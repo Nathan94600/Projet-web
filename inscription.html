@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" 
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" 
     crossorigin="anonymous">
-    <link rel="icon" href="./assets/xing-logo-svgrepo-com (1).svg">
+    <link rel="icon" href="./images/assets/xing-logo-svgrepo-com (1).svg">
 </head>
 
 
@@ -20,17 +20,19 @@
 	justify-content: space-around;
 	align-items: center;
     border-bottom: 1px solid;">
+            <a href="index.html" target="_parent">
             <button style="border: none; background: none;padding: 0">
             <svg fill="#000000" width="4rem" height="4rem" viewBox="0 0 32 32" id="icon" xmlns="http://www.w3.org/2000/svg">
                 <path d="M11.42,8.29a1.25,1.25,0,0,0-1.13-.76h-4a.65.65,0,0,0-.55.25.63.63,0,0,0,0,.62l2.73,4.73v0L4.17,20.72a.6.6,0,0,0,0,.62.58.58,0,0,0,.52.28h4a1.22,1.22,0,0,0,1.1-.78l4.36-7.71S11.42,8.29,11.42,8.29Z" transform="translate(0)"/>
                 <path d="M27.83,2.88a.65.65,0,0,0,0-.62A.61.61,0,0,0,27.3,2H23.22a1.19,1.19,0,0,0-1.08.77s-8.7,15.43-9,15.93l5.74,10.53A1.26,1.26,0,0,0,20,30h4a.59.59,0,0,0,.54-.26.62.62,0,0,0,0-.62l-5.69-10.4a0,0,0,0,1,0,0Z" transform="translate(0)"/>
             </svg>
-        </button>
+             </button>
+             </a>
     
 		<nav style="font-weight: 700;" >
-            <a style="color: black;"     href="">ACCUEIL</a>&nbsp;
-			<a style="color: black;"     href="">NOS PRODUITS</a>&nbsp;
-			<a  style="color: black;"            href="">CHAUSSURES</a>&nbsp;
+            <a style="color: black;"     href="index.html" target="_parent">ACCUEIL</a>
+			<a style="color: black;"     href="produits.html">NOS PRODUITS</a>
+			<a  style="color: black;"            href="">CHAUSSURES</a>
 		</nav>
 		<div style="display: flex;
         justify-content: space-around;
@@ -63,13 +65,15 @@
     </header>
 
 
+
+
     <div style="height: 100vh; display: flex;">
 
         <div class="container-l" 
         style="
         max-width: 50%;
         width: 50%;
-        background-image : url(./assets/7d5773a0dd8f7af0806a4d6e72f8ea80_upscayl_4x_upscayl-standard-4x.png); 
+        background-image : url(./images/assets/michael-jordan-focuses.jpg); 
         background-size: cover;
         background-position: center;
         align-items: center;
@@ -77,7 +81,7 @@
         justify-content: center;
         "
         >
-            <img src="./assets/xing-logo-svgrepo-com (1).svg" alt="image Logo" 
+            <img src="./images/assets/xing-logo-svgrepo-com (1).svg" alt="image Logo" 
             style="width: 100px;
             margin-top: 50%;
             align-items: center;
@@ -102,12 +106,12 @@
         color: black;">
 
                 <div style="padding: 30px;">
-                <img src="./assets/xing-logo-svgrepo-com (1).svg" alt="image Logo" 
+                <img src="./images/assets/xing-logo-svgrepo-com (1).svg" alt="image Logo" 
                 style="width: 50px; ">
 
                     <h1 style="font-size: 64px; 
                     font-family: Inter;
-                    padding-top: 1px;">Informations personnelles</h1> 
+                    padding-top: 1px;">Création de ton compte</h1> 
                     
                     <h2 style="font-size: 15px;
                     font-family: Inter;
@@ -119,14 +123,41 @@
                         <form style="margin-bottom: 1rem;
                         justify-content: space-around;
                         ">
-                        
-                            <input type="email" placeholder="E-MAIL" name="email" >
-                            <input type="text" placeholder="Prénom" name="prenom">
-                            <input type="text" placeholder="Nom" name="nom" >
-                            <input type="text" placeholder="Date de Naissance" name="date">
-                            <input type="text" placeholder="N° de téléphone" name="tel">
-                            <input type="text" placeholder="Adresse mail" name="mail">
-                            <input type="text" placeholder="mot de passe" name="mdp">
+                            <input style="    width: 75%;
+                            height: 60px;
+                            font-size: 17px;
+                            padding: 0 25px;
+                            margin-bottom: 15px;
+                            border-radius: 30px;
+                            border: none;
+                            box-shadow: 0px 5px 10px 1px rgba(0,0,0, 0.05);
+                            outline: none;"
+
+                            type="text" placeholder="Nom d'utilisateur" name="username">
+
+                            <input style="    width: 75%;
+                            height: 60px;
+                            font-size: 17px;
+                            padding: 0 25px;
+                            margin-bottom: 15px;
+                            border-radius: 30px;
+                            border: none;
+                            box-shadow: 0px 5px 10px 1px rgba(0,0,0, 0.05);
+                            outline: none;"
+                            
+                            type="email" placeholder="E-MAIL" name="email" >
+
+                            <input style="    width: 75%;
+                            height: 60px;
+                            font-size: 17px;
+                            padding: 0 25px;
+                            margin-bottom: 15px;
+                            border-radius: 30px;
+                            border: none;
+                            box-shadow: 0px 5px 10px 1px rgba(0,0,0, 0.05);
+                            outline: none;"
+                            
+                            type="password" placeholder="mot de passe" name="mdp">
                             
                         
                         
@@ -134,11 +165,10 @@
                         </form>
                     </div>
 
-
-
-
                     <div style="font-family: Inter; font-weight: 500;">
-
+                        <a href="connexion.html" target="_parent">
+                        <img src="images/assets/return-svgrepo-com.svg" alt="return" style="width: 40px; padding-right: 10px;">
+                    </a>
                     <button type="button" 
                     class="btn btn-dark" 
                     style="width: 300px;
@@ -152,13 +182,11 @@
                 
                 </div>
 
-
-
-
             </div>
 
         </div>
     </div>
+    
     <script src="simple.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
