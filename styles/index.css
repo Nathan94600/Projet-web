@@ -1,0 +1,25 @@
+header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	align-items: center;
+	border-bottom: 1px solid;
+}
+
+button {
+	border: none;
+}
+
+nav {
+	font-weight: 700;
+}
+
+a {
+	color: black;
+}
+
+#container {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+}
