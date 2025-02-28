@@ -1,0 +1,32 @@
+header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	align-items: center;
+	border-bottom: 1px solid #000;
+}
+
+nav {
+	font-weight: 700;
+}
+
+nav a {
+	color: #000
+}
+
+header div {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+}
+
+button {
+	border: none;
+	background: none;
+	padding: 0;
+}
+
+#id {
+	width: 20%;
+	height: 100vh;
+}
