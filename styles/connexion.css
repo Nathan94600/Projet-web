@@ -1,0 +1,116 @@
+header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	align-items: center;
+	border-bottom: 1px solid;
+}
+
+header div {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+}
+
+button {
+	border: none;
+	background: none;
+	padding: 0;
+}
+
+nav {
+	font-weight: 700;
+}
+
+nav a {
+	color: black;
+}
+
+#container {
+	height: 100vh;
+	display: flex;
+}
+
+.container-l {
+	max-width: 50%;
+	width: 50%;
+	background-image: url("/images/assets/michael-jordan-focuses.jpg");
+	background-size: cover;
+	background-position: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.container-l img {
+	width: 100%;
+	margin-top: 50%;
+	align-items: center;
+	max-width: 20%;
+	display: flex;
+}
+
+.container-r {
+	width: 50%;
+	background: #fff;
+	display: flex;
+	align-items: center;
+	color: #000;
+}
+
+.container-r > div {
+	padding: 30px;
+}
+
+.container-r img {
+	width: 50px;
+}
+
+h1 {
+	font-size: 64px;
+	font-family: Inter;
+	margin-top: 50px;
+}
+
+h2 {
+	font-size: 15px;
+	font-family: Inter;
+	font-weight: 300;
+	color: #808080;
+}
+
+#form-container a {
+	color: #000;
+	margin-top: 1rem;
+}
+
+form {
+	margin-bottom: 1rem;
+}
+
+#email, #password {
+	height: 60px;
+	font-size: 17px;
+	padding: 0 25px;
+	margin-bottom: 15px;
+	border-radius: 30px;
+	border: none;
+	box-shadow: 0px 5px 10px 1px rgba(0, 0, 0, 0.05);
+	outline: none;
+}
+
+#password {
+	width: 75%;
+}
+
+#btn-container {
+	font-family: Iner;
+	font-weight: 500;
+}
+
+.btn {
+	width: 300px;
+	font-family: Inter;
+	 font-weight: 500;
+	border-radius: 30px
+}

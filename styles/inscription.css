@@ -1,0 +1,112 @@
+header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	align-items: center;
+	border-bottom: 1px solid;
+}
+
+header div {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+}
+
+button {
+	border: none;
+	background: none;
+	padding: 0;
+}
+
+nav {
+	font-weight: 700;
+}
+
+nav a {
+	color: black;
+}
+
+#container {
+	height: 100vh;
+	display: flex;
+}
+
+h1 {
+	font-size: 64px;
+	font-family: Inter;
+	padding-top: 1px;
+}
+
+h2 {
+	font-size: 15px;
+	font-family: Inter;
+	font-weight: 300;
+	color: #808080;
+}
+
+form {
+	margin-bottom: 1rem;
+	justify-content: space-around;
+}
+
+#inscription input {
+	width: 75%;
+	height: 60px;
+	font-size: 17px;
+	padding: 0 25px;
+	margin-bottom: 15px;
+	border-radius: 30px;
+	border: none;
+	box-shadow: 0px 5px 10px 1px rgba(0, 0, 0, 0.05);
+	outline: none;
+}
+
+.container-l {
+	width: 50%;
+	background-image: url("/images/assets/michael-jordan-focuses.jpg");
+	background-size: cover;
+	background-position: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.container-l img {
+	width: 100%;
+	margin-top: 50%;
+	align-items: center;
+	max-width: 20%;
+	display: flex;
+}
+
+.container-r {
+	width: 50%;
+	background: #fff;
+	display: flex;
+	align-items: center;
+}
+
+.container-r > div {
+	padding: 30px;
+}
+
+.container-r img {
+	width: 50px;
+}
+
+#btn-container {
+	font-family: Inter;
+	font-weight: 500;
+}
+
+#btn-container img {
+	width: 40px;
+	padding-right: 10px;
+}
+
+.btn {
+	width: 300px;
+	font-family: Inter;
+	font-weight: 500;
+	border-radius: 30px;
+}
