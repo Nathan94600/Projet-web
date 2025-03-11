@@ -54,20 +54,22 @@
       </div>
       <div class="container-r">
         <div>
+          {{error}}
           <img src="./images/assets/xing-logo-svgrepo-com.svg" alt="image Logo">
           <h1>Création de ton compte</h1> 
           <h2>Connectez-vous pour profiter d’une expérience personnalisée et accéder à tous nos services.</h2>
-          <form id="inscription">
-            <input type="text" placeholder="Nom d'utilisateur" name="username">
-            <input type="email" placeholder="E-MAIL" name="email">
-            <input type="password" placeholder="mot de passe" name="mdp">
+          <form id="inscription" method="post" action="/inscription">
+            <input type="text" placeholder="Nom d'utilisateur" name="username" minlength="3" maxlength="20" required>
+            <input type="email" placeholder="E-MAIL" name="email" required>
+            <input type="password" placeholder="mot de passe" name="password" minlength="8" maxlength="20" required>
+            <input type="password" placeholder="Confirmer le mot de passe" name="password2" minlength="8" maxlength="20" required>
+            <div id="btn-container">
+              <a href="/connexion" target="_parent">
+                <img src="/images/assets/return-svgrepo-com.svg" alt="return">
+              </a>
+              <button type="submit" class="btn btn-dark">Créer un compte</button>
+            </div>
           </form>
-          <div id="btn-container">
-            <a href="/connexion" target="_parent">
-              <img src="/images/assets/return-svgrepo-com.svg" alt="return">
-            </a>
-            <button type="button" class="btn btn-dark">Créer un compte</button>
-          </div>
         </div>
       </div>
     </div>

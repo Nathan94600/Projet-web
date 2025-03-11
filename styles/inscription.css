@@ -110,3 +110,13 @@ form {
 	font-weight: 500;
 	border-radius: 30px;
 }
+
+#error {
+	color: #ff0000;
+	width: calc(100% - 1rem);
+	padding: 1rem;
+	margin: 0 1rem;
+	background: rgba(197, 25, 25, 0.25);
+	border-radius: 10px;
+	border: 2px solid #ff0000;
+}
