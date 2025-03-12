@@ -3,6 +3,14 @@ const { createServer } = require("http"), { readFile } = require("fs"), { Databa
 	else console.log("Connexion à la base de données réussie");
 });
 
+/**
+ * @param { string } password 
+ * @param { string } passwordSalt 
+ */
+function securePassword(password, passwordSalt = randomBytes(128).toString("hex")) {	
+	return { password: pbkdf2Sync(password, passwordSalt, 1e6, 64, "sha3-512").toString("hex"), passwordSalt };
+}
+
 db.exec("CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, email TEXT, username TEXT, password TEXT, password_salt TEXT)", err => {
 	if (err) console.log("Erreur lors de la création de la table users: ", err);
 	else {
@@ -28,13 +36,26 @@ db.exec("CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, email TEXT, user
 				case "POST":
 					if (url == "/connexion") {
 						let body = "";
-						req.on("data", chunk => body += chunk);
-						req.on("end", () => {
-							const params = new URLSearchParams(body),
-							email = params.get("email"),
-							password = params.get("password");
+
+						req.on("data", chunk => body += chunk).on("end", () => {
+							const params = new URLSearchParams(body), email = params.get("email"), password = params.get("password");
 		
-							console.log(email, password);
+							let errorMessage = "";
+		
+							if (!email) errorMessage = "Vous devez mettre un email";
+							else if (!password) errorMessage = "Vous devez mettre un mot de passe";
+							else if (password.length > 20 || password.length < 8) errorMessage = "Votre mot de passe doit contenir entre 8 et 20 caractères";
+		
+							if (errorMessage) res.writeHead(302, { location: `/inscription?error=${encodeURIComponent(errorMessage)}` }).end();
+							else db.get("SELECT * FROM users WHERE email = ?", email, (err, row) => {								
+								if (err) {
+									console.log("Erreur lors de la vérication de l'email: ", err);
+	
+									res.writeHead(302, { location: `/connexion?error=${encodeURIComponent("Erreur lors de la vérification de l'email")}` }).end();
+								} else if (!row) res.writeHead(302, { location: `/connexion?error=${encodeURIComponent("Aucun compte n'est associé à cet email")}` }).end();
+								else if (row.password != securePassword(password, row.password_salt).password) res.writeHead(302, { location: `/connexion?error=${encodeURIComponent("Mot de passe incorrect")}` }).end();
+								else res.writeHead(302, { location: "/", "set-cookie": `token=${randomBytes(64).toString('hex')}.${row.id};` }).end();
+							});
 						});
 					} else if (url == "/inscription") {						
 						let body = "";
@@ -46,13 +67,15 @@ db.exec("CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, email TEXT, user
 		
 							if (!email) errorMessage = "Vous devez mettre un email";
 							else if (!username) errorMessage = "Vous devez mettre un nom d'utilisateur";
+							else if (!password) errorMessage = "Vous devez mettre un mot de passe";
+							else if (!password2) errorMessage = "Vous devez confirmer votre mot de passe";
 							else if (username.length > 20 || username.length < 3) errorMessage = "Votre nom d'utilisateur doit contenir entre 3 et 20 caractères";
 							else if (password.length > 20 || password.length < 8 || password2.length > 20 || password2.length < 8) errorMessage = "Votre mot de passe doit contenir entre 8 et 20 caractères";
 							else if (password != password2) errorMessage = "Les mots de passe ne correspondent pas";
 		
 							if (errorMessage) res.writeHead(302, { location: `/inscription?error=${encodeURIComponent(errorMessage)}` }).end();
 							else {
-								const passwordSalt = randomBytes(128).toString("hex"), userId = randomUUID({ disableEntropyCache: true });
+								const { password: encryptedPassword, passwordSalt } = securePassword(password), userId = randomUUID({ disableEntropyCache: true });
 
 								db.get("SELECT * FROM users WHERE email = ?", email, (err, row) => {
 									if (err) {
@@ -64,14 +87,14 @@ db.exec("CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, email TEXT, user
 										"${userId}",
 										"${email}",
 										"${username}",
-										"${pbkdf2Sync(password, passwordSalt, 1e6, 64, "sha3-512").toString("hex")}",
+										"${encryptedPassword}",
 										"${passwordSalt}"
 									)`, err => {
 										if (err) {
 											console.log("Erreur lors de la création du compte : ", err);
 	
 											res.writeHead(302, { location: `/inscription?error=${encodeURIComponent("Erreur lors de la création du compte ")}` }).end();
-										} else res.writeHead(302, { location: "/", "set-cookie": `token=${randomBytes(64).toString('hex')}.${userId}; ` }).end();
+										} else res.writeHead(302, { location: "/", "set-cookie": `token=${randomBytes(64).toString('hex')}.${userId};` }).end();
 									});
 								});
 							};
