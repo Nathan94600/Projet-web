@@ -1,4 +1,4 @@
-const { createServer } = require("http"), { readFile } = require("fs"), { Database } = require("sqlite3"), { randomUUID, randomBytes, pbkdf2Sync } = require("crypto"), db = new Database("database.db", err => {
+const { createServer } = require("http"), { readFile } = require("fs"), { Database } = require("sqlite3"), { randomUUID, randomBytes, pbkdf2Sync } = require("crypto"), componentRegexp = /(?<!\\)(?:\\\\)*\[[A-z]+\]/g, db = new Database("database.db", err => {
 	if (err) console.log("Erreur lors de la connexion à la base de données: ", err);
 	else console.log("Connexion à la base de données réussie");
 });
@@ -10,6 +10,34 @@ const { createServer } = require("http"), { readFile } = require("fs"), { Databa
 function securePassword(password, passwordSalt = randomBytes(128).toString("hex")) {	
 	return { password: pbkdf2Sync(password, passwordSalt, 1e6, 64, "sha3-512").toString("hex"), passwordSalt };
 }
+
+/**
+ * @param { string } pageName 
+ */
+function getPage(pageURL) {
+	return new Promise((resolve, reject) => {
+		readFile(`./pages${pageURL == "/" ? "/index" : pageURL}.html`, (err, data) => {
+			if (err) reject(err);
+			else {
+				let pageCode = data.toString(), components = pageCode.match(componentRegexp);
+
+				if (components) components.forEach((value, index) => {
+					const componentName = value.replace(/\[|\]/g, "");
+
+					readFile(`./components/${componentName}.html`, (err, data) => {
+            if (err) reject(err);
+            else {
+              pageCode = pageCode.replace(`[${componentName}]`, data.toString());
+
+							if (index + 1 == components.length) resolve(pageCode);
+            };
+          });
+				});
+				else resolve(pageCode);
+			};
+		});
+	});
+};
 
 db.exec("CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, email TEXT, username TEXT, password TEXT, password_salt TEXT)", err => {
 	if (err) console.log("Erreur lors de la création de la table users: ", err);
@@ -28,10 +56,10 @@ db.exec("CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, email TEXT, user
 						else res.writeHead(200, { "content-type": `text/css` }).end(data);
 					});
 					else if ((url == "/inscription" || url == "/connexion") && userToken) res.writeHead(302, { location: "/" }).end();
-					else readFile(`./pages${url == "/" ? "/index" : url}.html`, (err, data) => {
-						if (err) res.writeHead(404, "Not found").end();
-						else res.writeHead(200, { "content-type": `text/html` }).end(data.toString().replace("{{error}}", errorMessage ? `<p id="error">${errorMessage}</p>` : ""));
-					});
+					else getPage(url).then(
+						code => res.writeHead(200, { "content-type": `text/html` }).end(code.replace("{{error}}", errorMessage ? `<p id="error">${errorMessage}</p>` : "")),
+						() => res.writeHead(404, "Not found").end()
+					);
 					break;
 				case "POST":
 					if (url == "/connexion") {
