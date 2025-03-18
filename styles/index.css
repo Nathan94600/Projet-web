@@ -1,76 +1,72 @@
-a {
-	text-decoration: none;
-	color: #000;
+body {
+	overflow-x: hidden;
 }
 
-#presentations {
-	align-items: center;
+#presentation-img {
+	width: 100vw;
+}
+
+#news, #marques, #best-sellers, #promos {
 	display: flex;
-	flex-direction: column-reverse;
-	width: 100%;
-	overflow: hidden;
-	position: relative;
+	flex-direction: column;
 }
 
-#slides {
+#news h3, #marques h3, #best-sellers h3, #promos h3 {
+	margin: 2rem 5rem;
+}
+
+#news-container, #best-sellers-container, #promos-container {
+	overflow-x: scroll;
 	display: flex;
-	animation: presentationScroll 20s linear infinite;
-	animation-delay: 2s;
+	flex-direction: row;
 }
 
-.presentation {
-	width: 100%;
-	flex-shrink: 0;
-}
-
-#pause:checked ~ #slides {
-  animation-play-state: paused;
-}
-
-#pause:checked ~ #paused {
-	display: none;
-}
-
-#pause:checked ~ #running {
-	display: initial;
-}
-
-#running {
-	display: none;
-}
-
-#chaussures {
+#marques-container {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-around;
 }
 
-#chaussures a {
-	margin-bottom: 2rem;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	width: 15%;
+.news-item:first-child, .best-seller-item:first-child, .promo-item:first-child {
+	margin-left: 5rem;
 }
 
-#chaussures a img {
-	width: 100%;
+.news-item, .best-seller-item, .promo-item {
+	margin: 2vh 3vw;
+	padding: 2rem;
+	border-radius: 15px;
+	box-shadow: inset 4px 4px 5px #8a8a8a, 4px 4px 5px #8a8a8a;
 }
 
-@keyframes presentationScroll {
-	0% {
-		transform: translateX(0);
-	}
-	25% {
-		transform: translateX(0);
-	}
-	50% {
-		transform: translateX(-100%);
-	}
-	75% {
-		transform: translateX(-100%);
-	}
-	100% {
-		transform: translateX(-200%);
-	}
+.news-item img, .best-seller-item img, .promo-item img {
+	width: 20vw;
+}
+
+.news-item hr, .best-seller-item hr , .promo-item hr  {
+	margin: 1rem auto;
+	background: #000;
+	height: 2px;
+	width: 85%;
+}
+
+.news-item p, .best-seller-item p , .promo-item p {
+	margin: .5rem 0;
+}
+
+.promo, .promo-price {
+	font-weight: 600;
+	color: #ff9500;
+}
+
+.type {
+	color: #6F6F6F;
+}
+
+.news-item .prices p, .best-seller-item .prices p, .promo-item .prices p {
+	display: inline;
+}
+
+.prices .price {
+	margin-left: 1rem;
+	text-decoration: line-through
 }

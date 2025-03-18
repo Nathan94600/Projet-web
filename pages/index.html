@@ -10,51 +10,204 @@
   </head>
   <body>
     [header]
-    <hr/>
-    <div id="presentations">
-      <input type="checkbox" name="pause" id="pause" hidden/>
-      <label for="pause" id="paused">
-        <svg fill="#000000" width="3rem" height="3rem" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
-          <path
-            d="M5.92 24.096q0 0.832 0.576 1.408t1.44 0.608h4.032q0.832 0 1.44-0.608t0.576-1.408v-16.16q0-0.832-0.576-1.44t-1.44-0.576h-4.032q-0.832 0-1.44 0.576t-0.576 1.44v16.16zM18.016 24.096q0 0.832 0.608 1.408t1.408 0.608h4.032q0.832 0 1.44-0.608t0.576-1.408v-16.16q0-0.832-0.576-1.44t-1.44-0.576h-4.032q-0.832 0-1.408 0.576t-0.608 1.44v16.16z"
-          ></path>
-        </svg>
-      </label>
-      <label for="pause" id="running">
-        <svg width="3rem" height="3rem" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-          <path
-            d="m 2 2.5 v 11 c 0 1.5 1.269531 1.492188 1.269531 1.492188 h 0.128907 c 0.246093 0.003906 0.488281 -0.050782 0.699218 -0.171876 l 9.796875 -5.597656 c 0.433594 -0.242187 0.65625 -0.734375 0.65625 -1.226562 c 0 -0.492188 -0.222656 -0.984375 -0.65625 -1.222656 l -9.796875 -5.597657 c -0.210937 -0.121093 -0.453125 -0.175781 -0.699218 -0.175781 h -0.128907 s -1.269531 0 -1.269531 1.5 z m 0 0"
-            fill="#000"
-          />
-        </svg>
-      </label>
-      <div id="slides">
-        <img src="images/presentations/nike-tn-shark.webp" alt="Présentation chaussure Nike TN Shark" class="presentation"/>
-        <img src="images/presentations/holiday.webp" alt="Présentation idée de cadeaux" class="presentation"/>
-        <img src="images/presentations/nike-tn-shark.webp" alt="Présentation chaussure Nike TN Shark" class="presentation"/>
+    <img src="/images/presentations/nike-tn-shark.webp" alt="" id="presentation-img">
+    <section id="news">
+      <h3>Nouveautés</h3>
+      <div id="news-container">
+        <div class="news-item">
+          <a href="" class="container-link"></a>
+          <img src="https://images.footlocker.com/is/image/FLEU/314210082104_01?wid=390" alt="" class="product-img">
+          <hr class="separator">
+          <p class="name">Nike Air Max Plus</p>
+          <p class="type">Chaussure pour homme</p>
+          <p class="price">189,99€</p>
+        </div>
+        <div class="news-item">
+          <a href="" class="container-link"></a>
+          <img src="https://images.footlocker.com/is/image/FLEU/314210082104_01?wid=390" alt="" class="product-img">
+          <hr class="separator">
+          <p class="promo">EN PROMOTION</p>
+          <p class="name">Nike Air Max Plus</p>
+          <p class="type">Chaussure pour homme</p>
+          <div class="prices">
+            <p class="promo-price">149,99€</p>
+            <p class="price">189,99€</p>
+          </div>
+        </div>
+        <div class="news-item">
+          <a href="" class="container-link"></a>
+          <img src="https://images.footlocker.com/is/image/FLEU/314210082104_01?wid=390" alt="" class="product-img">
+          <hr class="separator">
+          <p class="name">Nike Air Max Plus</p>
+          <p class="type">Chaussure pour homme</p>
+          <p class="price">189,99€</p>
+        </div>
+        <div class="news-item">
+          <a href="" class="container-link"></a>
+          <img src="https://images.footlocker.com/is/image/FLEU/314210082104_01?wid=390" alt="" class="product-img">
+          <hr class="separator">
+          <p class="name">Nike Air Max Plus</p>
+          <p class="type">Chaussure pour homme</p>
+          <p class="price">189,99€</p>
+        </div>
+        <div class="news-item">
+          <a href="" class="container-link"></a>
+          <img src="https://images.footlocker.com/is/image/FLEU/314210082104_01?wid=390" alt="" class="product-img">
+          <hr class="separator">
+          <p class="name">Nike Air Max Plus</p>
+          <p class="type">Chaussure pour homme</p>
+          <p class="price">189,99€</p>
+        </div>
       </div>
-    </div>
-    <div id="chaussures">
-      <a href="">
-        <img src="images/articles/nike-tn-shark.webp" alt="Chaussure Nike TN Shark"/>
-        <p>Nike TN Shark</p>
-      </a>
-      <a href="">
-        <img src="images/articles/adidas-samba.webp" alt="Chaussure Adidas Samba"/>
-        <p>Adidas Samba</p>
-      </a>
-      <a href="">
-        <img src="images/articles/adidas-campus.webp" alt="Chaussure Adidas Campus"/>
-        <p>Adidas Campus</p>
-      </a>
-      <a href="">
-        <img src="images/articles/asics-nyc.webp" alt="Chaussure ASICS NYC"/>
-        <p>ASICS NYC</p>
-      </a>
-      <a href="">
-        <img src="images/articles/new-balance-9060.webp" alt="Chaussure New Balance 9060"/>
-        <p>New Balance 9060</p>
-      </a>
-    </div>
+    </section>
+    <section id="marques">
+      <h3>Marques</h3>
+      <div id="marques-container">
+        <div class="marque">
+          <a href="" class="container-link"></a>
+          <svg width="178" height="84" viewBox="0 0 178 84" fill="none" class="marque-logo">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M90.0876 29.6589L98.275 15.659L126.08 13.909L127.052 12.1988L101.355 10.4488L107.395 0.227272H155.06C169.732 0.227272 180.554 5.39769 176.339 20.4715C175.082 25.0851 169.124 36.6191 151.614 41.4316C155.343 41.8691 164.585 45.8861 162.963 56.3065C160.126 74.8007 135.767 83.5904 122.189 83.5904L65.8903 83.6302L63.0936 72.9314L92.6005 70.903L93.6138 69.1928L61.5939 67.2837L58.1488 54.5963L103.666 51.9713L104.679 50.3008L22.9269 45.2895L26.8584 38.6077L114.893 32.9998L115.906 31.3294L90.0876 29.6589ZM126.931 32.443L135.037 32.4032C140.468 32.3634 146.102 29.9373 148.169 25.0453C150.074 20.4715 147.521 16.5738 144.116 16.6135H136.253L126.931 32.443ZM117.568 48.3122L107.8 64.9769H117.122C121.459 64.9769 129.201 62.8689 131.592 56.8235C133.821 51.1758 129.727 48.3122 126.89 48.3122H117.568ZM46.5567 74.045L40.8823 83.5506L0.431885 83.6302L4.36344 76.9484L46.5567 74.045ZM49.394 0.1875L81.9408 0.227272L84.4132 9.25563L45.5435 6.86928L49.394 0.1875ZM86.2371 16.4147L89.8039 29.6589L34.2352 26.0794L38.1262 19.4374L86.2371 16.4147ZM57.9461 54.5963L50.8936 66.6075L11.6996 64.4201L15.6312 57.7383L57.9461 54.5963Z" fill="#040404"/>
+          </svg>
+        </div>
+        <div class="marque">
+          <a href="" class="container-link"></a>
+          <svg width="178" height="84" viewBox="0 0 178 84" fill="none" class="marque-logo">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M90.0876 29.6589L98.275 15.659L126.08 13.909L127.052 12.1988L101.355 10.4488L107.395 0.227272H155.06C169.732 0.227272 180.554 5.39769 176.339 20.4715C175.082 25.0851 169.124 36.6191 151.614 41.4316C155.343 41.8691 164.585 45.8861 162.963 56.3065C160.126 74.8007 135.767 83.5904 122.189 83.5904L65.8903 83.6302L63.0936 72.9314L92.6005 70.903L93.6138 69.1928L61.5939 67.2837L58.1488 54.5963L103.666 51.9713L104.679 50.3008L22.9269 45.2895L26.8584 38.6077L114.893 32.9998L115.906 31.3294L90.0876 29.6589ZM126.931 32.443L135.037 32.4032C140.468 32.3634 146.102 29.9373 148.169 25.0453C150.074 20.4715 147.521 16.5738 144.116 16.6135H136.253L126.931 32.443ZM117.568 48.3122L107.8 64.9769H117.122C121.459 64.9769 129.201 62.8689 131.592 56.8235C133.821 51.1758 129.727 48.3122 126.89 48.3122H117.568ZM46.5567 74.045L40.8823 83.5506L0.431885 83.6302L4.36344 76.9484L46.5567 74.045ZM49.394 0.1875L81.9408 0.227272L84.4132 9.25563L45.5435 6.86928L49.394 0.1875ZM86.2371 16.4147L89.8039 29.6589L34.2352 26.0794L38.1262 19.4374L86.2371 16.4147ZM57.9461 54.5963L50.8936 66.6075L11.6996 64.4201L15.6312 57.7383L57.9461 54.5963Z" fill="#040404"/>
+          </svg>
+        </div>
+        <div class="marque">
+          <a href="" class="container-link"></a>
+          <svg width="178" height="84" viewBox="0 0 178 84" fill="none" class="marque-logo">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M90.0876 29.6589L98.275 15.659L126.08 13.909L127.052 12.1988L101.355 10.4488L107.395 0.227272H155.06C169.732 0.227272 180.554 5.39769 176.339 20.4715C175.082 25.0851 169.124 36.6191 151.614 41.4316C155.343 41.8691 164.585 45.8861 162.963 56.3065C160.126 74.8007 135.767 83.5904 122.189 83.5904L65.8903 83.6302L63.0936 72.9314L92.6005 70.903L93.6138 69.1928L61.5939 67.2837L58.1488 54.5963L103.666 51.9713L104.679 50.3008L22.9269 45.2895L26.8584 38.6077L114.893 32.9998L115.906 31.3294L90.0876 29.6589ZM126.931 32.443L135.037 32.4032C140.468 32.3634 146.102 29.9373 148.169 25.0453C150.074 20.4715 147.521 16.5738 144.116 16.6135H136.253L126.931 32.443ZM117.568 48.3122L107.8 64.9769H117.122C121.459 64.9769 129.201 62.8689 131.592 56.8235C133.821 51.1758 129.727 48.3122 126.89 48.3122H117.568ZM46.5567 74.045L40.8823 83.5506L0.431885 83.6302L4.36344 76.9484L46.5567 74.045ZM49.394 0.1875L81.9408 0.227272L84.4132 9.25563L45.5435 6.86928L49.394 0.1875ZM86.2371 16.4147L89.8039 29.6589L34.2352 26.0794L38.1262 19.4374L86.2371 16.4147ZM57.9461 54.5963L50.8936 66.6075L11.6996 64.4201L15.6312 57.7383L57.9461 54.5963Z" fill="#040404"/>
+          </svg>
+        </div>
+        <div class="marque">
+          <a href="" class="container-link"></a>
+          <svg width="178" height="84" viewBox="0 0 178 84" fill="none" class="marque-logo">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M90.0876 29.6589L98.275 15.659L126.08 13.909L127.052 12.1988L101.355 10.4488L107.395 0.227272H155.06C169.732 0.227272 180.554 5.39769 176.339 20.4715C175.082 25.0851 169.124 36.6191 151.614 41.4316C155.343 41.8691 164.585 45.8861 162.963 56.3065C160.126 74.8007 135.767 83.5904 122.189 83.5904L65.8903 83.6302L63.0936 72.9314L92.6005 70.903L93.6138 69.1928L61.5939 67.2837L58.1488 54.5963L103.666 51.9713L104.679 50.3008L22.9269 45.2895L26.8584 38.6077L114.893 32.9998L115.906 31.3294L90.0876 29.6589ZM126.931 32.443L135.037 32.4032C140.468 32.3634 146.102 29.9373 148.169 25.0453C150.074 20.4715 147.521 16.5738 144.116 16.6135H136.253L126.931 32.443ZM117.568 48.3122L107.8 64.9769H117.122C121.459 64.9769 129.201 62.8689 131.592 56.8235C133.821 51.1758 129.727 48.3122 126.89 48.3122H117.568ZM46.5567 74.045L40.8823 83.5506L0.431885 83.6302L4.36344 76.9484L46.5567 74.045ZM49.394 0.1875L81.9408 0.227272L84.4132 9.25563L45.5435 6.86928L49.394 0.1875ZM86.2371 16.4147L89.8039 29.6589L34.2352 26.0794L38.1262 19.4374L86.2371 16.4147ZM57.9461 54.5963L50.8936 66.6075L11.6996 64.4201L15.6312 57.7383L57.9461 54.5963Z" fill="#040404"/>
+          </svg>
+        </div>
+        <div class="marque">
+          <a href="" class="container-link"></a>
+          <svg width="178" height="84" viewBox="0 0 178 84" fill="none" class="marque-logo">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M90.0876 29.6589L98.275 15.659L126.08 13.909L127.052 12.1988L101.355 10.4488L107.395 0.227272H155.06C169.732 0.227272 180.554 5.39769 176.339 20.4715C175.082 25.0851 169.124 36.6191 151.614 41.4316C155.343 41.8691 164.585 45.8861 162.963 56.3065C160.126 74.8007 135.767 83.5904 122.189 83.5904L65.8903 83.6302L63.0936 72.9314L92.6005 70.903L93.6138 69.1928L61.5939 67.2837L58.1488 54.5963L103.666 51.9713L104.679 50.3008L22.9269 45.2895L26.8584 38.6077L114.893 32.9998L115.906 31.3294L90.0876 29.6589ZM126.931 32.443L135.037 32.4032C140.468 32.3634 146.102 29.9373 148.169 25.0453C150.074 20.4715 147.521 16.5738 144.116 16.6135H136.253L126.931 32.443ZM117.568 48.3122L107.8 64.9769H117.122C121.459 64.9769 129.201 62.8689 131.592 56.8235C133.821 51.1758 129.727 48.3122 126.89 48.3122H117.568ZM46.5567 74.045L40.8823 83.5506L0.431885 83.6302L4.36344 76.9484L46.5567 74.045ZM49.394 0.1875L81.9408 0.227272L84.4132 9.25563L45.5435 6.86928L49.394 0.1875ZM86.2371 16.4147L89.8039 29.6589L34.2352 26.0794L38.1262 19.4374L86.2371 16.4147ZM57.9461 54.5963L50.8936 66.6075L11.6996 64.4201L15.6312 57.7383L57.9461 54.5963Z" fill="#040404"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+    <section id="best-sellers">
+      <h3>Meilleurs ventes</h3>
+      <div id="best-sellers-container">
+        <div class="best-seller-item">
+          <a href="" class="container-link"></a>
+          <img src="https://images.footlocker.com/is/image/FLEU/314210082104_01?wid=390" alt="" class="product-img">
+          <hr class="separator">
+          <p class="name">Nike Air Max Plus</p>
+          <p class="type">Chaussure pour homme</p>
+          <p class="price">189,99€</p>
+        </div>
+        <div class="best-seller-item">
+          <a href="" class="container-link"></a>
+          <img src="https://images.footlocker.com/is/image/FLEU/314210082104_01?wid=390" alt="" class="product-img">
+          <hr class="separator">
+          <p class="promo">EN PROMOTION</p>
+          <p class="name">Nike Air Max Plus</p>
+          <p class="type">Chaussure pour homme</p>
+          <div class="prices">
+            <p class="promo-price">149,99€</p>
+            <p class="price">189,99€</p>
+          </div>
+        </div>
+        <div class="best-seller-item">
+          <a href="" class="container-link"></a>
+          <img src="https://images.footlocker.com/is/image/FLEU/314210082104_01?wid=390" alt="" class="product-img">
+          <hr class="separator">
+          <p class="name">Nike Air Max Plus</p>
+          <p class="type">Chaussure pour homme</p>
+          <p class="price">189,99€</p>
+        </div>
+        <div class="best-seller-item">
+          <a href="" class="container-link"></a>
+          <img src="https://images.footlocker.com/is/image/FLEU/314210082104_01?wid=390" alt="" class="product-img">
+          <hr class="separator">
+          <p class="name">Nike Air Max Plus</p>
+          <p class="type">Chaussure pour homme</p>
+          <p class="price">189,99€</p>
+        </div>
+        <div class="best-seller-item">
+          <a href="" class="container-link"></a>
+          <img src="https://images.footlocker.com/is/image/FLEU/314210082104_01?wid=390" alt="" class="product-img">
+          <hr class="separator">
+          <p class="name">Nike Air Max Plus</p>
+          <p class="type">Chaussure pour homme</p>
+          <p class="price">189,99€</p>
+        </div>
+      </div>
+    </section>
+    <section id="promos">
+      <h3>Meilleurs ventes</h3>
+      <div id="promos-container">
+        <div class="promo-item">
+          <a href="" class="container-link"></a>
+          <img src="https://images.footlocker.com/is/image/FLEU/314210082104_01?wid=390" alt="" class="product-img">
+          <hr class="separator">
+          <p class="promo">EN PROMOTION</p>
+          <p class="name">Nike Air Max Plus</p>
+          <p class="type">Chaussure pour homme</p>
+          <div class="prices">
+            <p class="promo-price">149,99€</p>
+            <p class="price">189,99€</p>
+          </div>
+        </div>
+        <div class="promo-item">
+          <a href="" class="container-link"></a>
+          <img src="https://images.footlocker.com/is/image/FLEU/314210082104_01?wid=390" alt="" class="product-img">
+          <hr class="separator">
+          <p class="promo">EN PROMOTION</p>
+          <p class="name">Nike Air Max Plus</p>
+          <p class="type">Chaussure pour homme</p>
+          <div class="prices">
+            <p class="promo-price">149,99€</p>
+            <p class="price">189,99€</p>
+          </div>
+        </div>
+        <div class="promo-item">
+          <a href="" class="container-link"></a>
+          <img src="https://images.footlocker.com/is/image/FLEU/314210082104_01?wid=390" alt="" class="product-img">
+          <hr class="separator">
+          <p class="promo">EN PROMOTION</p>
+          <p class="name">Nike Air Max Plus</p>
+          <p class="type">Chaussure pour homme</p>
+          <div class="prices">
+            <p class="promo-price">149,99€</p>
+            <p class="price">189,99€</p>
+          </div>
+        </div>
+        <div class="promo-item">
+          <a href="" class="container-link"></a>
+          <img src="https://images.footlocker.com/is/image/FLEU/314210082104_01?wid=390" alt="" class="product-img">
+          <hr class="separator">
+          <p class="promo">EN PROMOTION</p>
+          <p class="name">Nike Air Max Plus</p>
+          <p class="type">Chaussure pour homme</p>
+          <div class="prices">
+            <p class="promo-price">149,99€</p>
+            <p class="price">189,99€</p>
+          </div>
+        </div>
+        <div class="promo-item">
+          <a href="" class="container-link"></a>
+          <img src="https://images.footlocker.com/is/image/FLEU/314210082104_01?wid=390" alt="" class="product-img">
+          <hr class="separator">
+          <p class="promo">EN PROMOTION</p>
+          <p class="name">Nike Air Max Plus</p>
+          <p class="type">Chaussure pour homme</p>
+          <div class="prices">
+            <p class="promo-price">149,99€</p>
+            <p class="price">189,99€</p>
+          </div>
+        </div>
+      </div>
+    </section>
   </body>
-</html>
+  </html>
