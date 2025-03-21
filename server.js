@@ -49,7 +49,7 @@ db.exec("CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, email TEXT, user
 				case "GET":
 					if (url.startsWith("/images/")) readFile(`.${url}`, (err, data) => {
 						if (err) res.writeHead(404, "Not found").end();
-						else res.writeHead(200, { "content-type": `image/${url.split(".").at(-1)}` }).end(data);
+						else res.writeHead(200, { "content-type": `image/${url.endsWith(".svg") ? "svg+xml" : url.split(".").at(-1)}` }).end(data);
 					});
 					else if (url.startsWith("/styles/")) readFile(`.${url}`, (err, data) => {
 						if (err) res.writeHead(404, "Not found").end();
