@@ -3,11 +3,11 @@ body {
 }
 
 #container {
-	height: calc(100vh - 70px);
+	height: calc(100vh - 10vw - 70px);
 	width: calc(90vw);
 	display: flex;
 	flex-direction: row;
-	margin: calc(10vw - 70px) 10vw;
+	margin: calc(10vw - 70px) 0 0 10vw;
 }
 
 #presentation-container {
@@ -53,7 +53,9 @@ body {
 }
 
 #information-container {
-	width: calc(32.5vw);
+	display: flex;
+	flex-direction: column;
+	width: 32.5vw;
 }
 
 #text-container, #prices {
@@ -62,17 +64,13 @@ body {
 	flex-direction: row;
 }
 
-#text-container, #prices {
-	margin-bottom: 2rem;
+#text-container, #prices, #information-container > #name, #information-container > #price {
+	margin-bottom: 1rem;
 }
 
 #name, #promo {
 	width: 50%;
 	height: min-content;
-}
-
-#information-container > #name {
-	margin-bottom: 2rem;
 }
 
 #promo, #promo-price {
@@ -89,15 +87,111 @@ body {
 	color: #6F6F6F;
 }
 
-#information-container > #price {
-	margin-bottom: 2rem;
-}
-
 #prices #price {
 	margin-left: 1rem;
 	text-decoration: line-through;
 }
 
+#other-items {
+	margin-bottom: 2rem;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
 #other-items img {
-	width: calc(100% / 4);
+	background: #8a8a8a40;
+	border-radius: 5px;
+	padding: .25rem;
+	width: calc((100% - 9vw) / 4);
+}
+
+.current-item {
+	box-shadow: inset 4px 4px 5px #8a8a8a, 4px 4px 5px #8a8a8a;
+}
+
+#add-item {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+}
+
+fieldset {
+	border: none;
+}
+
+legend {
+	margin-bottom: calc(8vw / 10);
+}
+
+#input-container {
+	display: grid;
+	grid-template-columns: repeat(6, calc((32.5vw - 8vw) / 6));
+	gap: calc(8vw / 10) calc(8vw / 5);
+	width: 32.5vw;
+}
+
+#input-container div {
+	height: calc((32.5vw - 10vw) / 6);
+}
+
+#input-container input {
+	display: none;
+}
+
+label {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 5px;
+	background: #8a8a8a40;
+}
+
+input:checked ~ label {
+	box-shadow: inset 4px 4px 5px #8a8a8a, inset -4px -4px 5px #8a8a8a;
+}
+
+input:disabled ~ label {
+	background: #7a7a7a80;
+	color: #00000040;
+	text-decoration: line-through;
+}
+
+#add {
+	border: #000 2px solid;
+	border-radius: 15px;
+	padding: 1vw;
+	align-self: center;
+	margin-top: auto;
+	width: max-content;
+	animation: add-button-idle .1s both;
+}
+
+#add:active {
+	animation: add-button-active .1s both;
+}
+
+@keyframes add-button-active {
+	from {
+		box-shadow: none;
+	}
+
+	to {
+		border: #8a8a8a40 2px solid;
+		box-shadow: inset 4px 4px 5px #8a8a8a;
+	}
+}
+
+@keyframes add-button-idle {
+	from {
+		border: #8a8a8a40 2px solid;
+		box-shadow: inset 4px 4px 5px #8a8a8a;
+	}
+
+	to {
+		border: #000 2px solid;
+		box-shadow: none;
+	}
 }

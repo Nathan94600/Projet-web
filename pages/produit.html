@@ -37,108 +37,109 @@
 					<img src="https://images.footlocker.com/is/image/FLEU/314210082104_01?wid=390" alt="">
 					<img src="https://images.footlocker.com/is/image/FLEU/314210082104_01?wid=390" alt="">
 				</div>
-				<p>Sélectionner une taille</p>
-				<form action="/baskets/add?id=123" method="post">
+				<form action="/baskets/add?id=123" method="post" id="add-item">
 					<fieldset>
 						<legend>Sélectionner une taille</legend>
-						<div>
-							<input type="radio" id="38" name="size">
-							<label for="38" class="current-size">38</label>
-						</div>
-						<div>
-							<input type="radio" id="38.5" name="size">
-							<label for="38.5">38.5</label>
-						</div>
-						<div>
-							<input type="radio" id="39" name="size">
-							<label for="39">39</label>
-						</div>
-						<div>
-							<input type="radio" id="39.5" name="size">
-							<label for="39.5">39.5</label>
-						</div>
-						<div>
-							<input type="radio" id="40" name="size">
-							<label for="40">40</label>
-						</div>
-						<div>
-							<input type="radio" id="40.5" name="size">
-							<label for="40.5">40.5</label>
-						</div>
-						<div>
-							<input type="radio" id="41" name="size">
-							<label for="41">41</label>
-						</div>
-						<div>
-							<input type="radio" id="41.5" name="size">
-							<label for="41.5">41.5</label>
-						</div>
-						<div>
-							<input type="radio" id="42" name="size">
-							<label for="42">42</label>
-						</div>
-						<div>
-							<input type="radio" id="42.5" name="size">
-							<label for="42.5">42.5</label>
-						</div>
-						<div>
-							<input type="radio" id="43" name="size">
-							<label for="43">43</label>
-						</div>
-						<div>
-							<input type="radio" id="43.5" name="size">
-							<label for="43.5">43.5</label>
-						</div>
-						<div>
-							<input type="radio" id="44" name="size">
-							<label for="44">44</label>
-						</div>
-						<div>
-							<input type="radio" id="44.5" name="size">
-							<label for="44.5">44.5</label>
-						</div>
-						<div>
-							<input type="radio" id="45" name="size">
-							<label for="45">45</label>
-						</div>
-						<div>
-							<input type="radio" id="45.5" name="size">
-							<label for="45.5">45.5</label>
-						</div>
-						<div>
-							<input type="radio" id="46" name="size">
-							<label for="46">46</label>
-						</div>
-						<div>
-							<input type="radio" id="46.5" name="size">
-							<label for="46.5">46.5</label>
-						</div>
-						<div>
-							<input type="radio" id="47" name="size">
-							<label for="47">47</label>
-						</div>
-						<div>
-							<input type="radio" id="47.5" name="size">
-							<label for="47.5">47.5</label>
-						</div>
-						<div>
-							<input type="radio" id="48" name="size">
-							<label for="48">48</label>
-						</div>
-						<div>
-							<input type="radio" id="48.5" name="size">
-							<label for="48.5">48.5</label>
-						</div>
-						<div>
-							<input type="radio" id="49" name="size">
-							<label for="49">49</label>
-						</div>
-						<div>
-							<input type="radio" id="49.5" name="size">
-							<label for="49.5">49.5</label>
+						<div id="input-container">
+							<div>
+								<input type="radio" id="38" name="size" checked>
+								<label for="38">38</label>
+							</div>
+							<div>
+								<input type="radio" id="38.5" name="size">
+								<label for="38.5">38.5</label>
+							</div>
+							<div>
+								<input type="radio" id="39" name="size" disabled>
+								<label for="39">39</label>
+							</div>
+							<div>
+								<input type="radio" id="39.5" name="size">
+								<label for="39.5">39.5</label>
+							</div>
+							<div>
+								<input type="radio" id="40" name="size">
+								<label for="40">40</label>
+							</div>
+							<div>
+								<input type="radio" id="40.5" name="size">
+								<label for="40.5">40.5</label>
+							</div>
+							<div>
+								<input type="radio" id="41" name="size" disabled>
+								<label for="41" class="disable">41</label>
+							</div>
+							<div>
+								<input type="radio" id="41.5" name="size">
+								<label for="41.5">41.5</label>
+							</div>
+							<div>
+								<input type="radio" id="42" name="size">
+								<label for="42">42</label>
+							</div>
+							<div>
+								<input type="radio" id="42.5" name="size">
+								<label for="42.5">42.5</label>
+							</div>
+							<div>
+								<input type="radio" id="43" name="size">
+								<label for="43">43</label>
+							</div>
+							<div>
+								<input type="radio" id="43.5" name="size">
+								<label for="43.5">43.5</label>
+							</div>
+							<div>
+								<input type="radio" id="44" name="size">
+								<label for="44">44</label>
+							</div>
+							<div>
+								<input type="radio" id="44.5" name="size">
+								<label for="44.5">44.5</label>
+							</div>
+							<div>
+								<input type="radio" id="45" name="size">
+								<label for="45">45</label>
+							</div>
+							<div>
+								<input type="radio" id="45.5" name="size">
+								<label for="45.5">45.5</label>
+							</div>
+							<div>
+								<input type="radio" id="46" name="size">
+								<label for="46">46</label>
+							</div>
+							<div>
+								<input type="radio" id="46.5" name="size">
+								<label for="46.5">46.5</label>
+							</div>
+							<div>
+								<input type="radio" id="47" name="size">
+								<label for="47">47</label>
+							</div>
+							<div>
+								<input type="radio" id="47.5" name="size">
+								<label for="47.5">47.5</label>
+							</div>
+							<div>
+								<input type="radio" id="48" name="size">
+								<label for="48">48</label>
+							</div>
+							<div>
+								<input type="radio" id="48.5" name="size">
+								<label for="48.5">48.5</label>
+							</div>
+							<div>
+								<input type="radio" id="49" name="size">
+								<label for="49">49</label>
+							</div>
+							<div>
+								<input type="radio" id="49.5" name="size">
+								<label for="49.5">49.5</label>
+							</div>
 						</div>
 					</fieldset>
-					<button type="submit">Ajouter au panier</button>
+					<button type="submit" id="add">Ajouter au panier</button>
 				</form>
 			</div>
 		</div>
