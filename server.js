@@ -21,8 +21,8 @@ function getPage(pageURL) {
 			else {
 				let pageCode = data.toString(), components = pageCode.match(componentRegexp);
 
-				if (components) components.forEach((value, index) => {
-					const componentName = value.replace(/\[|\]/g, "");
+				if (components) components.forEach((value, index) => {					
+					const componentName = value.replace(/[\\\[\]]/g, "");
 
 					readFile(`./components/${componentName}.html`, (err, data) => {
             if (err) reject(err);
