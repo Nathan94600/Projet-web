@@ -1,4 +1,10 @@
-const { createServer } = require("http"), { readFile } = require("fs"), { Database } = require("sqlite3"), { randomUUID, randomBytes, pbkdf2Sync } = require("crypto"), componentRegexp = /(?<!\\)(?:\\\\)*\[[A-z]+\]/g, db = new Database("database.db", err => {
+const { createServer } = require("http"),
+{ readFile } = require("fs"),
+{ Database } = require("sqlite3"),
+{ randomUUID, randomBytes, pbkdf2Sync } = require("crypto"),
+componentRegexp = /(?<!\\)(?:\\\\)*\[[A-z]+\]/g,
+variableRegexp = /(?<!\\)(?:\\\\)*{{[A-z]+}}/g,
+db = new Database("database.db", err => {
 	if (err) console.log("Erreur lors de la connexion à la base de données: ", err);
 	else console.log("Connexion à la base de données réussie");
 });
@@ -13,8 +19,9 @@ function securePassword(password, passwordSalt = randomBytes(128).toString("hex"
 
 /**
  * @param { string } pageName 
+ * @param { Record<string, string> } params
  */
-function getPage(pageURL) {
+function getPage(pageURL, params = {}) {
 	return new Promise((resolve, reject) => {
 		readFile(`./pages${pageURL == "/" ? "/index" : pageURL}.html`, (err, data) => {
 			if (err) reject(err);
@@ -28,12 +35,26 @@ function getPage(pageURL) {
             if (err) reject(err);
             else {
               pageCode = pageCode.replace(`[${componentName}]`, data.toString());
+							
+							pageCode.match(variableRegexp).forEach(variable => {
+								const variableName = variable.replace(/[{}\\]/g, "");
+
+								pageCode = pageCode.replace(`{{${variableName}}}`, params[variableName]);
+							});							
 
 							if (index + 1 == components.length) resolve(pageCode);
             };
           });
 				});
-				else resolve(pageCode);
+				else {
+					pageCode.match(variableRegexp).forEach(variable => {
+						const variableName = variable.replace(/[{}\\]/g, "");
+
+						pageCode = pageCode.replace(`{{${variableName}}}`, params[variableName]);
+					});					
+
+					resolve(pageCode);
+				};
 			};
 		});
 	});
@@ -56,8 +77,8 @@ db.exec("CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, email TEXT, user
 						else res.writeHead(200, { "content-type": `text/css` }).end(data);
 					});
 					else if ((url == "/inscription" || url == "/connexion") && userToken) res.writeHead(302, { location: "/" }).end();
-					else getPage(url).then(
-						code => res.writeHead(200, { "content-type": `text/html` }).end(code.replace("{{error}}", errorMessage ? `<p id="error">${errorMessage}</p>` : "")),
+					else getPage(url, { error: errorMessage ? `<p id="error">${errorMessage}</p>` : "", accountText: userToken ? "Mon compte" : "Se connecter" }).then(
+						code => res.writeHead(200, { "content-type": `text/html` }).end(code),
 						() => res.writeHead(404, "Not found").end()
 					);
 					break;
