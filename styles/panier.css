@@ -12,7 +12,7 @@
     width: 40%;
     height: 60vh;
     overflow: hidden;
-    overflow-y: scroll;
+    overflow-y:auto;
     
 
 }
@@ -134,3 +134,24 @@ h2 {
 .container input:checked ~ svg {
   fill: #E3474F;
 }
+
+#nom_prix p{
+  width: 50%;
+}
+
+#nom_prix {
+  display: flex;
+}
+
+#prix {
+  text-align: right;
+}
+
+label {
+  width: 50%;
+}
+
+#like_poubelle {
+  display: flex;
+}
+
