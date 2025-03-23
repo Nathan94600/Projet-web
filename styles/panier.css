@@ -11,9 +11,12 @@
     border-radius: 3px;
     width: 40%;
     height: 60vh;
-
+    overflow: hidden;
+    overflow-y: scroll;
+    
 
 }
+
 
 #panier_droit {
     width: 20%;
@@ -83,9 +86,50 @@ h2 {
 #article_ajouté {
   display: flex; 
   grid-row: 1; 
+
   }
   
   #article_ajouté, p{
     margin-left: 10px;
     margin-top: 10px;
   }
+
+#description {
+  width: 100%;
+}
+
+/* Pour le bouton Favoris */ 
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.container {
+  display: block;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+}
+
+.container svg {
+  position: relative;
+  top: 0;
+  left: 0;
+  height: 30px;
+  width: 30px;
+  transition: all 0.3s;
+  fill: #666;
+  margin-top: 1cm;
+  margin-left: 1cm;
+}
+
+.container svg:hover {
+  transform: scale(1.1);
+}
+
+.container input:checked ~ svg {
+  fill: #E3474F;
+}
