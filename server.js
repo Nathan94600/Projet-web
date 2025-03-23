@@ -2,8 +2,10 @@ const { createServer } = require("http"),
 { readFile } = require("fs"),
 { Database } = require("sqlite3"),
 { randomUUID, randomBytes, pbkdf2Sync } = require("crypto"),
+{ gzip, brotliCompress, deflate } = require("zlib"),
 componentRegexp = /(?<!\\)(?:\\\\)*\[[A-z]+\]/g,
 variableRegexp = /(?<!\\)(?:\\\\)*{{[A-z]+}}/g,
+supportedEncodings = ["*", "br", "deflate", "gzip"],
 db = new Database("database.db", err => {
 	if (err) console.log("Erreur lors de la connexion à la base de données: ", err);
 	else console.log("Connexion à la base de données réussie");
@@ -16,6 +18,48 @@ db = new Database("database.db", err => {
 function securePassword(password, passwordSalt = randomBytes(128).toString("hex")) {	
 	return { password: pbkdf2Sync(password, passwordSalt, 1e6, 64, "sha3-512").toString("hex"), passwordSalt };
 }
+
+/**
+ * @param { string } acceptEncodingHeader 
+ * @param { string } data
+ * @returns { Promise<{ encoding: string; data: Buffer<ArrayBufferLike>; }> }
+ */
+function compressData(acceptEncodingHeader, data) {
+	const encodings = acceptEncodingHeader.split(",").map(encoding => {
+		const [name, qualityValue] = encoding.trim().split(";")				
+
+		return { name, q: parseFloat(qualityValue?.split("=")?.[1] || "1") }
+	}).filter(encoding => supportedEncodings.includes(encoding.name)),
+	bestQValue = Math.max(...encodings.map(encoding => encoding.q)),
+	bestEncodings = encodings.filter(encoding => encoding.q == bestQValue),
+	bestEncoding = supportedEncodings.find(encoding => bestEncodings.some(({ name }) => name == encoding));
+
+	return new Promise(resolve => {
+		switch (bestEncoding == "*" ? supportedEncodings[1] : bestEncoding) {
+			case "gzip":
+				gzip(data, (err, res) => {
+					if (err) resolve({ encoding: "identity", data });
+					else resolve({ encoding: "gzip", data: res });
+				});
+				break;
+			case "deflate":
+				deflate(data, (err, res) => {
+					if (err) resolve({ encoding: "identity", data });
+					else resolve({ encoding: "deflate", data: res });
+				});
+				break;
+			case "br":
+				brotliCompress(data, (err, res) => {
+					if (err) resolve({ encoding: "identity", data });
+					else resolve({ encoding: "br", data: res });
+				});
+				break;
+			default:
+				resolve({ encoding: "identity", data });
+				break;
+		};
+	});
+};
 
 /**
  * @param { string } pageName 
@@ -65,6 +109,8 @@ db.exec("CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, email TEXT, user
 	else {
 		createServer((req, res) => {
 			const { pathname: url, searchParams } = new URL(req.url, "http://localhost:8080"), errorMessage = searchParams.get("error"), userToken = new URLSearchParams(req.headers.cookie || "").get("token");
+
+			compressData(req.headers["accept-encoding"], "");
 		
 			switch (req.method) {
 				case "GET":
@@ -74,11 +120,11 @@ db.exec("CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, email TEXT, user
 					});
 					else if (url.startsWith("/styles/")) readFile(`.${url}`, (err, data) => {
 						if (err) res.writeHead(404, "Not found").end();
-						else res.writeHead(200, { "content-type": `text/css` }).end(data);
+						else compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { "content-type": `text/css`, "content-encoding": compression.encoding }).end(compression.data));
 					});
 					else if ((url == "/inscription" || url == "/connexion") && userToken) res.writeHead(302, { location: "/" }).end();
 					else getPage(url, { error: errorMessage ? `<p id="error">${errorMessage}</p>` : "", accountText: userToken ? "Mon compte" : "Se connecter" }).then(
-						code => res.writeHead(200, { "content-type": `text/html` }).end(code),
+						data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { "content-type": `text/html`, "content-encoding": compression.encoding }).end(compression.data)),
 						() => res.writeHead(404, "Not found").end()
 					);
 					break;
