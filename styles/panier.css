@@ -10,7 +10,7 @@
     padding: 30px;
     border-radius: 3px;
     width: 40%;
-    height: 20%;
+    height: 60vh;
 
 
 }
@@ -20,7 +20,7 @@
     margin-top: 10%;
     margin-right: 2cm;
     padding: 20px;
-    height: 50%;
+    height: 60%;
     border-radius: 10px;
     border: 1px solid black;
 }
@@ -83,3 +83,13 @@ button {
   #images img {
     margin: 10px;
 }
+
+#article_ajouté {
+  display: flex; 
+  grid-row: 1; 
+  }
+  
+  #article_ajouté, p{
+    margin-left: 10px;
+    margin-top: 10px;
+  }
