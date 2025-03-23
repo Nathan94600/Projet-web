@@ -43,7 +43,7 @@ h2{
 
 
 
-button {
+.payment-method {
     /* Variables */
     --button_radius: 0.75em;
     --button_color: #e8e8e8;
@@ -68,12 +68,12 @@ button {
     transition: transform 0.1s ease;
   }
   
-  button:hover .button_top {
+  .payment-method:hover .button_top {
     /* Pull the button upwards when hovered */
     transform: translateY(-0.33em);
   }
   
-  button:active .button_top {
+  .payment-method:active .button_top {
     /* Push the button downwards when pressed */
     transform: translateY(0);
   }
