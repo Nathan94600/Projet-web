@@ -133,8 +133,6 @@ db.exec("CREATE TABLE IF NOT EXISTS products (id CHAR(36) NOT NULL PRIMARY KEY, 
 				createServer((req, res) => {
 					const { pathname: url, searchParams } = new URL(req.url, "http://localhost:8080"), errorMessage = searchParams.get("error"), userToken = new URLSearchParams(req.headers.cookie || "").get("token");
 
-					compressData(req.headers["accept-encoding"], "");
-
 					switch (req.method) {
 						case "GET":
 							if (url.startsWith("/images/")) readFile(`.${url}`, (err, data) => {
