@@ -7,6 +7,7 @@ const { createServer } = require("http"),
 { email, password } = require("./config.json"),
 componentRegexp = /(?<!\\)(?:\\\\)*\[[A-z]+\]/g,
 variableRegexp = /(?<!\\)(?:\\\\)*{{[A-z]+}}/g,
+emailRegexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
 supportedEncodings = ["*", "br", "deflate", "gzip"],
 db = new Database("database.db", err => {
 	if (err) console.log("Erreur lors de la connexion à la base de données: ", err);
@@ -178,6 +179,7 @@ db.exec("CREATE TABLE IF NOT EXISTS products (id CHAR(36) NOT NULL PRIMARY KEY, 
 									let errorMessage = "";
 
 									if (!email) errorMessage = "Vous devez mettre un email";
+									else if (!emailRegexp.test(email)) errorMessage = "Vous devez mettre un email valide";
 									else if (!password) errorMessage = "Vous devez mettre un mot de passe";
 									else if (password.length > 20 || password.length < 8) errorMessage = "Votre mot de passe doit contenir entre 8 et 20 caractères";
 
@@ -201,6 +203,7 @@ db.exec("CREATE TABLE IF NOT EXISTS products (id CHAR(36) NOT NULL PRIMARY KEY, 
 									let errorMessage = "";
 
 									if (!email) errorMessage = "Vous devez mettre un email";
+									else if (!emailRegexp.test(email)) errorMessage = "Vous devez mettre un email valide";
 									else if (!username) errorMessage = "Vous devez mettre un nom d'utilisateur";
 									else if (!password) errorMessage = "Vous devez mettre un mot de passe";
 									else if (!password2) errorMessage = "Vous devez confirmer votre mot de passe";
