@@ -99,7 +99,7 @@ function getPage(pageURL, params = {}) {
             else {
               pageCode = pageCode.replace(`[${componentName}]`, data.toString());
 							
-							pageCode.match(variableRegexp).forEach(variable => {
+							pageCode.match(variableRegexp)?.forEach(variable => {
 								const variableName = variable.replace(/[{}\\]/g, "");
 
 								pageCode = pageCode.replace(`{{${variableName}}}`, params[variableName]);
@@ -110,7 +110,7 @@ function getPage(pageURL, params = {}) {
           });
 				});
 				else {
-					pageCode.match(variableRegexp).forEach(variable => {
+					pageCode.match(variableRegexp)?.forEach(variable => {
 						const variableName = variable.replace(/[{}\\]/g, "");
 
 						pageCode = pageCode.replace(`{{${variableName}}}`, params[variableName]);
