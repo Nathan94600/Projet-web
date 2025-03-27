@@ -1,0 +1,78 @@
+
+#mdp {
+    margin: auto;
+    width: 20%;
+    padding: 30px;
+    border: 2px solid black;
+    border-radius: 10px;
+    box-shadow: 5px 10px;
+    margin-top: 3cm;
+}
+
+h2{
+    max-width: max-content;
+    margin-bottom: 1cm;
+}
+
+#help {
+margin-top: 30px;
+}
+
+#code1 {
+    margin-top: 25px;
+    font-weight: 600;
+}
+
+#code {
+    margin-top: 3px;
+}
+
+.payment-method {
+    /* Variables */
+    --button_radius: 0.75em;
+    --button_color: #e8e8e8;
+    --button_outline_color: #000000;
+    font-size: 17px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    border-radius: var(--button_radius);
+    background: var(--button_outline_color);
+
+  }
+  
+  .button_top {
+    display: block;
+    box-sizing: border-box;
+    border: 2px solid var(--button_outline_color);
+    border-radius: var(--button_radius);
+    padding: 0.25em 0.60em;
+    background: var(--button_color);
+    color: var(--button_outline_color);
+    transform: translateY(-0.2em);
+    transition: transform 0.1s ease;
+  }
+  
+  .payment-method:hover .button_top {
+    /* Pull the button upwards when hovered */
+    transform: translateY(-0.33em);
+  }
+  
+  .payment-method:active .button_top {
+    /* Push the button downwards when pressed */
+    transform: translateY(0);
+  }
+
+  input {
+    border-radius: 10px;
+    height: 30px;
+  }
+
+  .valider {
+    flex-direction: column;
+    display: flex;
+  }
+
+  #mail {
+    font-weight: 600;
+  }

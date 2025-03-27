@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/styles/components/header.css" />
+    <link rel="stylesheet" href="/styles/mdp_oublie.css" />
+    <title>XYZ | Accueil</title>
+    <link rel="icon" href="./images/assets/xing-logo-svgrepo-com.svg" />
+  </head>
+  <body>
+    [header]
+    <div id="mdp">
+      <h2>Rénitialisez votre mot de passe.</h2>
+      <form action="" method="post">
+        <label for="mail" id="mail">Votre adresse e-mail</label>
+        <input type="email" name="mail" id="mail" required />
+        <div>
+          <button class="payment-method" style="margin-top: 10px;">
+            <span class="button_top">Recevoir le code</span>
+          </button>
+          <p style="margin-top: 7px;">Demande possible dans 10 secondes.</p>
+        </div>
+      </form>
+
+      <form action="" method="post" class="valider">
+        <label for="code" id="code1">Code à 8 chiffres</label>
+        <input type="number" name="code" id="code" />
+        <br>
+        <button class="payment-method">
+          <span class="button_top">Valider</span>
+        </button>
+
+        <p id="help">
+          Si vous rencontrez des difficultés à réinitialser votre mot de passe,
+          contacter le support à l'adresse mail suivant : support@xyz.com
+        </p>
+      </form>
+    </div>
+    
+  </body>
+</html>
