@@ -246,7 +246,7 @@ db.exec("CREATE TABLE IF NOT EXISTS products (id CHAR(36) NOT NULL PRIMARY KEY, 
 									else {
 										transporter.sendMail({
 											from: senderEmail,
-											to: "nathan94nahtan@gmail.com",
+											to: mail,
 											subject: "Code de réinitialisation de mot de passe",
 											text: "Voici votre code de réinitialisation de mot de passe: " + (passwordResetCodes[mail] = randomBytes(4).toString("hex"))
 										}, (err, info) => {
