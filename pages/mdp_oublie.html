@@ -10,11 +10,12 @@
   </head>
   <body>
     [header]
+    {{error}}
     <div id="mdp">
       <h2>Rénitialisez votre mot de passe.</h2>
-      <form action="" method="post">
+      <form action="/password-reset/request" method="post">
         <label for="mail" id="mail">Votre adresse e-mail</label>
-        <input type="email" name="mail" id="mail" required />
+        <input type="email" name="mail" id="mail" required value="{{email}}"/>
         <div>
           <button class="payment-method" style="margin-top: 10px;">
             <span class="button_top">Recevoir le code</span>
@@ -23,9 +24,9 @@
         </div>
       </form>
 
-      <form action="" method="post" class="valider">
-        <label for="code" id="code1">Code à 8 chiffres</label>
-        <input type="number" name="code" id="code" />
+      <form action="/password-reset/verify" method="post" class="valider">
+        <label for="code" id="code1">Code à 8 caractères</label>
+        <input type="text" name="code" id="code" minlength="8" maxlength="8"/>
         <br>
         <button class="payment-method">
           <span class="button_top">Valider</span>
