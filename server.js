@@ -1,8 +1,10 @@
 const { createServer } = require("http"),
+{ createTransport } = require("nodemailer"),
 { readFile } = require("fs"),
 { Database } = require("sqlite3"),
 { randomUUID, randomBytes, pbkdf2Sync } = require("crypto"),
 { gzip, brotliCompress, deflate } = require("zlib"),
+{ email, password } = require("./config.json"),
 componentRegexp = /(?<!\\)(?:\\\\)*\[[A-z]+\]/g,
 variableRegexp = /(?<!\\)(?:\\\\)*{{[A-z]+}}/g,
 supportedEncodings = ["*", "br", "deflate", "gzip"],
@@ -29,6 +31,23 @@ sexes = {
 	Enfant: "e",
 	Mixte: "m",
 };
+
+createTransport({
+	service: "outlook",
+	host: "smtp-mail.outlook.com",
+	auth: {
+		user: email,
+		pass: password
+	}
+}).sendMail({
+	from: email,
+	to: "nathan94nahtan@gmail.com",
+	subject: "Test",
+	text: "text de test"
+}, (err, info) => {
+	if (err) console.log("Erreur lors de l'envoi du mail: ", err);
+	else console.log("Mail envoyé: ", info);
+})
 
 /**
  * @param { string } password 
