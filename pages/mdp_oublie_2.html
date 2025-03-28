@@ -15,12 +15,12 @@
       <h2>Rénitialiser votre mot de passe.</h2>
       <form action="/password-reset/request" method="post" class="valider">
         <label for="mot_de_passe" id="mot_de_passe">Nouveau mot de passe</label>
-        <input type="password" name="mot_de_passe" id="mot_de_passe" required value="{{email}}"/>
+        <input type="password" name="mot_de_passe" id="mot_de_passe" required value="{{email}}" minlength="8" />
       </form>
 
       <form action="/password-reset/verify" method="post" class="valider">
         <label for="code" id="code1">Confirmer le mot de passe</label>
-        <input type="text" name="code" id="code" minlength="8" maxlength="8"/>
+        <input type="password" name="code" id="code" minlength="8"/>
         <br>
         <button class="payment-method">
           <span class="button_top">Modifier</span>
