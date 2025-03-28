@@ -262,7 +262,7 @@ db.exec("CREATE TABLE IF NOT EXISTS products (id CHAR(36) NOT NULL PRIMARY KEY, 
 											to: mail,
 											subject: "Code de réinitialisation de mot de passe",
 											text: "Voici votre code de réinitialisation de mot de passe: " + (passwordResetCodes[mail] = randomBytes(4).toString("hex"))
-										}, (err, info) => {
+										}, err => {
 											if (err) res.writeHead(302, { location: `/mdp_oublie?error=${encodeURIComponent("Erreur lors de l'envoi du mail")}` }).end();
 											else res.writeHead(302, { location: `/mdp_oublie?email=${mail}` }).end();
 										});
@@ -311,9 +311,7 @@ db.exec("CREATE TABLE IF NOT EXISTS products (id CHAR(36) NOT NULL PRIMARY KEY, 
 									else {
 										const { password: pwd, passwordSalt } = securePassword(password);
 
-										db.exec(`UPDATE users SET password = "${pwd}", password_salt = "${passwordSalt}" WHERE email = "${email}"`, err => {
-											console.log(err);
-											
+										db.exec(`UPDATE users SET password = "${pwd}", password_salt = "${passwordSalt}" WHERE email = "${email}"`, err => {											
 											if (err) res.writeHead(302, { location: `/mdp_oublie_2?error=${encodeURIComponent("Erreur lors de la réinitialisation du mot de passe")}` }).end();
 											else res.writeHead(302, { location: "/" }).end();
 										});
