@@ -1,10 +1,13 @@
 const { createServer } = require("http"),
+{ createTransport } = require("nodemailer"),
 { readFile } = require("fs"),
 { Database } = require("sqlite3"),
 { randomUUID, randomBytes, pbkdf2Sync } = require("crypto"),
 { gzip, brotliCompress, deflate } = require("zlib"),
+{ email: senderEmail, password } = require("./config.json"),
 componentRegexp = /(?<!\\)(?:\\\\)*\[[A-z]+\]/g,
 variableRegexp = /(?<!\\)(?:\\\\)*{{[A-z]+}}/g,
+emailRegexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
 supportedEncodings = ["*", "br", "deflate", "gzip"],
 db = new Database("database.db", err => {
 	if (err) console.log("Erreur lors de la connexion à la base de données: ", err);
@@ -28,6 +31,17 @@ sexes = {
 	Femme: "f",
 	Enfant: "e",
 	Mixte: "m",
+},
+transporter = createTransport({
+	service: "outlook",
+	host: "smtp-mail.outlook.com",
+	auth: {
+		user: senderEmail,
+		pass: password
+	}
+}),
+passwordResetCodes = {
+	// email: code
 };
 
 /**
@@ -99,7 +113,7 @@ function getPage(pageURL, params = {}) {
             else {
               pageCode = pageCode.replace(`[${componentName}]`, data.toString());
 							
-							pageCode.match(variableRegexp).forEach(variable => {
+							pageCode.match(variableRegexp)?.forEach(variable => {
 								const variableName = variable.replace(/[{}\\]/g, "");
 
 								pageCode = pageCode.replace(`{{${variableName}}}`, params[variableName]);
@@ -110,7 +124,7 @@ function getPage(pageURL, params = {}) {
           });
 				});
 				else {
-					pageCode.match(variableRegexp).forEach(variable => {
+					pageCode.match(variableRegexp)?.forEach(variable => {
 						const variableName = variable.replace(/[{}\\]/g, "");
 
 						pageCode = pageCode.replace(`{{${variableName}}}`, params[variableName]);
@@ -131,7 +145,7 @@ db.exec("CREATE TABLE IF NOT EXISTS products (id CHAR(36) NOT NULL PRIMARY KEY, 
 			if (err) console.log("Erreur lors de la création de la table users: ", err);
 			else {
 				createServer((req, res) => {
-					const { pathname: url, searchParams } = new URL(req.url, "http://localhost:8080"), errorMessage = searchParams.get("error"), userToken = new URLSearchParams(req.headers.cookie || "").get("token");
+					const { pathname: url, searchParams } = new URL(req.url, "http://localhost:8080"), errorMessage = searchParams.get("error"), email = searchParams.get("email"), userToken = new URLSearchParams(req.headers.cookie || "").get("token");					
 
 					switch (req.method) {
 						case "GET":
@@ -144,7 +158,7 @@ db.exec("CREATE TABLE IF NOT EXISTS products (id CHAR(36) NOT NULL PRIMARY KEY, 
 								else compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { "content-type": `text/css`, "content-encoding": compression.encoding }).end(compression.data));
 							});
 							else if ((url == "/inscription" || url == "/connexion") && userToken) res.writeHead(302, { location: "/" }).end();
-							else getPage(url, { error: errorMessage ? `<p id="error">${errorMessage}</p>` : "", accountText: userToken ? "Mon compte" : "Se connecter" }).then(
+							else getPage(url, { error: errorMessage ? `<p id="error">${errorMessage}</p>` : "", email: email || "", accountText: userToken ? "Mon compte" : "Se connecter" }).then(
 								data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { "content-type": `text/html`, "content-encoding": compression.encoding }).end(compression.data)),
 								() => res.writeHead(404, "Not found").end()
 							);
@@ -159,6 +173,7 @@ db.exec("CREATE TABLE IF NOT EXISTS products (id CHAR(36) NOT NULL PRIMARY KEY, 
 									let errorMessage = "";
 
 									if (!email) errorMessage = "Vous devez mettre un email";
+									else if (!emailRegexp.test(email)) errorMessage = "Vous devez mettre un email valide";
 									else if (!password) errorMessage = "Vous devez mettre un mot de passe";
 									else if (password.length > 20 || password.length < 8) errorMessage = "Votre mot de passe doit contenir entre 8 et 20 caractères";
 
@@ -182,6 +197,7 @@ db.exec("CREATE TABLE IF NOT EXISTS products (id CHAR(36) NOT NULL PRIMARY KEY, 
 									let errorMessage = "";
 
 									if (!email) errorMessage = "Vous devez mettre un email";
+									else if (!emailRegexp.test(email)) errorMessage = "Vous devez mettre un email valide";
 									else if (!username) errorMessage = "Vous devez mettre un nom d'utilisateur";
 									else if (!password) errorMessage = "Vous devez mettre un mot de passe";
 									else if (!password2) errorMessage = "Vous devez confirmer votre mot de passe";
@@ -212,6 +228,37 @@ db.exec("CREATE TABLE IF NOT EXISTS products (id CHAR(36) NOT NULL PRIMARY KEY, 
 													res.writeHead(302, { location: `/inscription?error=${encodeURIComponent("Erreur lors de la création du compte ")}` }).end();
 												} else res.writeHead(302, { location: "/", "set-cookie": `token=${randomBytes(64).toString('hex')}.${userId};` }).end();
 											});
+										});
+									};
+								});
+							} else if (url == "/password-reset/request") {
+								let body = "";
+
+								req.on("data", chunk => body += chunk).on("end", () => {
+									const params = new URLSearchParams(body), mail = params.get("mail");
+
+									let errorMessage = "";
+
+									if (!mail) errorMessage = "Vous devez mettre un email";
+									else if (!emailRegexp.test(mail)) errorMessage = "Vous devez mettre un email valide";									
+
+									if (errorMessage) res.writeHead(302, { location: `/mdp_oublie?error=${encodeURIComponent(errorMessage)}` }).end();
+									else {
+										transporter.sendMail({
+											from: senderEmail,
+											to: mail,
+											subject: "Code de réinitialisation de mot de passe",
+											text: "Voici votre code de réinitialisation de mot de passe: " + (passwordResetCodes[mail] = randomBytes(4).toString("hex"))
+										}, (err, info) => {
+											if (err) {
+												console.log("Erreur lors de l'envoi du mail: ", err);
+
+												res.writeHead(302, { location: `/mdp_oublie?error=${encodeURIComponent("Erreur lors de l'envoi du mail")}` }).end();
+											} else {
+												console.log("Mail envoyé: ", info);
+
+												res.writeHead(302, { location: `/mdp_oublie?email=${mail}` }).end();
+											};
 										});
 									};
 								});
