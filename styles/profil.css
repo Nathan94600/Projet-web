@@ -1,0 +1,38 @@
+#parametres {
+    height: 100vh;
+    width: 20%;
+    padding: 150px;
+    text-align: left;
+}
+
+p {
+    font-weight: 400;
+
+}
+
+.informations p{
+    padding: 10px;
+    margin-left: 3px;
+}
+
+.informations {
+    margin-top: 30px;
+}
+
+#details {
+    width: 50%;
+    padding: 10px;
+    margin-top: 200px;
+    margin-left: 50px;
+    
+}
+
+#parent {
+    display: flex;
+}
+
+input {
+    height: 40px;
+    border-color: gray;
+    border-radius: 10px;
+}
