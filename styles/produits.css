@@ -19,7 +19,8 @@ body {
 }
   
   /* Filters Sidebar */
-.filters {
+.filtres {
+    position: fixed;
     width: 280px;
     background: white;
     padding: 20px;
@@ -106,6 +107,7 @@ body {
   
   /* Results Section */
 .results {
+    margin-left: 300px;
     flex: 1;
 }
   
