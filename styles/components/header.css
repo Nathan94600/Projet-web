@@ -75,3 +75,10 @@ header {
 	display: flex;
 	align-items: center;
 }
+
+.sticky {
+	position: sticky;
+	top: 0;
+	z-index: 1;
+	background: #fff;
+}
