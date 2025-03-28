@@ -157,6 +157,10 @@ db.exec("CREATE TABLE IF NOT EXISTS products (id CHAR(36) NOT NULL PRIMARY KEY, 
 								if (err) res.writeHead(404, "Not found").end();
 								else compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { "content-type": `text/css`, "content-encoding": compression.encoding }).end(compression.data));
 							});
+							else if (url.startsWith("/scripts/")) readFile(`.${url}`, (err, data) => {
+								if (err) res.writeHead(404, "Not found").end();
+								else compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { "content-type": `application/javascript`, "content-encoding": compression.encoding }).end(compression.data));
+							});
 							else if ((url == "/inscription" || url == "/connexion") && userToken) res.writeHead(302, { location: "/" }).end();
 							else getPage(url, { error: errorMessage ? `<p id="error">${errorMessage}</p>` : "", email: email || "", accountText: userToken ? "Mon compte" : "Se connecter" }).then(
 								data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { "content-type": `text/html`, "content-encoding": compression.encoding }).end(compression.data)),
