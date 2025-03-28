@@ -1,3 +1,18 @@
+#error {
+  margin-top: 1rem;
+	color: #ff0000;
+	width: max-content;
+	padding: 1rem;
+	background: rgba(197, 25, 25, 0.25);
+	border-radius: 10px;
+	border: 2px solid #ff0000;
+  position: absolute;
+  left: 0; 
+  right: 0; 
+  margin-inline: auto; 
+  width: fit-content;
+}
+
 #mdp {
     margin: auto;
     width: 20%;

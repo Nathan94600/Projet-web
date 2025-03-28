@@ -25,6 +25,7 @@
       </form>
 
       <form action="/password-reset/verify" method="post" class="valider">
+        <input type="text" name="email" value="{{email}}" style="display: none;"/>
         <label for="code" id="code1">Code à 8 caractères</label>
         <input type="text" name="code" id="code" minlength="8" maxlength="8"/>
         <br>

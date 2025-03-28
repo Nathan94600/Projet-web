@@ -13,14 +13,13 @@
     {{error}}
     <div id="mdp">
       <h2>Rénitialiser votre mot de passe.</h2>
-      <form action="/password-reset/request" method="post" class="valider">
+      <form action="/password-reset/confirm" method="post" class="valider">
+        <input type="text" name="code" style="display: none;" required value="{{code}}"/>
+        <input type="code" name="email" style="display: none;" required value="{{email}}"/>
         <label for="mot_de_passe" id="mot_de_passe">Nouveau mot de passe</label>
-        <input type="password" name="mot_de_passe" id="mot_de_passe" required value="{{email}}" minlength="8" />
-      </form>
-
-      <form action="/password-reset/verify" method="post" class="valider">
-        <label for="code" id="code1">Confirmer le mot de passe</label>
-        <input type="password" name="code" id="code" minlength="8"/>
+        <input type="password" name="mot_de_passe" id="mot_de_passe" required minlength="8" maxlength="20"/>
+        <label for="mot_de_passe_verif" id="code1">Confirmer le mot de passe</label>
+        <input type="password" name="mot_de_passe_verif" id="mot_de_passe_verif" minlength="8" maxlength="20"/>
         <br>
         <button class="payment-method">
           <span class="button_top">Modifier</span>
