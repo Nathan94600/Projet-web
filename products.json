@@ -1,0 +1,283 @@
+[
+	{
+		"supplierId": "U9060BLK",
+		"name": "New Balance 9060",
+		"price": 18999,
+		"promoPrice": 15000,
+		"type": "h",
+		"colors": 1028
+	},
+	{
+		"supplierId": "U9060FM",
+		"name": "New Balance 9060",
+		"price": 18999,
+		"type": "h",
+		"colors": 258
+	},
+	{
+		"supplierId": "U9060FNQ",
+		"name": "New Balance 9060",
+		"price": 18999,
+		"promoPrice": 15000,
+		"type": "h",
+		"colors": 2
+	},
+	{
+		"supplierId": "U740WM2",
+		"name": "New Balance 740",
+		"price": 11999,
+		"type": "f",
+		"colors": 256
+	},
+	{
+		"supplierId": "U740GR2",
+		"name": "New Balance 740",
+		"price": 11999,
+		"type": "f",
+		"colors": 272
+	},
+	{
+		"supplierId": "GC9060BM",
+		"name": "New Balance 9060",
+		"price": 15499,
+		"type": "e",
+		"colors": 384
+	},
+	{
+		"supplierId": "39081205",
+		"name": "Puma Slipstream",
+		"price": 8499,
+		"promoPrice": 4000,
+		"type": "e",
+		"colors": 272
+	},
+	{
+		"supplierId": "39197501",
+		"name": "Puma Slipstream",
+		"price": 8499,
+		"type": "e",
+		"colors": 256
+	},
+	{
+		"supplierId": "39884601",
+		"name": "Puma Speedcat",
+		"price": 10999,
+		"type": "m",
+		"colors": 260
+	},
+	{
+		"supplierId": "39884604",
+		"name": "Puma Speedcat",
+		"price": 10999,
+		"type": "m",
+		"colors": 384
+	},
+	{
+		"supplierId": "39884602",
+		"name": "Puma Speedcat",
+		"price": 10999,
+		"type": "m",
+		"colors": 257
+	},
+	{
+		"supplierId": "39884612",
+		"name": "Puma Speedcat",
+		"price": 10999,
+		"promoPrice": 7500,
+		"type": "h",
+		"colors": 272
+	},
+	{
+		"supplierId": "39884605",
+		"name": "Puma Speedcat",
+		"price": 10999,
+		"type": "h",
+		"colors": 1280
+	},
+	{
+		"supplierId": "604133-050",
+		"name": "Nike Tuned 1",
+		"price": 18999,
+		"type": "h",
+		"colors": 4
+	},
+	{
+		"supplierId": "604133-139",
+		"name": "Nike Tuned 1",
+		"price": 18999,
+		"type": "h",
+		"colors": 256
+	},
+	{
+		"supplierId": "FN0237-001",
+		"name": "Nike Air Force 1 Low Ez",
+		"price": 6999,
+		"type": "e",
+		"colors": 4
+	},
+	{
+		"supplierId": "FN0237-110",
+		"name": "Nike Air Force 1 Low Ez",
+		"price": 6999,
+		"type": "e",
+		"colors": 256
+	},
+	{
+		"supplierId": "AR3565-004",
+		"name": "Nike Shox R4",
+		"price": 12999,
+		"type": "f",
+		"colors": 4
+	},
+	{
+		"supplierId": "1203A681-400",
+		"name": "Asics GEL-QUANTUM 360 VIII",
+		"price": 18999,
+		"type": "h",
+		"colors": 6
+	},
+	{
+		"supplierId": "1203A681-001",
+		"name": "Asics GEL-QUANTUM 360 VIII",
+		"price": 18999,
+		"type": "h",
+		"colors": 1028
+	},
+	{
+		"supplierId": "1201A906-001",
+		"name": "Asics GEL 1130",
+		"price": 10999,
+		"type": "f",
+		"colors": 4
+	},
+	{
+		"supplierId": "1202A164-116",
+		"name": "Asics GEL 1130",
+		"price": 10999,
+		"type": "f",
+		"colors": 256
+	},
+	{
+		"supplierId": "1204A177-001",
+		"name": "Asics GEL-VENTURE 6",
+		"price": 7999,
+		"type": "e",
+		"colors": 4
+	},
+	{
+		"supplierId": "1204A177-020",
+		"name": "Asics GEL-VENTURE 6",
+		"price": 7999,
+		"type": "e",
+		"colors": 1028
+	},
+	{
+		"supplierId": "JR3416",
+		"name": "Adidas Adizero Evo SL",
+		"price": 14999,
+		"type": "h",
+		"colors": 16
+	},
+	{
+		"supplierId": "JH6206",
+		"name": "Adidas Adizero Evo SL",
+		"price": 14999,
+		"type": "h",
+		"colors": 256
+	},
+	{
+		"supplierId": "JP7149",
+		"name": "Adidas Adizero Evo SL",
+		"price": 14999,
+		"type": "h",
+		"colors": 4
+	},
+	{
+		"supplierId": "JR3419",
+		"name": "Adidas Adizero Evo SL",
+		"price": 14999,
+		"type": "h",
+		"colors": 1024
+	},
+	{
+		"supplierId": "JI2063",
+		"name": "Adidas Gazelle Indoor",
+		"price": 11999,
+		"type": "f",
+		"colors": 1
+	},
+	{
+		"supplierId": "HQ8717",
+		"name": "Adidas Gazelle Indoor",
+		"price": 11999,
+		"promoPrice": 9500,
+		"type": "f",
+		"colors": 2
+	},
+	{
+		"supplierId": "IH7502",
+		"name": "Adidas Gazelle Indoor",
+		"price": 11999,
+		"promoPrice": 8000,
+		"type": "f",
+		"colors": 256
+	},
+	{
+		"supplierId": "IH7499",
+		"name": "Adidas Gazelle Indoor",
+		"price": 11999,
+		"promoPrice": 8000,
+		"type": "f",
+		"colors": 32
+	},
+	{
+		"supplierId": "IE6605",
+		"name": "Adidas Gazelle Indoor",
+		"price": 11999,
+		"type": "f",
+		"colors": 16
+	},
+	{
+		"supplierId": "JI1371",
+		"name": "Adidas Gazelle Indoor",
+		"price": 11999,
+		"promoPrice": 9000,
+		"type": "f",
+		"colors": 128
+	},
+	{
+		"supplierId": "HQ6638",
+		"name": "Adidas Campus 00S",
+		"price": 8999,
+		"type": "e",
+		"colors": 4
+	},
+	{
+		"supplierId": "HQ6507",
+		"name": "Adidas Campus 00S",
+		"price": 8999,
+		"type": "e",
+		"colors": 1024
+	},
+	{
+		"supplierId": "JH6333",
+		"name": "Adidas Campus 00S",
+		"price": 8999,
+		"type": "e",
+		"colors": 2
+	},
+	{
+		"supplierId": "JI0284",
+		"name": "Adidas Campus 00S",
+		"price": 8999,
+		"type": "e",
+		"colors": 128
+	},
+	{
+		"supplierId": "JI3985",
+		"name": "Adidas Campus 00S",
+		"price": 9499,
+		"type": "e",
+		"colors": 512
+	}
+]
