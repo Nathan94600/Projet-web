@@ -173,7 +173,8 @@ db.exec("CREATE TABLE IF NOT EXISTS products (id CHAR(36) NOT NULL PRIMARY KEY, 
 								error: errorMessage ? `<p id="error">${errorMessage}</p>` : "",
 								email: email || "",
 								code: code || "",
-								accountText: userToken ? "Mon compte" : "Se connecter"
+								accountText: userToken ? "Mon compte" : "Se connecter",
+								accountLink: userToken ? "/profil" : "/connexion",
 							}).then(
 								data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { "content-type": `text/html`, "content-encoding": compression.encoding }).end(compression.data)),
 								() => res.writeHead(404, "Not found").end()
