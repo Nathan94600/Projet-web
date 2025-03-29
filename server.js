@@ -23,7 +23,7 @@ colors = {
 	Marron: 2**9,
 	Orange: 2**5,
 	Violet: 2**3,
-	Gris: 2*10,
+	Gris: 2**10,
 	Rouge: 2**0,
 	Bleu: 2**1,
 	Vert: 2**4,
