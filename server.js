@@ -141,12 +141,6 @@ function getPage(pageURL, params = {}) {
 	});
 };
 
-products.forEach((product, index) => {
-	// db.run
-
-	if (products.length - 1 == index) console.log("Produits ajoutés à la base de données");
-});
-
 db.exec("CREATE TABLE IF NOT EXISTS products (id CHAR(36) NOT NULL PRIMARY KEY, supplierId VARCHAR(20) NOT NULL, name VARCHAR(50) NOT NULL, price INT NOT NULL, promoPrice INT, type CHAR(1) NOT NULL, colors INT NOT NULL, CHECK (type IN ('h', 'f', 'e', 'm')))", err => {
 	if (err) console.log("Erreur lors de la création de la table products: ", err);
 	else db.run("CREATE UNIQUE INDEX IF NOT EXISTS indexSupplierId ON products(supplierId)", err => {
