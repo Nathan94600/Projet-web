@@ -69,6 +69,10 @@ header {
 	outline: none;
 }
 
+#search-button {
+	cursor: pointer;
+}
+
 #account-container, #basket-container {
 	min-width: max-content;
 	padding-left: 1vw;
