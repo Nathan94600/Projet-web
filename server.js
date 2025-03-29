@@ -1,12 +1,12 @@
 // Importation des modules nécessaires
-const { createServer } = require("http"),
-{ createTransport } = require("nodemailer"),
-{ readFile } = require("fs"),
-{ Database } = require("sqlite3"),
-{ randomUUID, randomBytes, pbkdf2Sync } = require("crypto"),
-{ gzip, brotliCompress, deflate } = require("zlib"),
-{ email: senderEmail, password } = require("./config.json"),
-products = require("./products.json");
+const { createServer, ServerResponse, IncomingMessage } = require("http"),
+	{ createTransport } = require("nodemailer"),
+	{ readFile } = require("fs"),
+	{ Database } = require("sqlite3"),
+	{ randomUUID, randomBytes, pbkdf2Sync } = require("crypto"),
+	{ gzip, brotliCompress, deflate } = require("zlib"),
+	{ email: senderEmail, password } = require("./config.json"),
+	products = require("./products.json");
 
 // Variables
 const componentRegexp = /(?<!\\)(?:\\\\)*\[[A-z]+\]/g,
@@ -141,6 +141,43 @@ function getPage(pageURL, params = {}) {
 	});
 };
 
+/**
+ * Gère les requêtes GET en fonction de l'URL.
+ * @param { string } url - L'URL de la requête.
+ * @param { IncomingMessage } req - La requête HTTP.
+ * @param { ServerResponse } res - La réponse HTTP.
+ * @param { URLSearchParams } params - Les paramètres de la requête.
+ * @param { Record<string, string> } headers - Les en-têtes supplémentaires à ajouter à la réponse.
+ */
+function handleGetRequest(url, req, res, params, headers = {}) {
+	const userToken = params.get("userToken"),
+	errorMessage = params.get("errorMessage");
+
+	if (url.startsWith("/images/")) readFile(`.${url}`, (err, data) => {
+		if (err) res.writeHead(404, "Not found").end();
+		else res.writeHead(200, { ...headers, "content-type": `image/${url.endsWith(".svg") ? "svg+xml" : url.split(".").at(-1)}` }).end(data);
+	});
+	else if (url.startsWith("/styles/")) readFile(`.${url}`, (err, data) => {
+		if (err) res.writeHead(404, "Not found").end();
+		else compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { ...headers, "content-type": `text/css`, "content-encoding": compression.encoding }).end(compression.data));
+	});
+	else if (url.startsWith("/scripts/")) readFile(`.${url}`, (err, data) => {
+		if (err) res.writeHead(404, "Not found").end();
+		else compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { ...headers, "content-type": `application/javascript`, "content-encoding": compression.encoding }).end(compression.data));
+	});
+	else if ((url == "/inscription" || url == "/connexion") && userToken) res.writeHead(302, { location: "/" }).end();
+	else getPage(url, {
+		error: errorMessage ? `<p id="error">${errorMessage}</p>` : "",
+		email: params.get("email") || "",
+		code: params.get("code") || "",
+		accountText: userToken ? "Mon compte" : "Se connecter",
+		accountLink: userToken ? "/profil" : "/connexion",
+	}).then(
+		data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { ...headers, "content-type": `text/html`, "content-encoding": compression.encoding }).end(compression.data)),
+		() => res.writeHead(404, "Not found").end()
+	);
+}
+
 db.run("CREATE TABLE IF NOT EXISTS products (id CHAR(36) NOT NULL PRIMARY KEY, supplierId VARCHAR(20) NOT NULL, name VARCHAR(50) NOT NULL, price INT NOT NULL, promoPrice INT, type CHAR(1) NOT NULL, colors INT NOT NULL, CHECK (type IN ('h', 'f', 'e', 'm')))", err => {
 	if (err) console.log("Erreur lors de la création de la table products: ", err);
 	else db.run("CREATE UNIQUE INDEX IF NOT EXISTS indexSupplierId ON products(supplierId)", err => {
@@ -168,37 +205,19 @@ db.run("CREATE TABLE IF NOT EXISTS products (id CHAR(36) NOT NULL PRIMARY KEY, s
 							if (err) console.log("Erreur lors de la création de la table users: ", err);
 							else {
 								createServer((req, res) => {
-									const { pathname: url, searchParams } = new URL(req.url, "http://localhost:8080"),
-									errorMessage = searchParams.get("error"),
-									email = searchParams.get("email"),
-									code = searchParams.get("code"),
-									userToken = new URLSearchParams(req.headers.cookie || "").get("token");					
+									const { pathname: url, searchParams } = new URL(req.url, "http://localhost:8080"), userToken = new URLSearchParams(req.headers.cookie || "").get("token");
 				
 									switch (req.method) {
 										case "GET":
-											if (url.startsWith("/images/")) readFile(`.${url}`, (err, data) => {
-												if (err) res.writeHead(404, "Not found").end();
-												else res.writeHead(200, { "content-type": `image/${url.endsWith(".svg") ? "svg+xml" : url.split(".").at(-1)}` }).end(data);
-											});
-											else if (url.startsWith("/styles/")) readFile(`.${url}`, (err, data) => {
-												if (err) res.writeHead(404, "Not found").end();
-												else compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { "content-type": `text/css`, "content-encoding": compression.encoding }).end(compression.data));
-											});
-											else if (url.startsWith("/scripts/")) readFile(`.${url}`, (err, data) => {
-												if (err) res.writeHead(404, "Not found").end();
-												else compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { "content-type": `application/javascript`, "content-encoding": compression.encoding }).end(compression.data));
-											});
-											else if ((url == "/inscription" || url == "/connexion") && userToken) res.writeHead(302, { location: "/" }).end();
-											else getPage(url, {
-												error: errorMessage ? `<p id="error">${errorMessage}</p>` : "",
-												email: email || "",
-												code: code || "",
-												accountText: userToken ? "Mon compte" : "Se connecter",
-												accountLink: userToken ? "/profil" : "/connexion",
-											}).then(
-												data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { "content-type": `text/html`, "content-encoding": compression.encoding }).end(compression.data)),
-												() => res.writeHead(404, "Not found").end()
-											);
+											if (userToken) {
+												const userId = userToken.split(".")?.at(-1);
+													
+												db.get("SELECT * FROM users WHERE id = ?", userId, (err, row) => {
+													if (err) console.log("Erreur lors de la vérification du token: ", err);
+													else if (!row) handleGetRequest(url, req, res, searchParams, { "set-cookie": "token=; expires=Thu, 01 Jan 1970 00:00:00 GMT;" });
+													else handleGetRequest(url, req, res, searchParams);
+												});
+											} else handleGetRequest(url, req, res, searchParams);
 											break;
 										case "POST":
 											let body = "";
