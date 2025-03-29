@@ -1,11 +1,14 @@
+// Importation des modules nécessaires
 const { createServer } = require("http"),
 { createTransport } = require("nodemailer"),
 { readFile } = require("fs"),
 { Database } = require("sqlite3"),
 { randomUUID, randomBytes, pbkdf2Sync } = require("crypto"),
 { gzip, brotliCompress, deflate } = require("zlib"),
-{ email: senderEmail, password } = require("./config.json"),
-componentRegexp = /(?<!\\)(?:\\\\)*\[[A-z]+\]/g,
+{ email: senderEmail, password } = require("./config.json");
+
+// Variables
+const componentRegexp = /(?<!\\)(?:\\\\)*\[[A-z]+\]/g,
 variableRegexp = /(?<!\\)(?:\\\\)*{{[A-z]+}}/g,
 emailRegexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
 supportedEncodings = ["*", "br", "deflate", "gzip"],
