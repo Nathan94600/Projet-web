@@ -149,214 +149,217 @@ products.forEach((product, index) => {
 
 db.exec("CREATE TABLE IF NOT EXISTS products (id CHAR(36) NOT NULL PRIMARY KEY, supplierId VARCHAR(20) NOT NULL, name VARCHAR(50) NOT NULL, price INT NOT NULL, promoPrice INT, type CHAR(1) NOT NULL, colors INT NOT NULL, CHECK (type IN ('h', 'f', 'e', 'm')))", err => {
 	if (err) console.log("Erreur lors de la création de la table products: ", err);
-	else db.serialize(() => {
-		db.run("BEGIN TRANSACTION", err => {
-			if (err) console.log("Erreur lors de la création de la transaction: ", err);
-		});
-	
-		const req = db.prepare("INSERT INTO products (id, supplierId, name, price, promoPrice, type, colors) VALUES (?, ?, ?, ?, ?, ?, ?)");
-	
-		products.forEach(product => {
-			req.run(randomUUID({ disableEntropyCache: true }), product.supplierId, product.name, product.price, product.promoPrice || null, product.type, product.colors, err => {
-				if (err) console.log("Erreur lors de l'ajout du produit: ", err);
+	else db.run("CREATE UNIQUE INDEX IF NOT EXISTS indexSupplierId ON products(supplierId)", err => {
+		if (err) console.log("Erreur lors de la création de l'index indexSupplierId: ", err);
+		else db.serialize(() => {
+			db.run("BEGIN TRANSACTION", err => {
+				if (err) console.log("Erreur lors de la création de la transaction: ", err);
 			});
-		});
-	
-		req.finalize(err => {
-			if (err) console.log("Erreur lors de la finalisation de la requête: ", err);
-			else db.run("COMMIT", err => {
-				if (err) console.log("Erreur lors de la validation de la transaction: ", err);
-				else db.exec("CREATE TABLE IF NOT EXISTS stocks (id CHAR(36) NOT NULL PRIMARY KEY, productId CHAR(36) NOT NULL, quantity INT NOT NULL, size INT NOT NULL, FOREIGN KEY (productId) REFERENCES products(id) ON DELETE CASCADE)", err => {
-					if (err) console.log("Erreur lors de la création de la table stocks: ", err);
-					else db.exec("CREATE TABLE IF NOT EXISTS users (id CHAR(36) NOT NULL PRIMARY KEY, email TEXT NOT NULL, username VARCHAR(20) NOT NULL, password CHAR(128) NOT NULL, password_salt CHAR(256) NOT NULL)", err => {
-						if (err) console.log("Erreur lors de la création de la table users: ", err);
-						else {
-							createServer((req, res) => {
-								const { pathname: url, searchParams } = new URL(req.url, "http://localhost:8080"),
-								errorMessage = searchParams.get("error"),
-								email = searchParams.get("email"),
-								code = searchParams.get("code"),
-								userToken = new URLSearchParams(req.headers.cookie || "").get("token");					
-			
-								switch (req.method) {
-									case "GET":
-										if (url.startsWith("/images/")) readFile(`.${url}`, (err, data) => {
-											if (err) res.writeHead(404, "Not found").end();
-											else res.writeHead(200, { "content-type": `image/${url.endsWith(".svg") ? "svg+xml" : url.split(".").at(-1)}` }).end(data);
-										});
-										else if (url.startsWith("/styles/")) readFile(`.${url}`, (err, data) => {
-											if (err) res.writeHead(404, "Not found").end();
-											else compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { "content-type": `text/css`, "content-encoding": compression.encoding }).end(compression.data));
-										});
-										else if (url.startsWith("/scripts/")) readFile(`.${url}`, (err, data) => {
-											if (err) res.writeHead(404, "Not found").end();
-											else compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { "content-type": `application/javascript`, "content-encoding": compression.encoding }).end(compression.data));
-										});
-										else if ((url == "/inscription" || url == "/connexion") && userToken) res.writeHead(302, { location: "/" }).end();
-										else getPage(url, {
-											error: errorMessage ? `<p id="error">${errorMessage}</p>` : "",
-											email: email || "",
-											code: code || "",
-											accountText: userToken ? "Mon compte" : "Se connecter",
-											accountLink: userToken ? "/profil" : "/connexion",
-										}).then(
-											data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { "content-type": `text/html`, "content-encoding": compression.encoding }).end(compression.data)),
-											() => res.writeHead(404, "Not found").end()
-										);
-										break;
-									case "POST":
-										let body = "";
-			
-										switch (url) {
-											case "/connexion":
-												req.on("data", chunk => body += chunk).on("end", () => {
-													const params = new URLSearchParams(body), email = params.get("email"), password = params.get("password");
+		
+			const req = db.prepare("INSERT OR IGNORE INTO products (id, supplierId, name, price, promoPrice, type, colors) VALUES (?, ?, ?, ?, ?, ?, ?)");
+		
+			products.forEach(product => {
+				req.run(randomUUID({ disableEntropyCache: true }), product.supplierId, product.name, product.price, product.promoPrice || null, product.type, product.colors, err => {
+					if (err) console.log("Erreur lors de l'ajout du produit: ", err);
+				});
+			});
+		
+			req.finalize(err => {
+				if (err) console.log("Erreur lors de la finalisation de la requête: ", err);
+				else db.run("COMMIT", err => {
+					if (err) console.log("Erreur lors de la validation de la transaction: ", err);
+					else db.exec("CREATE TABLE IF NOT EXISTS stocks (id CHAR(36) NOT NULL PRIMARY KEY, productId CHAR(36) NOT NULL, quantity INT NOT NULL, size INT NOT NULL, FOREIGN KEY (productId) REFERENCES products(id) ON DELETE CASCADE)", err => {
+						if (err) console.log("Erreur lors de la création de la table stocks: ", err);
+						else db.exec("CREATE TABLE IF NOT EXISTS users (id CHAR(36) NOT NULL PRIMARY KEY, email TEXT NOT NULL, username VARCHAR(20) NOT NULL, password CHAR(128) NOT NULL, password_salt CHAR(256) NOT NULL)", err => {
+							if (err) console.log("Erreur lors de la création de la table users: ", err);
+							else {
+								createServer((req, res) => {
+									const { pathname: url, searchParams } = new URL(req.url, "http://localhost:8080"),
+									errorMessage = searchParams.get("error"),
+									email = searchParams.get("email"),
+									code = searchParams.get("code"),
+									userToken = new URLSearchParams(req.headers.cookie || "").get("token");					
 				
-													let errorMessage = "";
+									switch (req.method) {
+										case "GET":
+											if (url.startsWith("/images/")) readFile(`.${url}`, (err, data) => {
+												if (err) res.writeHead(404, "Not found").end();
+												else res.writeHead(200, { "content-type": `image/${url.endsWith(".svg") ? "svg+xml" : url.split(".").at(-1)}` }).end(data);
+											});
+											else if (url.startsWith("/styles/")) readFile(`.${url}`, (err, data) => {
+												if (err) res.writeHead(404, "Not found").end();
+												else compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { "content-type": `text/css`, "content-encoding": compression.encoding }).end(compression.data));
+											});
+											else if (url.startsWith("/scripts/")) readFile(`.${url}`, (err, data) => {
+												if (err) res.writeHead(404, "Not found").end();
+												else compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { "content-type": `application/javascript`, "content-encoding": compression.encoding }).end(compression.data));
+											});
+											else if ((url == "/inscription" || url == "/connexion") && userToken) res.writeHead(302, { location: "/" }).end();
+											else getPage(url, {
+												error: errorMessage ? `<p id="error">${errorMessage}</p>` : "",
+												email: email || "",
+												code: code || "",
+												accountText: userToken ? "Mon compte" : "Se connecter",
+												accountLink: userToken ? "/profil" : "/connexion",
+											}).then(
+												data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { "content-type": `text/html`, "content-encoding": compression.encoding }).end(compression.data)),
+												() => res.writeHead(404, "Not found").end()
+											);
+											break;
+										case "POST":
+											let body = "";
 				
-													if (!email) errorMessage = "Vous devez mettre un email";
-													else if (!emailRegexp.test(email)) errorMessage = "Vous devez mettre un email valide";
-													else if (!password) errorMessage = "Vous devez mettre un mot de passe";
-													else if (password.length > 20 || password.length < 8) errorMessage = "Votre mot de passe doit contenir entre 8 et 20 caractères";
-				
-													if (errorMessage) res.writeHead(302, { location: `/inscription?error=${encodeURIComponent(errorMessage)}` }).end();
-													else db.get("SELECT * FROM users WHERE email = ?", email, (err, row) => {								
-														if (err) {
-															console.log("Erreur lors de la vérication de l'email: ", err);
-				
-															res.writeHead(302, { location: `/connexion?error=${encodeURIComponent("Erreur lors de la vérification de l'email")}` }).end();
-														} else if (!row) res.writeHead(302, { location: `/connexion?error=${encodeURIComponent("Aucun compte n'est associé à cet email")}` }).end();
-														else if (row.password != securePassword(password, row.password_salt).password) res.writeHead(302, { location: `/connexion?error=${encodeURIComponent("Mot de passe incorrect")}` }).end();
-														else res.writeHead(302, { location: "/", "set-cookie": `token=${randomBytes(64).toString('hex')}.${row.id};` }).end();
-													});
-												});
-												break;
-											case "/inscription":
-												req.on("data", chunk => body += chunk).on("end", () => {
-													const params = new URLSearchParams(body), email = params.get("email"), username = params.get("username"), password = params.get("password"), password2 = params.get("password2");
-				
-													let errorMessage = "";
-				
-													if (!email) errorMessage = "Vous devez mettre un email";
-													else if (!emailRegexp.test(email)) errorMessage = "Vous devez mettre un email valide";
-													else if (!username) errorMessage = "Vous devez mettre un nom d'utilisateur";
-													else if (!password) errorMessage = "Vous devez mettre un mot de passe";
-													else if (!password2) errorMessage = "Vous devez confirmer votre mot de passe";
-													else if (username.length > 20 || username.length < 3) errorMessage = "Votre nom d'utilisateur doit contenir entre 3 et 20 caractères";
-													else if (password.length > 20 || password.length < 8 || password2.length > 20 || password2.length < 8) errorMessage = "Votre mot de passe doit contenir entre 8 et 20 caractères";
-													else if (password != password2) errorMessage = "Les mots de passe ne correspondent pas";
-				
-													if (errorMessage) res.writeHead(302, { location: `/inscription?error=${encodeURIComponent(errorMessage)}` }).end();
-													else {
-														const { password: encryptedPassword, passwordSalt } = securePassword(password), userId = randomUUID({ disableEntropyCache: true });
-				
-														db.get("SELECT * FROM users WHERE email = ?", email, (err, row) => {
+											switch (url) {
+												case "/connexion":
+													req.on("data", chunk => body += chunk).on("end", () => {
+														const params = new URLSearchParams(body), email = params.get("email"), password = params.get("password");
+					
+														let errorMessage = "";
+					
+														if (!email) errorMessage = "Vous devez mettre un email";
+														else if (!emailRegexp.test(email)) errorMessage = "Vous devez mettre un email valide";
+														else if (!password) errorMessage = "Vous devez mettre un mot de passe";
+														else if (password.length > 20 || password.length < 8) errorMessage = "Votre mot de passe doit contenir entre 8 et 20 caractères";
+					
+														if (errorMessage) res.writeHead(302, { location: `/inscription?error=${encodeURIComponent(errorMessage)}` }).end();
+														else db.get("SELECT * FROM users WHERE email = ?", email, (err, row) => {								
 															if (err) {
 																console.log("Erreur lors de la vérication de l'email: ", err);
-				
-																res.writeHead(302, { location: `/inscription?error=${encodeURIComponent("Erreur lors de la vérification de l'email")}` }).end();
-															} else if (row) res.writeHead(302, { location: `/inscription?error=${encodeURIComponent("Cet email est déjà utilisé")}` }).end();
-															else db.exec(`INSERT INTO users (id, email, username, password, password_salt) VALUES (
-																"${userId}",
-																"${email}",
-																"${username}",
-																"${encryptedPassword}",
-																"${passwordSalt}"
-															)`, err => {
-																if (err) {
-																	console.log("Erreur lors de la création du compte : ", err);
-				
-																	res.writeHead(302, { location: `/inscription?error=${encodeURIComponent("Erreur lors de la création du compte ")}` }).end();
-																} else res.writeHead(302, { location: "/", "set-cookie": `token=${randomBytes(64).toString('hex')}.${userId};` }).end();
-															});
-														});
-													};
-												});
-												break;
-											case "/password-reset/request":
-												req.on("data", chunk => body += chunk).on("end", () => {
-													const params = new URLSearchParams(body), mail = params.get("mail");
-				
-													let errorMessage = "";
-				
-													if (!mail) errorMessage = "Vous devez mettre un email";
-													else if (!emailRegexp.test(mail)) errorMessage = "Vous devez mettre un email valide";
-													
-													if (errorMessage) res.writeHead(302, { location: `/mdp_oublie?error=${encodeURIComponent(errorMessage)}` }).end();
-													else db.get("SELECT * FROM users WHERE email = ?", mail, (err, row) => {
-														if (err) res.writeHead(302, { location: `/mdp_oublie?error=${encodeURIComponent("Erreur lors de la vérification de l'email")}` }).end();
-														else if (!row) res.writeHead(302, { location: `/mdp_oublie?error=${encodeURIComponent("Aucun compte n'est associé à cet email")}` }).end();
-														else transporter.sendMail({
-															from: senderEmail,
-															to: mail,
-															subject: "Code de réinitialisation de mot de passe",
-															text: "Voici votre code de réinitialisation de mot de passe: " + (passwordResetCodes[mail] = randomBytes(4).toString("hex"))
-														}, err => {
-															if (err) res.writeHead(302, { location: `/mdp_oublie?error=${encodeURIComponent("Erreur lors de l'envoi du mail")}` }).end();
-															else res.writeHead(302, { location: `/mdp_oublie?email=${mail}` }).end();
+					
+																res.writeHead(302, { location: `/connexion?error=${encodeURIComponent("Erreur lors de la vérification de l'email")}` }).end();
+															} else if (!row) res.writeHead(302, { location: `/connexion?error=${encodeURIComponent("Aucun compte n'est associé à cet email")}` }).end();
+															else if (row.password != securePassword(password, row.password_salt).password) res.writeHead(302, { location: `/connexion?error=${encodeURIComponent("Mot de passe incorrect")}` }).end();
+															else res.writeHead(302, { location: "/", "set-cookie": `token=${randomBytes(64).toString('hex')}.${row.id};` }).end();
 														});
 													});
-												});
-												break;
-											case "/password-reset/verify":
-												req.on("data", chunk => body += chunk).on("end", () => {
-													const params = new URLSearchParams(body), email = params.get("email"), code = params.get("code");
-				
-													let errorMessage = "";
-				
-													if (!email) errorMessage = "Vous devez mettre un email";
-													else if (!emailRegexp.test(email)) errorMessage = "Vous devez mettre un email valide";
-													else if (!code) errorMessage = "Vous devez mettre un code de réinitialisation";
-													else if (code != passwordResetCodes[email]) errorMessage = "Le code de réinitialisation est incorrect";							
-				
-													if (errorMessage) res.writeHead(302, { location: `/mdp_oublie?error=${encodeURIComponent(errorMessage)}` }).end();
-													else res.writeHead(302, { location: `/mdp_oublie_2?email=${email}&code=${code}` }).end();
-												});
-												break;
-											case "/password-reset/confirm":
-												req.on("data", chunk => body += chunk).on("end", () => {
-													const params = new URLSearchParams(body),
-													email = params.get("email"),
-													code = params.get("code"),
-													password = params.get("mot_de_passe"),
-													password2 = params.get("mot_de_passe_verif");
-				
-													let errorMessage = "";									
-													
-													if (
-														!email ||
-														!emailRegexp.test(email) ||
-														!code ||
-														code != passwordResetCodes[email]
-													) errorMessage = "Problème lors de la réinitialisation du mot de passe";
-													else if (!password) errorMessage = "Vous devez mettre un mot de passe";
-													else if (!password2) errorMessage = "Vous devez confirmer votre mot de passe";
-													else if (password.length > 20 || password.length < 8 || password2.length > 20 || password2.length < 8) errorMessage = "Votre mot de passe doit contenir entre 8 et 20 caractères";
-													else if (password != password2) errorMessage = "Les mots de passe ne correspondent pas";				
-				
-													if (errorMessage) res.writeHead(302, { location: `/mdp_oublie?error=${encodeURIComponent(errorMessage)}` }).end();
-													else {
-														const { password: pwd, passwordSalt } = securePassword(password);
-				
-														db.exec(`UPDATE users SET password = "${pwd}", password_salt = "${passwordSalt}" WHERE email = "${email}"`, err => {											
-															if (err) res.writeHead(302, { location: `/mdp_oublie_2?error=${encodeURIComponent("Erreur lors de la réinitialisation du mot de passe")}` }).end();
-															else res.writeHead(302, { location: "/" }).end();
+													break;
+												case "/inscription":
+													req.on("data", chunk => body += chunk).on("end", () => {
+														const params = new URLSearchParams(body), email = params.get("email"), username = params.get("username"), password = params.get("password"), password2 = params.get("password2");
+					
+														let errorMessage = "";
+					
+														if (!email) errorMessage = "Vous devez mettre un email";
+														else if (!emailRegexp.test(email)) errorMessage = "Vous devez mettre un email valide";
+														else if (!username) errorMessage = "Vous devez mettre un nom d'utilisateur";
+														else if (!password) errorMessage = "Vous devez mettre un mot de passe";
+														else if (!password2) errorMessage = "Vous devez confirmer votre mot de passe";
+														else if (username.length > 20 || username.length < 3) errorMessage = "Votre nom d'utilisateur doit contenir entre 3 et 20 caractères";
+														else if (password.length > 20 || password.length < 8 || password2.length > 20 || password2.length < 8) errorMessage = "Votre mot de passe doit contenir entre 8 et 20 caractères";
+														else if (password != password2) errorMessage = "Les mots de passe ne correspondent pas";
+					
+														if (errorMessage) res.writeHead(302, { location: `/inscription?error=${encodeURIComponent(errorMessage)}` }).end();
+														else {
+															const { password: encryptedPassword, passwordSalt } = securePassword(password), userId = randomUUID({ disableEntropyCache: true });
+					
+															db.get("SELECT * FROM users WHERE email = ?", email, (err, row) => {
+																if (err) {
+																	console.log("Erreur lors de la vérication de l'email: ", err);
+					
+																	res.writeHead(302, { location: `/inscription?error=${encodeURIComponent("Erreur lors de la vérification de l'email")}` }).end();
+																} else if (row) res.writeHead(302, { location: `/inscription?error=${encodeURIComponent("Cet email est déjà utilisé")}` }).end();
+																else db.exec(`INSERT INTO users (id, email, username, password, password_salt) VALUES (
+																	"${userId}",
+																	"${email}",
+																	"${username}",
+																	"${encryptedPassword}",
+																	"${passwordSalt}"
+																)`, err => {
+																	if (err) {
+																		console.log("Erreur lors de la création du compte : ", err);
+					
+																		res.writeHead(302, { location: `/inscription?error=${encodeURIComponent("Erreur lors de la création du compte ")}` }).end();
+																	} else res.writeHead(302, { location: "/", "set-cookie": `token=${randomBytes(64).toString('hex')}.${userId};` }).end();
+																});
+															});
+														};
+													});
+													break;
+												case "/password-reset/request":
+													req.on("data", chunk => body += chunk).on("end", () => {
+														const params = new URLSearchParams(body), mail = params.get("mail");
+					
+														let errorMessage = "";
+					
+														if (!mail) errorMessage = "Vous devez mettre un email";
+														else if (!emailRegexp.test(mail)) errorMessage = "Vous devez mettre un email valide";
+														
+														if (errorMessage) res.writeHead(302, { location: `/mdp_oublie?error=${encodeURIComponent(errorMessage)}` }).end();
+														else db.get("SELECT * FROM users WHERE email = ?", mail, (err, row) => {
+															if (err) res.writeHead(302, { location: `/mdp_oublie?error=${encodeURIComponent("Erreur lors de la vérification de l'email")}` }).end();
+															else if (!row) res.writeHead(302, { location: `/mdp_oublie?error=${encodeURIComponent("Aucun compte n'est associé à cet email")}` }).end();
+															else transporter.sendMail({
+																from: senderEmail,
+																to: mail,
+																subject: "Code de réinitialisation de mot de passe",
+																text: "Voici votre code de réinitialisation de mot de passe: " + (passwordResetCodes[mail] = randomBytes(4).toString("hex"))
+															}, err => {
+																if (err) res.writeHead(302, { location: `/mdp_oublie?error=${encodeURIComponent("Erreur lors de l'envoi du mail")}` }).end();
+																else res.writeHead(302, { location: `/mdp_oublie?email=${mail}` }).end();
+															});
 														});
-													};
-												});
-												break;
-											default:
-												res.writeHead(404, "Not found").end();
-												break;
-										};
-										break;
-									default:
-										res.writeHead(404, "Not found").end();
-										break;
-								};
-							}).listen(8080, () => console.log("http://localhost:8080"));
-						};
-					}); 
+													});
+													break;
+												case "/password-reset/verify":
+													req.on("data", chunk => body += chunk).on("end", () => {
+														const params = new URLSearchParams(body), email = params.get("email"), code = params.get("code");
+					
+														let errorMessage = "";
+					
+														if (!email) errorMessage = "Vous devez mettre un email";
+														else if (!emailRegexp.test(email)) errorMessage = "Vous devez mettre un email valide";
+														else if (!code) errorMessage = "Vous devez mettre un code de réinitialisation";
+														else if (code != passwordResetCodes[email]) errorMessage = "Le code de réinitialisation est incorrect";							
+					
+														if (errorMessage) res.writeHead(302, { location: `/mdp_oublie?error=${encodeURIComponent(errorMessage)}` }).end();
+														else res.writeHead(302, { location: `/mdp_oublie_2?email=${email}&code=${code}` }).end();
+													});
+													break;
+												case "/password-reset/confirm":
+													req.on("data", chunk => body += chunk).on("end", () => {
+														const params = new URLSearchParams(body),
+														email = params.get("email"),
+														code = params.get("code"),
+														password = params.get("mot_de_passe"),
+														password2 = params.get("mot_de_passe_verif");
+					
+														let errorMessage = "";									
+														
+														if (
+															!email ||
+															!emailRegexp.test(email) ||
+															!code ||
+															code != passwordResetCodes[email]
+														) errorMessage = "Problème lors de la réinitialisation du mot de passe";
+														else if (!password) errorMessage = "Vous devez mettre un mot de passe";
+														else if (!password2) errorMessage = "Vous devez confirmer votre mot de passe";
+														else if (password.length > 20 || password.length < 8 || password2.length > 20 || password2.length < 8) errorMessage = "Votre mot de passe doit contenir entre 8 et 20 caractères";
+														else if (password != password2) errorMessage = "Les mots de passe ne correspondent pas";				
+					
+														if (errorMessage) res.writeHead(302, { location: `/mdp_oublie?error=${encodeURIComponent(errorMessage)}` }).end();
+														else {
+															const { password: pwd, passwordSalt } = securePassword(password);
+					
+															db.exec(`UPDATE users SET password = "${pwd}", password_salt = "${passwordSalt}" WHERE email = "${email}"`, err => {											
+																if (err) res.writeHead(302, { location: `/mdp_oublie_2?error=${encodeURIComponent("Erreur lors de la réinitialisation du mot de passe")}` }).end();
+																else res.writeHead(302, { location: "/" }).end();
+															});
+														};
+													});
+													break;
+												default:
+													res.writeHead(404, "Not found").end();
+													break;
+											};
+											break;
+										default:
+											res.writeHead(404, "Not found").end();
+											break;
+									};
+								}).listen(8080, () => console.log("http://localhost:8080"));
+							};
+						}); 
+					});
 				});
 			});
 		});
