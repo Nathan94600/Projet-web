@@ -141,7 +141,7 @@ function getPage(pageURL, params = {}) {
 	});
 };
 
-db.exec("CREATE TABLE IF NOT EXISTS products (id CHAR(36) NOT NULL PRIMARY KEY, supplierId VARCHAR(20) NOT NULL, name VARCHAR(50) NOT NULL, price INT NOT NULL, promoPrice INT, type CHAR(1) NOT NULL, colors INT NOT NULL, CHECK (type IN ('h', 'f', 'e', 'm')))", err => {
+db.run("CREATE TABLE IF NOT EXISTS products (id CHAR(36) NOT NULL PRIMARY KEY, supplierId VARCHAR(20) NOT NULL, name VARCHAR(50) NOT NULL, price INT NOT NULL, promoPrice INT, type CHAR(1) NOT NULL, colors INT NOT NULL, CHECK (type IN ('h', 'f', 'e', 'm')))", err => {
 	if (err) console.log("Erreur lors de la création de la table products: ", err);
 	else db.run("CREATE UNIQUE INDEX IF NOT EXISTS indexSupplierId ON products(supplierId)", err => {
 		if (err) console.log("Erreur lors de la création de l'index indexSupplierId: ", err);
@@ -162,9 +162,9 @@ db.exec("CREATE TABLE IF NOT EXISTS products (id CHAR(36) NOT NULL PRIMARY KEY, 
 				if (err) console.log("Erreur lors de la finalisation de la requête: ", err);
 				else db.run("COMMIT", err => {
 					if (err) console.log("Erreur lors de la validation de la transaction: ", err);
-					else db.exec("CREATE TABLE IF NOT EXISTS stocks (id CHAR(36) NOT NULL PRIMARY KEY, productId CHAR(36) NOT NULL, quantity INT NOT NULL, size INT NOT NULL, FOREIGN KEY (productId) REFERENCES products(id) ON DELETE CASCADE)", err => {
+					else db.run("CREATE TABLE IF NOT EXISTS stocks (id CHAR(36) NOT NULL PRIMARY KEY, productId CHAR(36) NOT NULL, quantity INT NOT NULL, size INT NOT NULL, FOREIGN KEY (productId) REFERENCES products(id) ON DELETE CASCADE)", err => {
 						if (err) console.log("Erreur lors de la création de la table stocks: ", err);
-						else db.exec("CREATE TABLE IF NOT EXISTS users (id CHAR(36) NOT NULL PRIMARY KEY, email TEXT NOT NULL, username VARCHAR(20) NOT NULL, password CHAR(128) NOT NULL, password_salt CHAR(256) NOT NULL)", err => {
+						else db.run("CREATE TABLE IF NOT EXISTS users (id CHAR(36) NOT NULL PRIMARY KEY, email TEXT NOT NULL, username VARCHAR(20) NOT NULL, password CHAR(128) NOT NULL, password_salt CHAR(256) NOT NULL)", err => {
 							if (err) console.log("Erreur lors de la création de la table users: ", err);
 							else {
 								createServer((req, res) => {
@@ -252,13 +252,7 @@ db.exec("CREATE TABLE IF NOT EXISTS products (id CHAR(36) NOT NULL PRIMARY KEY, 
 					
 																	res.writeHead(302, { location: `/inscription?error=${encodeURIComponent("Erreur lors de la vérification de l'email")}` }).end();
 																} else if (row) res.writeHead(302, { location: `/inscription?error=${encodeURIComponent("Cet email est déjà utilisé")}` }).end();
-																else db.exec(`INSERT INTO users (id, email, username, password, password_salt) VALUES (
-																	"${userId}",
-																	"${email}",
-																	"${username}",
-																	"${encryptedPassword}",
-																	"${passwordSalt}"
-																)`, err => {
+																else db.run(`INSERT INTO users (id, email, username, password, password_salt) VALUES (?, ?, ?, ?, ?)`, [userId, email, username, encryptedPassword, passwordSalt], err => {
 																	if (err) {
 																		console.log("Erreur lors de la création du compte : ", err);
 					
@@ -334,7 +328,7 @@ db.exec("CREATE TABLE IF NOT EXISTS products (id CHAR(36) NOT NULL PRIMARY KEY, 
 														else {
 															const { password: pwd, passwordSalt } = securePassword(password);
 					
-															db.exec(`UPDATE users SET password = "${pwd}", password_salt = "${passwordSalt}" WHERE email = "${email}"`, err => {											
+															db.run(`UPDATE users SET password = ?, password_salt = ? WHERE email = ?`, [pwd, passwordSalt, email], err => {											
 																if (err) res.writeHead(302, { location: `/mdp_oublie_2?error=${encodeURIComponent("Erreur lors de la réinitialisation du mot de passe")}` }).end();
 																else res.writeHead(302, { location: "/" }).end();
 															});
