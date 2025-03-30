@@ -169,10 +169,15 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 	});
 	else if ((url == "/inscription" || url == "/connexion") && userToken) res.writeHead(302, { location: "/" }).end();
 	else if (url == "/produits") {
-		const conditions = [], promoParams = params.get("promo");
+		const conditions = [], promoParams = params.get("promo"), genderParams = params.get("genre");
 
 		if (promoParams == "true") conditions.push("promoPrice IS NOT NULL");
 		else if (promoParams == "false") conditions.push("promoPrice IS NULL");
+
+		if (genderParams == "h") conditions.push("type = 'h' OR type = 'm'");
+		else if (genderParams == "f") conditions.push("type = 'f' OR type = 'm'");
+		else if (genderParams == "e") conditions.push("type = 'e'");
+		else if (genderParams == "m") conditions.push("type = 'm'");
 		
 		db.all(`SELECT *, CAST(price AS DECIMAL(10,2)) / 100 AS formattedPrice, CAST(promoPrice AS DECIMAL(10,2)) / 100 AS formattedPromoPrice FROM products${conditions.length != 0 ? ` WHERE ${conditions.join(" AND ")}` : ""}`, (err, rows) => {
 			if (err) {
