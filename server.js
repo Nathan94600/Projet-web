@@ -168,6 +168,29 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 		else compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { ...headers, "content-type": `application/javascript`, "content-encoding": compression.encoding }).end(compression.data));
 	});
 	else if ((url == "/inscription" || url == "/connexion") && userToken) res.writeHead(302, { location: "/" }).end();
+	else if (url == "/produits") db.all("SELECT *, CAST(price AS DECIMAL(10,2)) / 100 AS formattedPrice, CAST(promoPrice AS DECIMAL(10,2)) / 100 AS formattedPromoPrice FROM products;", (err, rows) => {
+		if (err) {
+			console.log("Erreur lors de la récupération des produits: ", err);
+			res.writeHead(500, "Internal Server Error").end();
+		} else {			
+			const productsHTML = rows.map(product => `
+				<div class="product-card">
+          <img src="https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa" alt="Running Shoes">
+          <div class="product-info">
+            <h3>${product.name}</h3>
+            <p class="price">${product.formattedPrice}€</p>
+						${product.formattedPromoPrice ? `<p class="promo-price">${product.formattedPromoPrice}€</p>` : ""}
+          	<div class="rating"> ★★★★☆(4.0)</div>
+          </div>
+        </div>
+			`);
+
+			getPage(url, { products: productsHTML.join(""), nbProducts: rows.length }).then(
+				data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { ...headers, "content-type": `text/html`, "content-encoding": compression.encoding }).end(compression.data)),
+				() => res.writeHead(404, "Not found").end()
+			);
+		};
+	});
 	else getPage(url, {
 		error: errorMessage ? `<p id="error">${errorMessage}</p>` : "",
 		email: params.get("email") || "",
