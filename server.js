@@ -19,17 +19,17 @@ db = new Database("database.db", err => {
 	else console.log("Connexion à la base de données réussie");
 }),
 colors = {
-	Noir: 2**2,
-	Jaune: 2**6,
-	Rose: 2**7,
-	Marron: 2**9,
-	Orange: 2**5,
-	Violet: 2**3,
-	Gris: 2**10,
 	Rouge: 2**0,
 	Bleu: 2**1,
+	Noir: 2**2,
+	Violet: 2**3,
 	Vert: 2**4,
-	Blanc: 2**8
+	Orange: 2**5,
+	Jaune: 2**6,
+	Rose: 2**7,
+	Blanc: 2**8,
+	Marron: 2**9,
+	Gris: 2**10,
 },
 sexes = {
 	Homme: "h",
