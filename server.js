@@ -31,6 +31,13 @@ colors = {
 	[2**9]: "marron",
 	[2**10]: "gris",
 },
+suppliers = {
+	[2**0]: "new-balance",
+	[2**1]: "puma",
+	[2**2]: "nike",
+	[2**3]: "asics",
+	[2**4]: "adidas",
+},
 sexes = {
 	h: "homme",
 	f: "femme",
@@ -169,7 +176,7 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 	});
 	else if ((url == "/inscription" || url == "/connexion") && userToken) res.writeHead(302, { location: "/" }).end();
 	else if (url == "/produits") {
-		const conditions = [], promoParams = params.get("promo"), genderParams = params.get("genre"), colorsParams = params.get("couleurs"), newProductsParams = params.get("new");
+		const conditions = [], promoParams = params.get("promo"), genderParams = params.get("genre"), colorsParams = params.get("couleurs"), newProductsParams = params.get("new"), suppliersParams = params.get("marques");
 
 		if (promoParams == "true") conditions.push("promoPrice IS NOT NULL");
 		else if (promoParams == "false") conditions.push("promoPrice IS NULL");
@@ -185,6 +192,10 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 
 		if (newProductsParams == "true") conditions.push(`date > ${Date.now() - 1209600000 /* 2 semaines */}`);
 		else if (newProductsParams == "false") conditions.push(`date <= ${Date.now() - 1209600000 /* 2 semaines */}`);
+
+		const suppliersCondition = Object.keys(suppliers).filter(supplier => (suppliersParams & supplier) == supplier).map(supplier => `supplierName = "${suppliers[supplier]}"`).join(" OR ");
+
+		if (suppliersCondition) conditions.push(`(${suppliersCondition})`);		
 		
 		db.all(`SELECT *, CAST(price AS DECIMAL(10,2)) / 100 AS formattedPrice, CAST(promoPrice AS DECIMAL(10,2)) / 100 AS formattedPromoPrice FROM products${conditions.length != 0 ? ` WHERE ${conditions.join(" AND ")}` : ""}`, (err, rows) => {
 			if (err) {
@@ -237,7 +248,9 @@ db.serialize(() => {
 			type CHAR(1) NOT NULL,
 			colors INT NOT NULL,
 			date INT NOT NULL,
-			CHECK (type IN ('h', 'f', 'e', 'm'))
+			supplierName VARCHAR(20) NOT NULL,
+			CHECK (type IN ('h', 'f', 'e', 'm')),
+			CHECK (supplierName IN ('new-balance', 'puma', 'nike', 'asics', 'adidas'))
 		);
 
 		CREATE UNIQUE INDEX IF NOT EXISTS indexSupplierId ON products(supplierId);
@@ -263,10 +276,10 @@ db.serialize(() => {
 		if (err) console.log("Erreur lors de la création des tables: ", err);
 	});
 
-	const reqForProducts = db.prepare("INSERT OR IGNORE INTO products (id, supplierId, name, price, promoPrice, type, colors, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+	const reqForProducts = db.prepare("INSERT OR IGNORE INTO products (id, supplierId, name, price, promoPrice, type, colors, date, supplierName) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
 	products.forEach(product => {
-		reqForProducts.run(randomUUID({ disableEntropyCache: true }), product.supplierId, product.name, product.price, product.promoPrice || null, product.type, product.colors, new Date(product.date).getTime(), err => {
+		reqForProducts.run(randomUUID({ disableEntropyCache: true }), product.supplierId, product.name, product.price, product.promoPrice || null, product.type, product.colors, new Date(product.date).getTime(), product.supplierName, err => {
 			if (err) console.log("Erreur lors de l'ajout du produit: ", err);
 		});
 	});
