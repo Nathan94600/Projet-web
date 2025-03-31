@@ -215,7 +215,8 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 					</div>
 				`);
 	
-				getPage(url, { products: productsHTML.join(""), nbProducts: rows.length }).then(
+				getPage(url, { products: productsHTML.join(""), nbProducts: rows.length, accountText: userToken ? "Mon compte" : "Se connecter",
+					accountLink: userToken ? "/profil" : "/connexion", }).then(
 					data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { ...headers, "content-type": `text/html`, "content-encoding": compression.encoding }).end(compression.data)),
 					() => res.writeHead(404, "Not found").end()
 				);
