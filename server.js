@@ -169,7 +169,7 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 	});
 	else if ((url == "/inscription" || url == "/connexion") && userToken) res.writeHead(302, { location: "/" }).end();
 	else if (url == "/produits") {
-		const conditions = [], promoParams = params.get("promo"), genderParams = params.get("genre"), colorsParams = params.get("couleurs");
+		const conditions = [], promoParams = params.get("promo"), genderParams = params.get("genre"), colorsParams = params.get("couleurs"), newProductsParams = params.get("new");
 
 		if (promoParams == "true") conditions.push("promoPrice IS NOT NULL");
 		else if (promoParams == "false") conditions.push("promoPrice IS NULL");
@@ -182,6 +182,9 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 		const colorsCondition = Object.keys(colors).filter(color => (colorsParams & color) == color).map(color => `(colors & ${color}) = ${color}`).join(" OR ");
 
 		if (colorsCondition) conditions.push(`(${colorsCondition})`);
+
+		if (newProductsParams == "true") conditions.push(`date > ${Date.now() - 1209600000 /* 2 semaines */}`);
+		else if (newProductsParams == "false") conditions.push(`date <= ${Date.now() - 1209600000 /* 2 semaines */}`);
 		
 		db.all(`SELECT *, CAST(price AS DECIMAL(10,2)) / 100 AS formattedPrice, CAST(promoPrice AS DECIMAL(10,2)) / 100 AS formattedPromoPrice FROM products${conditions.length != 0 ? ` WHERE ${conditions.join(" AND ")}` : ""}`, (err, rows) => {
 			if (err) {
