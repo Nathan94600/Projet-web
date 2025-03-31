@@ -56,16 +56,6 @@
 		"date": "2025-03-11T09:42:37Z"
 	},
 	{
-		"supplierId": "39081205",
-		"name": "Puma Slipstream",
-		"price": 8499,
-		"promoPrice": 4000,
-		"type": "e",
-		"colors": 272,
-		"supplierName": "puma",
-		"date": "2025-01-25T08:07:27Z"
-	},
-	{
 		"supplierId": "39197501",
 		"name": "Puma Slipstream",
 		"price": 8499,
