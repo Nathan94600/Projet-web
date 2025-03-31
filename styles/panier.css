@@ -156,3 +156,6 @@ label {
   display: flex;
 }
 
+#articles {
+  margin-top: 7rem;
+}
