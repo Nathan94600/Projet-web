@@ -32,10 +32,10 @@ colors = {
 	[2**10]: "gris",
 },
 sexes = {
-	Homme: "h",
-	Femme: "f",
-	Enfant: "e",
-	Mixte: "m",
+	h: "homme",
+	f: "femme",
+	e: "enfant",
+	m: "mixte",
 },
 transporter = createTransport({
 	service: "outlook",
@@ -193,6 +193,7 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 						<img src="https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa" alt="Running Shoes">
 						<div class="product-info">
 							<h3>${product.name}</h3>
+							<p class="price">Chaussure ${product.type == "m" ? sexes[product.type] : `pour ${sexes[product.type]}`}</p>
 							<p class="price">${product.formattedPrice}€</p>
 							${product.formattedPromoPrice ? `<p class="promo-price">${product.formattedPromoPrice}€</p>` : ""}
 							<div class="rating"> ★★★★☆(4.0)</div>
