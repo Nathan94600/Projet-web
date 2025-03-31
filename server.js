@@ -19,17 +19,17 @@ db = new Database("database.db", err => {
 	else console.log("Connexion à la base de données réussie");
 }),
 colors = {
-	Rouge: 2**0,
-	Bleu: 2**1,
-	Noir: 2**2,
-	Violet: 2**3,
-	Vert: 2**4,
-	Orange: 2**5,
-	Jaune: 2**6,
-	Rose: 2**7,
-	Blanc: 2**8,
-	Marron: 2**9,
-	Gris: 2**10,
+	[2**0]: "rouge",
+	[2**1]: "bleu",
+	[2**2]: "noir",
+	[2**3]: "violet",
+	[2**4]: "vert",
+	[2**5]: "orange",
+	[2**6]: "jaune",
+	[2**7]: "rose",
+	[2**8]: "blanc",
+	[2**9]: "marron",
+	[2**10]: "gris",
 },
 sexes = {
 	Homme: "h",
@@ -169,7 +169,7 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 	});
 	else if ((url == "/inscription" || url == "/connexion") && userToken) res.writeHead(302, { location: "/" }).end();
 	else if (url == "/produits") {
-		const conditions = [], promoParams = params.get("promo"), genderParams = params.get("genre");
+		const conditions = [], promoParams = params.get("promo"), genderParams = params.get("genre"), colorsParams = params.get("couleurs");
 
 		if (promoParams == "true") conditions.push("promoPrice IS NOT NULL");
 		else if (promoParams == "false") conditions.push("promoPrice IS NULL");
@@ -178,6 +178,10 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 		else if (genderParams == "f") conditions.push("type = 'f' OR type = 'm'");
 		else if (genderParams == "e") conditions.push("type = 'e'");
 		else if (genderParams == "m") conditions.push("type = 'm'");
+
+		const colorsCondition = Object.keys(colors).filter(color => (colorsParams & color) == color).map(color => `(colors & ${color}) = ${color}`).join(" OR ");
+
+		if (colorsCondition) conditions.push(`(${colorsCondition})`);
 		
 		db.all(`SELECT *, CAST(price AS DECIMAL(10,2)) / 100 AS formattedPrice, CAST(promoPrice AS DECIMAL(10,2)) / 100 AS formattedPromoPrice FROM products${conditions.length != 0 ? ` WHERE ${conditions.join(" AND ")}` : ""}`, (err, rows) => {
 			if (err) {
