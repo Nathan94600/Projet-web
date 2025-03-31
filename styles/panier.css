@@ -1,41 +1,35 @@
 #panier {
-  height: 75vh;
+  height: 100%;
   display: flex;
 }
 
 #panier_gauche {
-
-    margin-top: 5%;
-    margin-left: 18%;
-    padding: 30px;
-    border-radius: 3px;
-    width: 40%;
-    height: 60vh;
-    overflow: hidden;
-    overflow-y:auto;
-    
-
+  margin-top: 5%;
+  margin-left: 18%;
+  padding: 30px;
+  border-radius: 3px;
+  width: 40%;
+  height: 60vh;
+  overflow: hidden;
+  overflow-y: auto;
 }
 
-
 #panier_droit {
-    width: 20%;
-    margin-top: 10%;
-    margin-right: 2cm;
-    padding: 20px;
-    height: 60%;
-    border-radius: 10px;
-    border: 1px solid black;
-    margin-left: 30px;
+  width: 20%;
+  margin-top: 10%;
+  margin-right: 2cm;
+  padding: 20px;
+  height: 60%;
+  border-radius: 10px;
+  border: 1px solid black;
+  margin-left: 30px;
 }
 
 h1 {
-  font-size: small;
   font-size: 50px;
 }
 
 h2 {
-  font-size: small;
   font-size: 20px;
 }
 
@@ -46,7 +40,6 @@ h2 {
 }
 
 .payment-method {
-  /* Variables */
   --button_radius: 0.75em;
   --button_color: #e8e8e8;
   --button_outline_color: #000000;
@@ -71,12 +64,10 @@ h2 {
 }
 
 .payment-method:hover .button_top {
-  /* Pull the button upwards when hovered */
   transform: translateY(-0.33em);
 }
 
 .payment-method:active .button_top {
-  /* Push the button downwards when pressed */
   transform: translateY(0);
 }
 
@@ -85,12 +76,11 @@ h2 {
 }
 
 #article_ajouté {
-  display: flex; 
-  grid-row: 1; 
+  display: flex;
+  grid-row: 1;
+}
 
-  }
-  
-#article_ajouté, p{
+#article_ajouté, p {
   margin-left: 10px;
   margin-top: 10px;
 }
@@ -99,7 +89,6 @@ h2 {
   width: 100%;
 }
 
-/* Pour le bouton Favoris */ 
 .container input {
   position: absolute;
   opacity: 0;
@@ -136,7 +125,7 @@ h2 {
   fill: #E3474F;
 }
 
-#nom_prix p{
+#nom_prix p {
   width: 50%;
 }
 
@@ -158,4 +147,92 @@ label {
 
 #articles {
   margin-top: 7rem;
+}
+
+/* Responsive styles for tablets */
+@media (max-width: 1024px) {
+  #panier {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #panier_gauche,
+  #panier_droit {
+    width: 80%;
+    margin: 10px 0;
+  }
+
+  h1 {
+    font-size: 40px;
+  }
+
+  h2 {
+    font-size: 18px;
+  }
+
+  #ligne {
+    width: 120px;
+  }
+
+  .container {
+    width: 90%;
+  }
+}
+
+/* Responsive styles for smaller tablets */
+@media (max-width: 768px) {
+  #panier {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #panier_gauche,
+  #panier_droit {
+    width: 90%;
+    margin: 10px 0;
+  }
+
+  h1 {
+    font-size: 30px;
+  }
+
+  h2 {
+    font-size: 16px;
+  }
+
+  #ligne {
+    width: 100px;
+  }
+
+  .container {
+    width: 80%;
+  }
+}
+
+/* Responsive styles for mobile phones */
+@media (max-width: 480px) {
+  #panier_gauche,
+  #panier_droit {
+    width: 100%;
+    margin: 5px 0;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  h2 {
+    font-size: 14px;
+  }
+
+  #ligne {
+    width: 80px;
+  }
+
+  .container svg {
+    height: 20px;
+    width: 20px;
+    margin-top: 0.5cm;
+    margin-left: 0.5cm;
+  }
 }
