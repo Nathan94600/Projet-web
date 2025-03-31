@@ -33,8 +33,16 @@ npm i
 
 1. Lancer le server web :
 
+Par défaut, le serveur se lance sur l'adresse locale. Pour le lancer sur une IP d'interface spécifique, utilisez l'option --ip
+
 ```bash
-node server
+node server           # Lance le serveur sur l'adresse locale
 ```
 
-2. Aller sur http://localhost:8080
+ou pour le lancer sur une ip
+
+```bash
+node server --ip      # Lance le serveur en détectant l'IP de l'interface
+```
+
+2. Aller sur le lien affiché dans le terminal

@@ -5,6 +5,7 @@ const { createServer, ServerResponse, IncomingMessage } = require("http"),
 	{ Database } = require("sqlite3"),
 	{ randomUUID, randomBytes, pbkdf2Sync } = require("crypto"),
 	{ gzip, brotliCompress, deflate } = require("zlib"),
+	{ networkInterfaces } = require("os"),
 	{ email: senderEmail, password } = require("./config.json"),
 	products = require("./products.json"),
 	stocks = require("./stocks.json");
@@ -54,7 +55,10 @@ transporter = createTransport({
 }),
 passwordResetCodes = {
 	// email: code
-};
+},
+host = process.argv.includes("--ip") ?
+	Object.entries(networkInterfaces()).filter(([name]) => !name.includes("VM")).map(interface => interface[1]).flat().filter(interface => typeof interface != "string" && !interface.internal && interface.family == "IPv4")[0].address || "localhost" :
+	"localhost";
 
 /**
  * @param { string } password 
@@ -215,8 +219,7 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 					</div>
 				`);
 	
-				getPage(url, { products: productsHTML.join(""), nbProducts: rows.length, accountText: userToken ? "Mon compte" : "Se connecter",
-					accountLink: userToken ? "/profil" : "/connexion", }).then(
+				getPage(url, { products: productsHTML.join(""), nbProducts: rows.length, accountText: userToken ? "Mon compte" : "Se connecter", accountLink: userToken ? "/profil" : "/connexion" }).then(
 					data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { ...headers, "content-type": `text/html`, "content-encoding": compression.encoding }).end(compression.data)),
 					() => res.writeHead(404, "Not found").end()
 				);
@@ -470,7 +473,7 @@ db.serialize(() => {
 							res.writeHead(404, "Not found").end();
 							break;
 					};
-				}).listen(8080, () => console.log("http://localhost:8080"));
+				}).listen({ host, port: 8080 }, () => console.log(`http://${host}:8080`));
 			});
 		});
 	});
