@@ -1,6 +1,6 @@
 #parametres {
     height: 100vh;
-    width: 20%;
+    width: 15%;
     padding: 150px;
     text-align: left;
 }
@@ -21,7 +21,7 @@ p {
 
 #details {
     width: 50%;
-    padding: 10px;
+    padding: 15px;
     margin-top: 200px;
     margin-left: 50px;
     
@@ -36,3 +36,138 @@ input {
     border-color: gray;
     border-radius: 10px;
 }
+
+a, u {
+    text-decoration: none;
+  }
+
+a {
+    color: black;
+}
+
+
+.btn {
+    margin-left: 2rem;
+    position: relative;
+    font-size: 17px;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 1em 2.5em;
+    display: inline-block;
+    cursor: pointer;
+    border-radius: 6em;
+    transition: all 0.2s;
+    border: none;
+    font-family: inherit;
+    font-weight: 500;
+    color: white;
+    background-color: black;
+    height: 50px;
+  }
+  
+  .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+  
+  .btn:active {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .btn::after {
+    content: "";
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+    border-radius: 100px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    transition: all 0.4s;
+  }
+  
+  .btn::after {
+    background-color: black;
+  }
+  
+  .btn:hover::after {
+    transform: scaleX(1.4) scaleY(1.6);
+    opacity: 0;
+  }
+  
+  #fav {
+    margin-top: 5rem;
+  }
+
+  #article_ajouté {
+    display: flex;
+    margin-top: 40px;
+    margin-left: 20px;
+  }
+
+
+  p {
+    margin-left: 15px;
+  }
+
+  #cmd {
+    margin-top: 5rem;
+  }
+
+  label{
+    justify-content: center;
+  }
+
+
+  .btn1 {
+    margin-left: 2rem;
+    position: relative;
+    font-size: 17px;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 1em 2.5em;
+    display: inline-block;
+    cursor: pointer;
+    border-radius: 6em;
+    transition: all 0.2s;
+    border: none;
+    font-family: inherit;
+    font-weight: 500;
+    color: rgb(255, 255, 255);
+    background-color: gray;
+    height: 50px;
+  }
+  
+  .btn1:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+  
+  .btn1:active {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .btn1::after {
+    content: "";
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+    border-radius: 100px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    transition: all 0.4s;
+  }
+  
+  .btn1::after {
+    background-color: black;
+  }
+  
+  .btn1:hover::after {
+    transform: scaleX(1.4) scaleY(1.6);
+    opacity: 0;
+  }
