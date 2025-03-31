@@ -233,6 +233,7 @@ db.serialize(() => {
 			promoPrice INT,
 			type CHAR(1) NOT NULL,
 			colors INT NOT NULL,
+			date INT NOT NULL,
 			CHECK (type IN ('h', 'f', 'e', 'm'))
 		);
 
@@ -259,10 +260,10 @@ db.serialize(() => {
 		if (err) console.log("Erreur lors de la création des tables: ", err);
 	});
 
-	const reqForProducts = db.prepare("INSERT OR IGNORE INTO products (id, supplierId, name, price, promoPrice, type, colors) VALUES (?, ?, ?, ?, ?, ?, ?)");
+	const reqForProducts = db.prepare("INSERT OR IGNORE INTO products (id, supplierId, name, price, promoPrice, type, colors, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 
 	products.forEach(product => {
-		reqForProducts.run(randomUUID({ disableEntropyCache: true }), product.supplierId, product.name, product.price, product.promoPrice || null, product.type, product.colors, err => {
+		reqForProducts.run(randomUUID({ disableEntropyCache: true }), product.supplierId, product.name, product.price, product.promoPrice || null, product.type, product.colors, new Date(product.date).getTime(), err => {
 			if (err) console.log("Erreur lors de l'ajout du produit: ", err);
 		});
 	});
