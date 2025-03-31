@@ -1,113 +1,111 @@
-
 button {
-	border: none;
-	background: none;
-	padding: 0;
+    border: none;
+    background: none;
+    padding: 0;
 }
 
 nav {
-	font-weight: 700;
+    font-weight: 700;
 }
 
 nav a {
-	color: black;
+    color: black;
 }
 
 #container {
-	height: 100vh;
-	display: flex;
+    height: 100vh;
+    display: flex;
 }
 
 .container-l {
-	max-width: 50%;
-	width: 50%;
-	background-image: url("/images/assets/michael-jordan-focuses.jpg");
-	background-size: cover;
-	background-position: center;
-	display: flex;
-	justify-content: center;
-	align-items: center;
+    max-width: 50%;
+    width: 50%;
+    background-image: url("/images/assets/michael-jordan-focuses.jpg");
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .container-l img {
-	width: 100%;
-	margin-top: 50%;
-	align-items: center;
-	max-width: 20%;
-	display: flex;
+    width: 100%;
+    margin-top: 50%;
+    align-items: center;
+    max-width: 20%;
+    display: flex;
 }
 
 .container-r {
-	width: 50%;
-	background: #fff;
-	display: flex;
-	align-items: center;
-	color: #000;
+    width: 50%;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    color: #000;
 }
 
 .container-r > div {
-	padding: 30px;
+    padding: 30px;
 }
 
 .container-r img {
-	width: 50px;
+    width: 50px;
 }
 
 h1 {
-	font-size: 64px;
-	font-family: Inter;
-	margin-top: 50px;
+    font-size: 64px;
+    font-family: Inter;
+    margin-top: 50px;
 }
 
 h2 {
-	font-size: 15px;
-	font-family: Inter;
-	font-weight: 300;
-	color: #808080;
+    font-size: 15px;
+    font-family: Inter;
+    font-weight: 300;
+    color: #808080;
 }
 
 #form-container a {
-	color: #000;
-	margin-top: 1rem;
+    color: #000;
+    margin-top: 1rem;
 }
 
 form {
-	margin-bottom: 1rem;
+    margin-bottom: 1rem;
 }
 
 #email, #password {
-	height: 60px;
-	font-size: 17px;
-	padding: 0 25px;
-	margin-bottom: 15px;
-	border-radius: 30px;
-	border: none;
-	box-shadow: 0px 5px 10px 1px rgba(0, 0, 0, 0.05);
-	outline: none;
-	display: block;
+    height: 60px;
+    font-size: 17px;
+    padding: 0 25px;
+    margin-bottom: 15px;
+    border-radius: 30px;
+    border: none;
+    box-shadow: 0px 5px 10px 1px rgba(0, 0, 0, 0.05);
+    outline: none;
+    display: block;
 }
 
-
 #btn-container {
-	font-family: Iner;
-	font-weight: 500;
+    font-family: Iner;
+    font-weight: 500;
 }
 
 .btn {
-	width: 300px;
-	font-family: Inter;
-	 font-weight: 500;
-	border-radius: 30px
+    width: 300px;
+    font-family: Inter;
+    font-weight: 500;
+    border-radius: 30px;
 }
 
 #error {
-	color: #ff0000;
-	width: calc(100% - 1rem);
-	padding: 1rem;
-	margin: 0 1rem;
-	background: rgba(197, 25, 25, 0.25);
-	border-radius: 10px;
-	border: 2px solid #ff0000;
+    color: #ff0000;
+    width: calc(100% - 1rem);
+    padding: 1rem;
+    margin: 0 1rem;
+    background: rgba(197, 25, 25, 0.25);
+    border-radius: 10px;
+    border: 2px solid #ff0000;
 }
 
 .btn {
@@ -127,19 +125,19 @@ form {
     color: rgb(255, 255, 255);
     background-color: gray;
     height: 50px;
-  }
-  
-  .btn:hover {
+}
+
+.btn:hover {
     transform: translateY(-3px);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-  }
-  
-  .btn:active {
+}
+
+.btn:active {
     transform: translateY(-1px);
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-  }
-  
-  .btn::after {
+}
+
+.btn::after {
     content: "";
     display: inline-block;
     height: 100%;
@@ -150,13 +148,121 @@ form {
     left: 0;
     z-index: -1;
     transition: all 0.4s;
-  }
-  
-  .btn::after {
+}
+
+.btn::after {
     background-color: black;
-  }
-  
-  .btn:hover::after {
+}
+
+.btn:hover::after {
     transform: scaleX(1.4) scaleY(1.6);
     opacity: 0;
-  }
+}
+
+/* Responsive styles for tablets */
+@media (max-width: 768px) {
+    #container {
+        flex-direction: column;
+    }
+
+    .container-l,
+    .container-r {
+        width: 100%;
+    }
+
+    .container-l {
+        height: 50vh; /* Adjust height for better scaling */
+    }
+
+    .container-l img {
+        max-width: 70%; /* Adjust image size */
+        margin-top: 10%; /* Reduce margin for better fit */
+    }
+
+    h1 {
+        font-size: 48px;
+    }
+
+    h2 {
+        font-size: 14px;
+    }
+
+    #email, #password {
+        width: 90%;
+        margin: 10px auto;
+    }
+
+    .btn {
+        width: 90%;
+        margin: 10px auto;
+    }
+}
+
+/* Responsive styles for mobile phones */
+@media (max-width: 480px) {
+    #container {
+        flex-direction: column;
+    }
+
+    .container-l {
+        display: none; /* Hide the image container on mobile */
+    }
+
+    .container-r {
+        width: 100%; /* Make the right container take full width */
+        padding: 20px; /* Add padding for better spacing */
+    }
+
+    .container-r img {
+        display: none; /* Hide the logo on mobile */
+    }
+
+    h1 {
+        font-size: 36px;
+    }
+
+    h2 {
+        font-size: 12px;
+    }
+
+    #email, #password {
+        width: 100%;
+        padding: 0 15px;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 1em;
+        margin: 10px 0;
+    }
+}
+
+/* Responsive styles for very small devices */
+@media (max-width: 320px) {
+    .container-l {
+        display: none; /* Ensure the image container remains hidden */
+    }
+
+    .container-r img {
+        display: none; /* Ensure the logo remains hidden */
+    }
+
+    h1 {
+        font-size: 28px;
+    }
+
+    h2 {
+        font-size: 10px;
+    }
+
+    #email, #password {
+        width: 100%;
+        padding: 0 10px;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 0.8em;
+        margin: 5px 0;
+    }
+}
