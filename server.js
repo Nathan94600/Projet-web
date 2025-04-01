@@ -262,7 +262,7 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 								<img src="${url}-1000w.webp" alt="" class="product-img" srcset="${url}-300w.webp 300w, ${url}-500w.webp 500w, ${url}-1000w.webp 1000w" sizes="20vw">
 								<hr class="separator">
 								<p>${product.name}</p>
-								<p class="price">${typeToText(product.type)}</p>
+								<p class="type">${typeToText(product.type)}</p>
 								<p class="price">${product.formattedPrice}€</p>
 							</a>
 						`;
