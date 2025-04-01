@@ -158,7 +158,7 @@ function typeToText(type) {
 };
 
 function generateProductItem(product, itemName) {
-	const url = `/images/products/${product.supplierName}/${product.type.toUpperCase()}${product.supplierId}/00`;
+	const url = `/images/products/${product.supplierName}/${product.type.toUpperCase()}${product.supplierId}/00`;	
 	
 	return product.formattedPromoPrice ? `
 		<a href="/produits/${product.id}" class="${itemName}-item container-link">
@@ -467,9 +467,11 @@ db.serialize(() => {
 								const userId = userToken.split(".")?.at(-1);
 								
 								db.get("SELECT * FROM users WHERE id = ?", userId, (err, row) => {
-									if (err) console.log("Erreur lors de la vérification du token: ", err);
-									else if (!row) handleGetRequest(url, req, res, searchParams, { "set-cookie": "token=; expires=Thu, 01 Jan 1970 00:00:00 GMT;" });
-									else handleGetRequest(url, req, res, searchParams);
+									if (err) {
+										console.log("Erreur lors de la vérification du token: ", err);
+
+										res.writeHead(500, "Internal Server Error").end();
+									} else handleGetRequest(url, req, res, searchParams, !row ? { "set-cookie": "token=; expires=Thu, 01 Jan 1970 00:00:00 GMT;" } : {});
 								});
 							} else handleGetRequest(url, req, res, searchParams);
 							break;
