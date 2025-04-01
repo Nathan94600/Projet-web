@@ -1,7 +1,7 @@
 // Importation des modules nécessaires
 const { createServer, ServerResponse, IncomingMessage } = require("http"),
 	{ createTransport } = require("nodemailer"),
-	{ readFile } = require("fs"),
+	{ readFile, readdir } = require("fs"),
 	{ Database } = require("sqlite3"),
 	{ randomUUID, randomBytes, pbkdf2Sync } = require("crypto"),
 	{ gzip, brotliCompress, deflate } = require("zlib"),
@@ -328,7 +328,44 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 			});
 		});
 	});
-	else getPage(url, {
+	else if (url.startsWith("/produits/")) {
+		const productId = url.split("/").at(-1);
+
+		db.get("SELECT *, CAST(price AS DECIMAL(10,2)) / 100.0 AS formattedPrice, CAST(promoPrice AS DECIMAL(10,2)) / 100.0 AS formattedPromoPrice FROM products WHERE id = ?", productId, (err, product) => {
+			if (err) {
+				console.log("Erreur lors de la récupération du produit: ", err);
+				res.writeHead(500, "Internal Server Error").end();
+			} else if (!product) res.writeHead(404, "Not found").end();
+			else readdir(`./images/products/${product.supplierName}/${product.type.toUpperCase()}${product.supplierId}`, (err, files) => {
+				if (err) {
+					console.log("Erreur lors de la récupéraction des images du produit: ", err);
+					res.writeHead(500, "Internal Server Error").end();
+				} else {
+					const firstImageURL = `/images/products/${product.supplierName}/${product.type.toUpperCase()}${product.supplierId}/01`, productPresentationHTML = `
+						<img src="${firstImageURL}.webp" alt="" id="display" srcset="${firstImageURL}-300w.webp 300w, ${firstImageURL}-500w.webp 500w, ${firstImageURL}-1000w.webp 1000w, ${firstImageURL}-1500w.webp 1500w">
+						<hr>
+						<div id="images-container">
+							<img src="${firstImageURL}.webp" alt="" id="current-presentation" srcset="${firstImageURL}-300w.webp 300w, ${firstImageURL}-500w.webp 500w, ${firstImageURL}-1000w.webp 1000w, ${firstImageURL}-1500w.webp 1500w">
+							${files.filter(file => !file.includes("-")).slice(2).map(file => {
+								const url = `/images/products/${product.supplierName}/${product.type.toUpperCase()}${product.supplierId}/${file.split(".")[0]}`;
+
+								return `<img src="${url}.webp" alt="" srcset="${url}-300w.webp 300w, ${url}-500w.webp 500w, ${url}-1000w.webp 1000w, ${url}-1500w.webp 1500w">`
+							}).join("")}
+						</div>
+					`;
+					
+					getPage("/produit", {
+						accountText: userToken ? "Mon compte" : "Se connecter",
+						accountLink: userToken ? "/profil" : "/connexion",
+						productPresentation: productPresentationHTML
+					}).then(
+						data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { ...headers, "content-type": `text/html`, "content-encoding": compression.encoding }).end(compression.data)),
+						() => res.writeHead(404, "Not found").end()
+					);
+				}
+			});
+		});
+	} else getPage(url, {
 		error: errorMessage ? `<p id="error">${errorMessage}</p>` : "",
 		email: params.get("email") || "",
 		code: params.get("code") || "",

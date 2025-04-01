@@ -23,7 +23,8 @@ body {
 
 #display {
 	margin-top: 2.5vw;
-	width: calc(100% - 5vw);
+	height: 50%;
+	/* width: calc(100% - 5vw); */
 }
 
 #presentation-container hr {
@@ -38,6 +39,7 @@ body {
 }
 
 #images-container {
+	overflow: auto;
 	width: calc(100% - 5vw);
 	display: flex;
 	flex-direction: row;
@@ -46,9 +48,9 @@ body {
 
 #images-container img {
 	margin-bottom: 2.5vw;
+	margin-right: 2rem;
 	background: #8a8a8a40;
 	border-radius: 5px;
-	padding: .25rem;
 	width: calc((100% - 9vw) / 4);
 }
 
