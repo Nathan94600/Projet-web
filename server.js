@@ -208,7 +208,7 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 			} else {			
 				const productsHTML = rows.map(product => `
 					<div class="product-card">
-						<img src="https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa" alt="Running Shoes">
+						<img src="/images/products/${product.supplierName}/${product.type.toUpperCase()}${product.supplierId}/01-300w.webp" alt="Running Shoes">
 						<div class="product-info">
 							<h3>${product.name}</h3>
 							<p class="price">Chaussure ${product.type == "m" ? sexes[product.type] : `pour ${sexes[product.type]}`}</p>
