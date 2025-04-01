@@ -23,13 +23,14 @@ body {
   
   /* Filters Sidebar */
 .filtres {
+    overflow: auto;
     position: fixed;
     width: 280px;
     background: white;
     padding: 20px;
     border-radius: 12px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    height: fit-content;
+    height: calc(100vh - 110px);
 }
   
 .filters h2 {
@@ -75,27 +76,49 @@ body {
     grid-template-columns: repeat(3, 1fr);
     gap: 8px;
 }
+
+.size-grid input {
+    display: none;
+}
+
+.size-grid input:checked ~ label {
+    border: #8a8a8a40 2px solid;
+	box-shadow: inset 4px 4px 5px #8a8a8a;
+}
   
-.size-btn {
-    padding: 8px;
+.size-grid div {
+    text-align: center;
     border: 1px solid #ddd;
     background: white;
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.2s;
 }
+
+.size-label {
+    border: #000 2px solid;
+    border-radius: 6px;
+    padding: 8px;
+    display: block;
+    width: 100%;
+}
   
-.size-btn:hover {
+.size-label:hover {
     background: #f5f5f5;
 }
   
   /* Color Options */
 .color-options {
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
 }
+
+.color-options div {
+    display: flex;
+}
   
-.color-btn {
+.color-label {
     width: 30px;
     height: 30px;
     border-radius: 50%;
@@ -103,8 +126,28 @@ body {
     cursor: pointer;
     transition: transform 0.2s;
 }
+
+#colors input {
+    display: none;
+}
+
+label[for="red"] { background: red; }
+label[for="blue"] { background: blue; }
+label[for="black"] { background: black; }
+label[for="purple"] { background: purple; }
+label[for="green"] { background: green; }
+label[for="orange"] { background: orange; }
+label[for="yellow"] { background: yellow; }
+label[for="pink"] { background: pink; }
+label[for="white"] { background: white; border: 1px solid black; }
+label[for="brown"] { background: #644117; }
+label[for="grey"] { background: grey; }
+
+#colors input:checked ~ label {
+    transform: scale(1.2);
+}
   
-.color-btn:hover {
+.color-label:hover {
     transform: scale(1.1);
 }
   
@@ -143,6 +186,8 @@ body {
 }
   
 .product-card {
+    text-decoration: none;
+    color: #000;
     width: 250px;
     height: 400px;
     background: white;
@@ -189,11 +234,6 @@ body {
     font-weight: bold;
     color: #2c5282;
     margin-bottom: 4px;
-}
-  
-.rating {
-    color: #f6ad55;
-    font-size: 0.9rem;
 }
   
   /* Responsive Design */

@@ -1,99 +1,169 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XYZ | Nos produits</title>
-    <link rel="stylesheet" href="/styles/components/header.css">
-    <link rel="stylesheet" href="/styles/produits.css">
-    <link rel="icon" href="./images/assets/xing-logo-svgrepo-com.svg"/>
-    <script src="/scripts/header.js" defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XYZ | Nos produits</title>
+  <link rel="stylesheet" href="/styles/components/header.css">
+  <link rel="stylesheet" href="/styles/produits.css">
+  <link rel="icon" href="./images/assets/xing-logo-svgrepo-com.svg" />
+  <script src="/scripts/header.js" defer></script>
 </head>
-</html>
-
 <body>
-    [header]
-    <div class="container">
-        <aside class="filtres">
-            <h2>Filtres</h2>
-            
-            <div class="filter-group">
-                <h3>Categorie</h3>
-                <label class="checkbox-container">
-                    <input type="checkbox" name="category" value="running">
-                    Running
-                </label>
-                <label class="checkbox-container">
-                    <input type="checkbox" name="category" value="casual">
-                    Casual
-                </label>
-                <label class="checkbox-container">
-                    <input type="checkbox" name="category" value="sports">
-                    Sports
-                </label>
-            </div>
-
-            <div class="filter-group">
-                <h3>Budget</h3>
-                <label class="checkbox-container">
-                    <input type="checkbox" name="price" value="0-50">
-                    0€ - 50€
-                </label>
-                <label class="checkbox-container">
-                    <input type="checkbox" name="price" value="51-100">
-                    51€ - 100€
-                </label>
-                <label class="checkbox-container">
-                    <input type="checkbox" name="price" value="101-200">
-                    101€ - 200€
-                </label>
-                <label class="checkbox-container">
-                    <input type="checkbox" name="price" value="201">
-                    201€+
-                </label>
-            </div>
-
-            <div class="filter-group">
-                <h3>Taille</h3>
-                <div class="size-grid">
-                    <button class="size-btn">36</button>
-                    <button class="size-btn">37</button>
-                    <button class="size-btn">38</button>
-                    <button class="size-btn">39</button>
-                    <button class="size-btn">40</button>
-                    <button class="size-btn">41</button>
-                </div>
-            </div>
-
-            <div class="filter-group">
-                <h3>Couleur</h3>
-                <div class="color-options">
-                    <button class="color-btn" style="background-color: #000000;"></button>
-                    <button class="color-btn" style="background-color: #FFFFFF; border: 1px solid #000000;"></button>
-                    <button class="color-btn" style="background-color: #FF0000;"></button>
-                    <button class="color-btn" style="background-color: #0000FF;"></button>
-                    <button class="color-btn" style="background-color: #06402B;"></button>
-                </div>
-            </div>
-        </aside>
-
-        <!-- Results Section -->
-        <div class="results">
-            <div class="results-header">
-                <h1>Chaussure ({{nbProducts}} Resultats)</h1>
-                <select class="sort-select">
-                    <option>Sort by: Featured</option>
-                    <option>Price: Low to High</option>
-                    <option>Price: High to Low</option>
-                    <option>Newest Arrivals</option>
-                    <option>Best Rated</option>
-                </select>
-            </div>
-
-            <div class="products-grid">
-                {{products}}
-            </div>
+  [header]
+  <div class="container">
+    <aside class="filtres">
+      <h2>Filtres</h2>
+      <div class="filter-group" id="genres">
+        <h3>Genres</h3>
+        <label class="checkbox-container">
+          <input type="checkbox" name="genre" value="h">
+          Homme
+        </label>
+        <label class="checkbox-container">
+          <input type="checkbox" name="genre" value="f">
+          Femme
+        </label>
+        <label class="checkbox-container">
+          <input type="checkbox" name="genre" value="e">
+          Enfant
+        </label>
+        <label class="checkbox-container">
+          <input type="checkbox" name="genre" value="m">
+          Mixte
+        </label>
+      </div>
+      <div class="filter-group" id="marques">
+        <h3>Marques</h3>
+        <label class="checkbox-container">
+          <input type="checkbox" name="marque" value="new-balance">
+          New Balance
+        </label>
+        <label class="checkbox-container">
+          <input type="checkbox" name="marque" value="puma">
+          Puma
+        </label>
+        <label class="checkbox-container">
+          <input type="checkbox" name="marque" value="nike">
+          Nike
+        </label>
+        <label class="checkbox-container">
+          <input type="checkbox" name="marque" value="asics">
+          Asics
+        </label>
+        <label class="checkbox-container">
+          <input type="checkbox" name="marque" value="adidas">
+          Adidas
+        </label>
+      </div>
+      <div class="filter-group" id="promos">
+        <h3>En promotion</h3>
+        <label class="checkbox-container">
+          <input type="checkbox" name="promo" value="true">
+          Oui
+        </label>
+        <label class="checkbox-container">
+          <input type="checkbox" name="promo" value="false">
+          Non
+        </label>
+      </div>
+      <div class="filter-group" id="news">
+        <h3>Nouveau</h3>
+        <label class="checkbox-container">
+          <input type="checkbox" name="new" value="true">
+          Oui
+        </label>
+        <label class="checkbox-container">
+          <input type="checkbox" name="new" value="false">
+          Non
+        </label>
+      </div>
+      <div class="filter-group" id="prices">
+        <h3>Prix</h3>
+        <label class="checkbox-container">
+          <input type="checkbox" name="price" value="0-50">
+          0€ - 50€
+        </label>
+        <label class="checkbox-container">
+          <input type="checkbox" name="price" value="51-100">
+          51€ - 100€
+        </label>
+        <label class="checkbox-container">
+          <input type="checkbox" name="price" value="101-+">
+          101€ et +
+        </label>
+      </div>
+      <div class="filter-group" id="sizes">
+        <h3>Tailles</h3>
+        <div class="size-grid">
+          {{sizes}}
         </div>
+      </div>
+      <div class="filter-group" id="colors">
+        <h3>Couleurs</h3>
+        <div class="color-options">
+          <div>
+            <input type="checkbox" name="color" value="1" id="red">
+            <label class="color-label" for="red"></label>
+          </div>
+          <div>
+            <input type="checkbox" name="color" value="2" id="blue">
+            <label class="color-label" for="blue"></label>
+          </div>
+          <div>
+            <input type="checkbox" name="color" value="4" id="black">
+            <label class="color-label" for="black"></label>
+          </div>
+          <div>
+            <input type="checkbox" name="color" value="8" id="purple">
+            <label class="color-label" for="purple"></label>
+          </div>
+          <div>
+            <input type="checkbox" name="color" value="16" id="green">
+            <label class="color-label" for="green"></label>
+          </div>
+          <div>
+            <input type="checkbox" name="color" value="32" id="orange">
+            <label class="color-label" for="orange"></label>
+          </div>
+          <div>
+            <input type="checkbox" name="color" value="64" id="yellow">
+            <label class="color-label" for="yellow"></label>
+          </div>
+          <div>
+            <input type="checkbox" name="color" value="128" id="pink">
+            <label class="color-label" for="pink"></label>
+          </div>
+          <div>
+            <input type="checkbox" name="color" value="256" id="white">
+            <label class="color-label" for="white"></label>
+          </div>
+          <div>
+            <input type="checkbox" name="color" value="512" id="brown">
+            <label class="color-label" for="brown"></label>
+          </div>
+          <div>
+            <input type="checkbox" name="color" value="1024" id="grey">
+            <label class="color-label" for="grey"></label>
+          </div>
+        </div>
+      </div>
+    </aside>
+    <div class="results">
+      <div class="results-header">
+        <h1>Chaussure ({{nbProducts}} Resultats)</h1>
+        <select class="sort-select">
+          <option>Sort by: Featured</option>
+          <option>Price: Low to High</option>
+          <option>Price: High to Low</option>
+          <option>Newest Arrivals</option>
+          <option>Best Rated</option>
+        </select>
+      </div>
+      <div class="products-grid">
+        {{products}}
+      </div>
     </div>
+  </div>
 </body>
 </html>

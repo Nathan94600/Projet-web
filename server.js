@@ -236,26 +236,37 @@ function handleGetRequest(url, req, res, params, cookies, headers = {}) {
 			if (err) {
 				console.error("Erreur lors de la récupération des produits: ", err);
 				res.writeHead(500, "Internal Server Error").end();
-			} else getPage(url, {
-				products: rows.map(product => `
-					<div class="product-card">
-						<img src="/images/products/${product.supplierName}/${product.type.toUpperCase()}${product.supplierId}/01-300w.webp" alt="Running Shoes">
-						<div class="product-info">
-							<h3>${product.name}</h3>
-							<p class="price">${typeToText(product.type)}</p>
-							<p class="price">${product.formattedPrice}€</p>
-							${product.formattedPromoPrice ? `<p class="promo-price">${product.formattedPromoPrice}€</p>` : ""}
-							<div class="rating"> ★★★★☆(4.0)</div>
-						</div>
-					</div>
-				`).join(""),
-				nbProducts: rows.length,
-				accountText: userToken ? "Mon compte" : "Se connecter",
-				accountLink: userToken ? "/profil" : "/connexion"
-			}).then(
-				data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { ...headers, "content-type": `text/html`, "content-encoding": compression.encoding }).end(compression.data)),
-				() => res.writeHead(404, "Not found").end()
-			);
+			} else db.all("SELECT DISTINCT size FROM stocks ORDER BY size ASC", (err, sizes) => {				
+				if (err) {
+					console.error("Erreur lors de la récupération des tailles: ", err);
+
+					res.writeHead(500, "Internal Server Error").end();
+				} else getPage(url, {
+					products: rows.map(product => `
+						<a href="/produits/${product.id}" class="product-card">
+							<img src="/images/products/${product.supplierName}/${product.type.toUpperCase()}${product.supplierId}/01-300w.webp" alt="Running Shoes">
+							<div class="product-info">
+								<h3>${product.name}</h3>
+								<p class="price">${typeToText(product.type)}</p>
+								<p class="price">${product.formattedPrice}€</p>
+								${product.formattedPromoPrice ? `<p class="promo-price">${product.formattedPromoPrice}€</p>` : ""}
+							</div>
+						</a>
+					`).join(""),
+					nbProducts: rows.length,
+					accountText: userToken ? "Mon compte" : "Se connecter",
+					accountLink: userToken ? "/profil" : "/connexion",
+					sizes: sizes.map(({ size }) => `
+					  <div>
+            	<input type="checkbox" name="size" value="${size}" id="${size}">
+          	  <label class="size-label" for="${size}">${size}</label>
+          	</div>
+					`).join("")
+				}).then(
+					data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { ...headers, "content-type": `text/html`, "content-encoding": compression.encoding }).end(compression.data)),
+					() => res.writeHead(404, "Not found").end()
+				);
+			})
 		});
 	} else if (url == "/") db.all("SELECT *, CAST(price AS DECIMAL(10,2)) / 100.0 AS formattedPrice, CAST(promoPrice AS DECIMAL(10,2)) / 100.0 AS formattedPromoPrice FROM products WHERE date > ?", Date.now() - 1209600000 /* 2 semaines */, (err, newProductsRows) => {
 		if (err) {
