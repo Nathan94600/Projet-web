@@ -157,6 +157,32 @@ function typeToText(type) {
 	return `Chaussure ${type == "m" ? sexes[type] : `pour ${sexes[type]}`}`;
 };
 
+function generateProductItem(product, itemName) {
+	const url = `/images/products/${product.supplierName}/${product.type.toUpperCase()}${product.supplierId}/00`;
+	
+	return product.formattedPromoPrice ? `
+		<a href="/produits/${product.id}" class="${itemName}-item container-link">
+			<img src="${url}-1000w.webp" alt="" class="product-img" srcset="${url}-300w.webp 300w, ${url}-500w.webp 500w, ${url}-1000w.webp 1000w" sizes="20vw">
+			<hr class="separator">
+			<p class="promo">EN PROMOTION</p>
+			<p class="name">${product.name}</p>
+			<p class="type">${typeToText(product.type)}</p>
+			<div class="prices">
+				<p class="promo-price">${product.formattedPromoPrice}€</p>
+				<p class="price">${product.formattedPrice}€</p>
+			</div>
+		</a>
+	` : `
+		<a href="/produits/${product.id}" class="${itemName}-item container-link">
+			<img src="${url}-1000w.webp" alt="" class="product-img" srcset="${url}-300w.webp 300w, ${url}-500w.webp 500w, ${url}-1000w.webp 1000w" sizes="20vw">
+			<hr class="separator">
+			<p>${product.name}</p>
+			<p class="type">${typeToText(product.type)}</p>
+			<p class="price">${product.formattedPrice}€</p>
+		</a>
+	`;
+};
+
 /**
  * Gère les requêtes GET en fonction de l'URL.
  * @param { string } url - L'URL de la requête.
@@ -209,8 +235,8 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 			if (err) {
 				console.log("Erreur lors de la récupération des produits: ", err);
 				res.writeHead(500, "Internal Server Error").end();
-			} else {
-				const productsHTML = rows.map(product => `
+			} else getPage(url, {
+				products: rows.map(product => `
 					<div class="product-card">
 						<img src="/images/products/${product.supplierName}/${product.type.toUpperCase()}${product.supplierId}/01-300w.webp" alt="Running Shoes">
 						<div class="product-info">
@@ -221,13 +247,14 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 							<div class="rating"> ★★★★☆(4.0)</div>
 						</div>
 					</div>
-				`);
-	
-				getPage(url, { products: productsHTML.join(""), nbProducts: rows.length, accountText: userToken ? "Mon compte" : "Se connecter", accountLink: userToken ? "/profil" : "/connexion" }).then(
-					data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { ...headers, "content-type": `text/html`, "content-encoding": compression.encoding }).end(compression.data)),
-					() => res.writeHead(404, "Not found").end()
-				);
-			};
+				`).join(""),
+				nbProducts: rows.length,
+				accountText: userToken ? "Mon compte" : "Se connecter",
+				accountLink: userToken ? "/profil" : "/connexion"
+			}).then(
+				data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { ...headers, "content-type": `text/html`, "content-encoding": compression.encoding }).end(compression.data)),
+				() => res.writeHead(404, "Not found").end()
+			);
 		});
 	} else if (url == "/") db.all("SELECT *, CAST(price AS DECIMAL(10,2)) / 100.0 AS formattedPrice, CAST(promoPrice AS DECIMAL(10,2)) / 100.0 AS formattedPromoPrice FROM products WHERE date > ?", Date.now() - 1209600000 /* 2 semaines */, (err, newProductsRows) => {
 		if (err) {
@@ -244,81 +271,9 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 				} else getPage(url, {
 					accountText: userToken ? "Mon compte" : "Se connecter",
 					accountLink: userToken ? "/profil" : "/connexion",
-					newProducts: newProductsRows.map(product => {
-						const url = `/images/products/${product.supplierName}/${product.type.toUpperCase()}${product.supplierId}/00`;
-	
-						return product.formattedPromoPrice ? `
-							<a href="/produits/${product.id}" class="news-item container-link">
-								<img src="${url}-1000w.webp" alt="" class="product-img" srcset="${url}-300w.webp 300w, ${url}-500w.webp 500w, ${url}-1000w.webp 1000w" sizes="20vw">
-								<hr class="separator">
-								<p class="promo">EN PROMOTION</p>
-								<p class="name">${product.name}</p>
-								<p class="type">${typeToText(product.type)}</p>
-								<div class="prices">
-									<p class="promo-price">${product.formattedPromoPrice}€</p>
-									<p class="price">${product.formattedPrice}€</p>
-								</div>
-							</a>
-						` : `
-							<a href="/produits/${product.id}" class="news-item container-link">
-								<img src="${url}-1000w.webp" alt="" class="product-img" srcset="${url}-300w.webp 300w, ${url}-500w.webp 500w, ${url}-1000w.webp 1000w" sizes="20vw">
-								<hr class="separator">
-								<p>${product.name}</p>
-								<p class="type">${typeToText(product.type)}</p>
-								<p class="price">${product.formattedPrice}€</p>
-							</a>
-						`;
-					}).join(""),
-					bestProducts: bestProductsRows.map(product => {
-						const url = `/images/products/${product.supplierName}/${product.type.toUpperCase()}${product.supplierId}/00`;
-
-						return product.formattedPromoPrice ? `
-							<a href="/produits/${product.id}" class="best-seller-item container-link">
-								<img src="${url}-1000w.webp" alt="" class="product-img" srcset="${url}-300w.webp 300w, ${url}-500w.webp 500w, ${url}-1000w.webp 1000w" sizes="20vw">
-								<hr class="separator">
-								<p class="promo">EN PROMOTION</p>
-								<p class="name">${product.name}</p>
-								<p class="type">${typeToText(product.type)}</p>
-								<div class="prices">
-									<p class="promo-price">${product.formattedPromoPrice}€</p>
-									<p class="price">${product.formattedPrice}€</p>
-								</div>
-							</a>
-						` : `
-							<a href="/produits/${product.id}" class="best-seller-item container-link">
-								<img src="${url}-1000w.webp" alt="" class="product-img" srcset="${url}-300w.webp 300w, ${url}-500w.webp 500w, ${url}-1000w.webp 1000w" sizes="20vw">
-								<hr class="separator">
-								<p>${product.name}</p>
-								<p class="type">${typeToText(product.type)}</p>
-								<p class="price">${product.formattedPrice}€</p>
-							</a>
-						`;
-					}).join(""),
-					promoProducts: promoProductsRows.map(product => {
-						const url = `/images/products/${product.supplierName}/${product.type.toUpperCase()}${product.supplierId}/00`;
-
-						return product.formattedPromoPrice ? `
-							<a href="/produits/${product.id}" class="promo-item container-link">
-								<img src="${url}-1000w.webp" alt="" class="product-img" srcset="${url}-300w.webp 300w, ${url}-500w.webp 500w, ${url}-1000w.webp 1000w" sizes="20vw">
-								<hr class="separator">
-								<p class="promo">EN PROMOTION</p>
-								<p class="name">${product.name}</p>
-								<p class="type">${typeToText(product.type)}</p>
-								<div class="prices">
-									<p class="promo-price">${product.formattedPromoPrice}€</p>
-									<p class="price">${product.formattedPrice}€</p>
-								</div>
-							</a>
-						` : `
-							<a href="/produits/${product.id}" class="promo-item container-link">
-								<img src="${url}-1000w.webp" alt="" class="product-img" srcset="${url}-300w.webp 300w, ${url}-500w.webp 500w, ${url}-1000w.webp 1000w" sizes="20vw">
-								<hr class="separator">
-								<p>${product.name}</p>
-								<p class="price">${typeToText(product.type)}</p>
-								<p class="price">${product.formattedPrice}€</p>
-							</a>
-						`;
-					}).join(""),
+					newProducts: newProductsRows.map(product => generateProductItem(product, "news")).join(""),
+					bestProducts: bestProductsRows.map(product => generateProductItem(product, "best-seller")).join(""),
+					promoProducts: promoProductsRows.map(product => generateProductItem(product, "promo")).join(""),
 				}).then(
 					data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { ...headers, "content-type": `text/html`, "content-encoding": compression.encoding }).end(compression.data)),
 					() => res.writeHead(404, "Not found").end()
