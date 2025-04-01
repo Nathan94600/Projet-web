@@ -153,6 +153,10 @@ function getPage(pageURL, params = {}) {
 	});
 };
 
+function typeToText(type) {
+	return `Chaussure ${type == "m" ? sexes[type] : `pour ${sexes[type]}`}`;
+};
+
 /**
  * Gère les requêtes GET en fonction de l'URL.
  * @param { string } url - L'URL de la requête.
@@ -211,7 +215,7 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 						<img src="/images/products/${product.supplierName}/${product.type.toUpperCase()}${product.supplierId}/01-300w.webp" alt="Running Shoes">
 						<div class="product-info">
 							<h3>${product.name}</h3>
-							<p class="price">Chaussure ${product.type == "m" ? sexes[product.type] : `pour ${sexes[product.type]}`}</p>
+							<p class="price">${typeToText(product.type)}</p>
 							<p class="price">${product.formattedPrice}€</p>
 							${product.formattedPromoPrice ? `<p class="promo-price">${product.formattedPromoPrice}€</p>` : ""}
 							<div class="rating"> ★★★★☆(4.0)</div>
@@ -247,7 +251,7 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 								<hr class="separator">
 								<p class="promo">EN PROMOTION</p>
 								<p class="name">${product.name}</p>
-								<p class="type">Chaussure ${product.type == "m" ? sexes[product.type] : `pour ${sexes[product.type]}`}</p>
+								<p class="type">${typeToText(product.type)}</p>
 								<div class="prices">
 									<p class="promo-price">${product.formattedPromoPrice}€</p>
 									<p class="price">${product.formattedPrice}€</p>
@@ -258,7 +262,7 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 								<img src="${url}-1000w.webp" alt="" class="product-img" srcset="${url}-300w.webp 300w, ${url}-500w.webp 500w, ${url}-1000w.webp 1000w" sizes="20vw">
 								<hr class="separator">
 								<p>${product.name}</p>
-								<p class="price">Chaussure ${product.type == "m" ? sexes[product.type] : `pour ${sexes[product.type]}`}</p>
+								<p class="price">${typeToText(product.type)}</p>
 								<p class="price">${product.formattedPrice}€</p>
 							</a>
 						`;
@@ -272,7 +276,7 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 								<hr class="separator">
 								<p class="promo">EN PROMOTION</p>
 								<p class="name">${product.name}</p>
-								<p class="type">Chaussure ${product.type == "m" ? sexes[product.type] : `pour ${sexes[product.type]}`}</p>
+								<p class="type">${typeToText(product.type)}</p>
 								<div class="prices">
 									<p class="promo-price">${product.formattedPromoPrice}€</p>
 									<p class="price">${product.formattedPrice}€</p>
@@ -283,7 +287,7 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 								<img src="${url}-1000w.webp" alt="" class="product-img" srcset="${url}-300w.webp 300w, ${url}-500w.webp 500w, ${url}-1000w.webp 1000w" sizes="20vw">
 								<hr class="separator">
 								<p>${product.name}</p>
-								<p class="price">Chaussure ${product.type == "m" ? sexes[product.type] : `pour ${sexes[product.type]}`}</p>
+								<p class="price">${typeToText(product.type)}</p>
 								<p class="price">${product.formattedPrice}€</p>
 							</a>
 						`;
@@ -297,7 +301,7 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 								<hr class="separator">
 								<p class="promo">EN PROMOTION</p>
 								<p class="name">${product.name}</p>
-								<p class="type">Chaussure ${product.type == "m" ? sexes[product.type] : `pour ${sexes[product.type]}`}</p>
+								<p class="type">${typeToText(product.type)}</p>
 								<div class="prices">
 									<p class="promo-price">${product.formattedPromoPrice}€</p>
 									<p class="price">${product.formattedPrice}€</p>
@@ -308,7 +312,7 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 								<img src="${url}-1000w.webp" alt="" class="product-img" srcset="${url}-300w.webp 300w, ${url}-500w.webp 500w, ${url}-1000w.webp 1000w" sizes="20vw">
 								<hr class="separator">
 								<p>${product.name}</p>
-								<p class="price">Chaussure ${product.type == "m" ? sexes[product.type] : `pour ${sexes[product.type]}`}</p>
+								<p class="price">${typeToText(product.type)}</p>
 								<p class="price">${product.formattedPrice}€</p>
 							</a>
 						`;
@@ -375,7 +379,7 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 								<p id="name">${product.name}</p>
 								${product.promoPrice ? '<p id="promo">EN PROMOTION</p>' : ""}
 							</div>
-							<p id="type">Chaussure ${product.type == "m" ? sexes[product.type] : `pour ${sexes[product.type]}`}</p>
+							<p id="type">${typeToText(product.type)}</p>
 							${product.promoPrice ? `
 								<div id="prices">
 									<p id="promo-price">${product.formattedPromoPrice}€</p>
