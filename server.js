@@ -328,6 +328,7 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 			});
 		});
 	});
+	else if (url == "/index" || url == "/produit") res.writeHead(404, "Not found").end()
 	else if (url.startsWith("/produits/")) {
 		const productId = url.split("/").at(-1);
 
