@@ -2,6 +2,37 @@ body {
 	overflow-x: hidden;
 }
 
+#error {
+  margin-top: 1rem;
+	color: #ff0000;
+	width: max-content;
+	padding: 1rem;
+	background: rgba(197, 25, 25, 0.25);
+	border-radius: 10px;
+	border: 2px solid #ff0000;
+  position: absolute;
+  left: 0; 
+  right: 0; 
+  margin-inline: auto; 
+  width: fit-content;
+}
+
+#success {
+  margin-top: 1rem;
+	color: #2bff00;
+	width: max-content;
+	padding: 1rem;
+	background: rgba(25, 197, 25, 0.25);
+	border-radius: 10px;
+	border: 2px solid #2bff00;
+  position: absolute;
+  left: 0; 
+  right: 0; 
+  margin-inline: auto; 
+  width: fit-content;
+}
+
+
 #container {
 	height: calc(100vh - 10vw - 70px);
 	width: calc(90vw);

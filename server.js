@@ -16,7 +16,7 @@ variableRegexp = /(?<!\\)(?:\\\\)*{{[A-z]+}}/g,
 emailRegexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
 supportedEncodings = ["*", "br", "deflate", "gzip"],
 db = new Database("database.db", err => {
-	if (err) console.log("Erreur lors de la connexion à la base de données: ", err);
+	if (err) console.error("Erreur lors de la connexion à la base de données: ", err);
 	else console.log("Connexion à la base de données réussie");
 }),
 colors = {
@@ -191,9 +191,10 @@ function generateProductItem(product, itemName) {
  * @param { URLSearchParams } params - Les paramètres de la requête.
  * @param { Record<string, string> } headers - Les en-têtes supplémentaires à ajouter à la réponse.
  */
-function handleGetRequest(url, req, res, params, headers = {}) {
-	const userToken = params.get("userToken"),
-	errorMessage = params.get("errorMessage");
+function handleGetRequest(url, req, res, params, cookies, headers = {}) {	
+	const userToken = cookies.token,
+	errorMessage = params.get("errorMessage"),
+	successMessage = params.get("successMessage");	
 
 	if (url.startsWith("/images/")) readFile(`.${url}`, (err, data) => {
 		if (err) res.writeHead(404, "Not found").end();
@@ -233,7 +234,7 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 		
 		db.all(`SELECT *, CAST(price AS DECIMAL(10,2)) / 100.0 AS formattedPrice, CAST(promoPrice AS DECIMAL(10,2)) / 100.0 AS formattedPromoPrice FROM products${conditions.length != 0 ? ` WHERE ${conditions.join(" AND ")}` : ""}`, (err, rows) => {
 			if (err) {
-				console.log("Erreur lors de la récupération des produits: ", err);
+				console.error("Erreur lors de la récupération des produits: ", err);
 				res.writeHead(500, "Internal Server Error").end();
 			} else getPage(url, {
 				products: rows.map(product => `
@@ -258,15 +259,15 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 		});
 	} else if (url == "/") db.all("SELECT *, CAST(price AS DECIMAL(10,2)) / 100.0 AS formattedPrice, CAST(promoPrice AS DECIMAL(10,2)) / 100.0 AS formattedPromoPrice FROM products WHERE date > ?", Date.now() - 1209600000 /* 2 semaines */, (err, newProductsRows) => {
 		if (err) {
-			console.log("Erreur lors de la récupération des nouveaux produits: ", err);
+			console.error("Erreur lors de la récupération des nouveaux produits: ", err);
 			res.writeHead(500, "Internal Server Error").end();
 		} else db.all("SELECT *, CAST(price AS DECIMAL(10,2)) / 100.0 AS formattedPrice, CAST(promoPrice AS DECIMAL(10,2)) / 100.0 AS formattedPromoPrice FROM products ORDER BY soldCount DESC LIMIT 8", (err, bestProductsRows) => {
 			if (err) {
-				console.log("Erreur lors de la récupération des meilleurs produits: ", err);
+				console.error("Erreur lors de la récupération des meilleurs produits: ", err);
 				res.writeHead(500, "Internal Server Error").end();
 			} else db.all("SELECT *, CAST(price AS DECIMAL(10,2)) / 100.0 AS formattedPrice, CAST(promoPrice AS DECIMAL(10,2)) / 100.0 AS formattedPromoPrice FROM products WHERE promoPrice IS NOT NULL LIMIT 8", (err, promoProductsRows) => {
 				if (err) {
-					console.log("Erreur lors de la récupération des produits en promo: ", err);
+					console.error("Erreur lors de la récupération des produits en promo: ", err);
 					res.writeHead(500, "Internal Server Error").end();
 				} else getPage(url, {
 					accountText: userToken ? "Mon compte" : "Se connecter",
@@ -298,16 +299,16 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 			FROM products JOIN stocks ON products.id = stocks.productId WHERE products.id = ? GROUP BY products.id
 		`, productId, (err, product) => {
 			if (err) {
-				console.log("Erreur lors de la récupération du produit: ", err);
+				console.error("Erreur lors de la récupération du produit: ", err);
 				res.writeHead(500, "Internal Server Error").end();
 			} else if (!product) res.writeHead(404, "Not found").end();
 			else readdir(`./images/products/${product.supplierName}/${product.type.toUpperCase()}${product.supplierId}`, (err, files) => {
 				if (err) {
-					console.log("Erreur lors de la récupéraction des images du produit: ", err);
+					console.error("Erreur lors de la récupéraction des images du produit: ", err);
 					res.writeHead(500, "Internal Server Error").end();
 				} else db.all("SELECT id, supplierId FROM products WHERE supplierName = ? AND type = ? AND name = ?", [product.supplierName, product.type, product.name], (err, rows) => {
 					if (err) {
-						console.log("Erreur lors de la récupéraction des produits liés : ", err);
+						console.error("Erreur lors de la récupéraction des produits liés : ", err);
 						res.writeHead(500, "Internal Server Error").end();
 					} else {
 						const firstImageURL = `/images/products/${product.supplierName}/${product.type.toUpperCase()}${product.supplierId}/01`;						
@@ -345,7 +346,7 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 	
 								return `
 									<div>
-										<input type="radio" id="${size}" name="size"${quantity == 0 ? " disabled" : ""}>
+										<input type="radio" id="${size}" value="${size}" name="size"${quantity == 0 ? " disabled" : ""}>
 										<label for="${size}">${size}</label>
 									</div>
 								`;
@@ -359,7 +360,9 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 									</a>
 								`;
 							}).join(""),
-							productId: productId
+							productId: productId,
+							error: errorMessage ? `<p id="error">${errorMessage}</p>` : "",
+							success: successMessage ? `<p id="success">${successMessage}</p>` : ""
 						}).then(
 							data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { ...headers, "content-type": `text/html`, "content-encoding": compression.encoding }).end(compression.data)),
 							() => res.writeHead(404, "Not found").end()
@@ -382,7 +385,7 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 
 db.serialize(() => {
 	db.run("BEGIN TRANSACTION", err => {
-		if (err) console.log("Erreur lors de la création de la transaction: ", err);
+		if (err) console.error("Erreur lors de la création de la transaction: ", err);
 	});
 
 	db.exec(`
@@ -420,20 +423,31 @@ db.serialize(() => {
 			password CHAR(128) NOT NULL,
 			password_salt CHAR(256) NOT NULL
 		);
+
+		CREATE TABLE IF NOT EXISTS carts (
+			id CHAR(36) NOT NULL PRIMARY KEY,
+			userId CHAR(36) NOT NULL,
+			productId CHAR(36) NOT NULL,
+			size INT NOT NULL,
+			FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,
+			FOREIGN KEY (productId) REFERENCES products(id) ON DELETE CASCADE
+		);
+
+		CREATE UNIQUE INDEX IF NOT EXISTS indexProductInCart ON carts(userId, productId, size);
 	`, err => {
-		if (err) console.log("Erreur lors de la création des tables: ", err);
+		if (err) console.error("Erreur lors de la création des tables: ", err);
 	});
 
 	const reqForProducts = db.prepare("INSERT OR IGNORE INTO products (id, supplierId, name, price, promoPrice, type, colors, date, supplierName, soldCount) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
 	products.forEach(product => {
 		reqForProducts.run(randomUUID({ disableEntropyCache: true }), product.supplierId, product.name, product.price, product.promoPrice || null, product.type, product.colors, new Date(product.date).getTime(), product.supplierName, product.soldCount, err => {
-			if (err) console.log("Erreur lors de l'ajout du produit: ", err);
+			if (err) console.error("Erreur lors de l'ajout du produit: ", err);
 		});
 	});
 
 	reqForProducts.finalize(err => {
-		if (err) console.log("Erreur lors de la finalisation de la requête: ", err);
+		if (err) console.error("Erreur lors de la finalisation de la requête: ", err);
 	});
 
 	const reqForStocks = db.prepare("INSERT OR IGNORE INTO stocks (id, productId, quantity, size) VALUES (?, ?, ?, ?)");
@@ -441,25 +455,25 @@ db.serialize(() => {
 	Promise.all(stocks.map(stock => new Promise((resolve, reject) => {
 		db.get("SELECT id FROM products WHERE supplierId = ?", stock.supplierId, (err, row) => {
 			if (err) {
-				console.log("Erreur lors de la récupération de l'id du produit: ", err);
+				console.error("Erreur lors de la récupération de l'id du produit: ", err);
 				reject(err);
 			} else if (!row) {
-				console.log("Produit introuvable: ", stock.supplierId);
+				console.error("Produit introuvable: ", stock.supplierId);
 				reject(new Error("Produit introuvable"));
 			} else Object.entries(stock.quantities).forEach(([size, quantity]) => reqForStocks.run(randomUUID({ disableEntropyCache: true }), row.id, quantity, size, err => {
 				if (err) {
-					console.log("Erreur lors de l'ajout du stock: ", err);
+					console.error("Erreur lors de l'ajout du stock: ", err);
 					reject(err);
 				} else resolve();
 			}));
 		})
 	}))).then(() => {
 		reqForStocks.finalize(err => {
-			if (err) console.log("Erreur lors de la finalisation de la requête: ", err);
+			if (err) console.error("Erreur lors de la finalisation de la requête: ", err);
 			else db.run("COMMIT", err => {
-				if (err) console.log("Erreur lors de la validation de la transaction: ", err);
+				if (err) console.error("Erreur lors de la validation de la transaction: ", err);
 				else createServer((req, res) => {
-					const { pathname: url, searchParams } = new URL(req.url, "http://localhost:8080"), userToken = new URLSearchParams(req.headers.cookie || "").get("token");
+					const { pathname: url, searchParams } = new URL(req.url, "http://localhost:8080"), cookies = Object.fromEntries(req.headers.cookie?.split(";").map(cookie => cookie.trim().split("=")) || []), userToken = cookies?.token;									
 
 					switch (req.method) {
 						case "GET":
@@ -468,17 +482,34 @@ db.serialize(() => {
 								
 								db.get("SELECT * FROM users WHERE id = ?", userId, (err, row) => {
 									if (err) {
-										console.log("Erreur lors de la vérification du token: ", err);
+										console.error("Erreur lors de la vérification du token: ", err);
 
 										res.writeHead(500, "Internal Server Error").end();
-									} else handleGetRequest(url, req, res, searchParams, !row ? { "set-cookie": "token=; expires=Thu, 01 Jan 1970 00:00:00 GMT;" } : {});
+									} else handleGetRequest(url, req, res, searchParams, cookies, !row ? { "set-cookie": "token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; Path=/;" } : {});
 								});
-							} else handleGetRequest(url, req, res, searchParams);
+							} else handleGetRequest(url, req, res, searchParams, cookies);
 							break;
-						case "POST":
+						case "POST":							
 							let body = "";
 
 							switch (url) {
+								case "/cart/add":
+									req.on("data", chunk => body += chunk).on("end", () => {
+										const params = new URLSearchParams(body), productId = params.get("id"), size = parseFloat(params.get("size")), userId = userToken?.split(".")?.at(-1);
+
+										if (!size) res.writeHead(302, { location: `/produits/${productId}?errorMessage=${encodeURIComponent("Taille invalide")}` }).end();
+										else if (userToken) db.run("INSERT INTO carts (id, userId, productId, size) VALUES (?, ?, ?, ?)", [randomUUID({ disableEntropyCache: true }), userId, productId, size], err => {
+											if (err) res.writeHead(302, { location: `/produits/${productId}?errorMessage=${encodeURIComponent("Erreur lors de l'ajout du produit au panier' ")}` }).end();
+											else res.writeHead(302, { location: `/produits/${productId}?successMessage=${encodeURIComponent("Article ajouté au panier")}` }).end();
+										});
+										else {
+											const products = cookies.cart;											
+
+											if (products.includes(`${productId}.${size}`)) res.writeHead(302, { location: `/produits/${productId}?errorMessage=${encodeURIComponent("Cet article est déjà dans votre panier")}` }).end();
+											else res.writeHead(302, { location: `/produits/${productId}?successMessage=${encodeURIComponent("Article ajouté au panier")}`, "set-cookie": `cart=${products ? `${products}_` : ""}${productId}.${size}; Max-Age=2592000; Path=/;` }).end();
+										};
+									});
+									break;
 								case "/connexion":
 									req.on("data", chunk => body += chunk).on("end", () => {
 										const params = new URLSearchParams(body), email = params.get("email"), password = params.get("password");
@@ -493,12 +524,12 @@ db.serialize(() => {
 										if (errorMessage) res.writeHead(302, { location: `/inscription?error=${encodeURIComponent(errorMessage)}` }).end();
 										else db.get("SELECT * FROM users WHERE email = ?", email, (err, row) => {								
 											if (err) {
-												console.log("Erreur lors de la vérication de l'email: ", err);
+												console.error("Erreur lors de la vérication de l'email: ", err);
 
 												res.writeHead(302, { location: `/connexion?error=${encodeURIComponent("Erreur lors de la vérification de l'email")}` }).end();
 											} else if (!row) res.writeHead(302, { location: `/connexion?error=${encodeURIComponent("Aucun compte n'est associé à cet email")}` }).end();
 											else if (row.password != securePassword(password, row.password_salt).password) res.writeHead(302, { location: `/connexion?error=${encodeURIComponent("Mot de passe incorrect")}` }).end();
-											else res.writeHead(302, { location: "/", "set-cookie": `token=${randomBytes(64).toString('hex')}.${row.id};` }).end();
+											else res.writeHead(302, { location: "/", "set-cookie": `token=${randomBytes(64).toString('hex')}.${row.id}; Path=/;` }).end();
 										});
 									});
 									break;
@@ -523,16 +554,16 @@ db.serialize(() => {
 
 											db.get("SELECT * FROM users WHERE email = ?", email, (err, row) => {
 												if (err) {
-													console.log("Erreur lors de la vérication de l'email: ", err);
+													console.error("Erreur lors de la vérication de l'email: ", err);
 
 													res.writeHead(302, { location: `/inscription?error=${encodeURIComponent("Erreur lors de la vérification de l'email")}` }).end();
 												} else if (row) res.writeHead(302, { location: `/inscription?error=${encodeURIComponent("Cet email est déjà utilisé")}` }).end();
 												else db.run(`INSERT INTO users (id, email, username, password, password_salt) VALUES (?, ?, ?, ?, ?)`, [userId, email, username, encryptedPassword, passwordSalt], err => {
 													if (err) {
-														console.log("Erreur lors de la création du compte : ", err);
+														console.error("Erreur lors de la création du compte : ", err);
 
 														res.writeHead(302, { location: `/inscription?error=${encodeURIComponent("Erreur lors de la création du compte ")}` }).end();
-													} else res.writeHead(302, { location: "/", "set-cookie": `token=${randomBytes(64).toString('hex')}.${userId};` }).end();
+													} else res.writeHead(302, { location: "/", "set-cookie": `token=${randomBytes(64).toString('hex')}.${userId}; Path=/;` }).end();
 												});
 											});
 										};

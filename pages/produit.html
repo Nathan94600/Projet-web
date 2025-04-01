@@ -10,6 +10,8 @@
 </head>
 <body>
   [header]
+	{{error}}
+	{{success}}
 	<div id="container">
 		<div id="presentation-container">
 			{{productPresentation}}
@@ -19,7 +21,8 @@
 			<div id="other-items">
 				{{linkedProducts}}
 			</div>
-			<form action="/baskets/add?id={{productId}}" method="post" id="add-item">
+			<form action="/cart/add" method="POST" id="add-item">
+				<input type="text" value="{{productId}}" name="id" style="display: none;">
 				<fieldset>
 					<legend>Sélectionner une taille</legend>
 					<div id="input-container">

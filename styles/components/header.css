@@ -65,7 +65,7 @@ header {
     cursor: pointer;
 }
 
-#account-container, #basket-container {
+#account-container, #cart-container {
     display: flex;
     align-items: center;
     text-decoration: none;
