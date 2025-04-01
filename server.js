@@ -201,11 +201,11 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 
 		if (suppliersCondition) conditions.push(`(${suppliersCondition})`);		
 		
-		db.all(`SELECT *, CAST(price AS DECIMAL(10,2)) / 100 AS formattedPrice, CAST(promoPrice AS DECIMAL(10,2)) / 100 AS formattedPromoPrice FROM products${conditions.length != 0 ? ` WHERE ${conditions.join(" AND ")}` : ""}`, (err, rows) => {
+		db.all(`SELECT *, CAST(price AS DECIMAL(10,2)) / 100.0 AS formattedPrice, CAST(promoPrice AS DECIMAL(10,2)) / 100.0 AS formattedPromoPrice FROM products${conditions.length != 0 ? ` WHERE ${conditions.join(" AND ")}` : ""}`, (err, rows) => {
 			if (err) {
 				console.log("Erreur lors de la récupération des produits: ", err);
 				res.writeHead(500, "Internal Server Error").end();
-			} else {			
+			} else {
 				const productsHTML = rows.map(product => `
 					<div class="product-card">
 						<img src="/images/products/${product.supplierName}/${product.type.toUpperCase()}${product.supplierId}/01-300w.webp" alt="Running Shoes">
