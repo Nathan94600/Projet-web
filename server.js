@@ -340,7 +340,7 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 									</div>
 								` : `<p id="price">${product.formattedPrice}€</p>`}
 							`,
-							sizes: product.stocks.split(" ").map((stock, i) => {
+							sizes: product.stocks.split(" ").map(stock => {
 								const [size, quantity] = stock.split("-");
 	
 								return `
@@ -358,7 +358,8 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 										<img src="${url}.webp" alt="" srcset="${url}-300w.webp 300w, ${url}-500w.webp 500w, ${url}-1000w.webp 1000w, ${url}-1500w.webp 1500w" alt="" ${row.supplierId == product.supplierId ? 'class="current-item"' : ""}>
 									</a>
 								`;
-							}).join("")
+							}).join(""),
+							productId: productId
 						}).then(
 							data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { ...headers, "content-type": `text/html`, "content-encoding": compression.encoding }).end(compression.data)),
 							() => res.writeHead(404, "Not found").end()
