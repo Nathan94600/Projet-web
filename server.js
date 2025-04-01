@@ -332,7 +332,18 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 	else if (url.startsWith("/produits/")) {
 		const productId = url.split("/").at(-1);
 
-		db.get("SELECT *, CAST(price AS DECIMAL(10,2)) / 100.0 AS formattedPrice, CAST(promoPrice AS DECIMAL(10,2)) / 100.0 AS formattedPromoPrice FROM products WHERE id = ?", productId, (err, product) => {
+		db.get(`
+			SELECT
+				name,
+				promoPrice,
+				supplierName,
+				type,
+				supplierId,
+				CAST(price AS DECIMAL(10,2)) / 100.0 AS formattedPrice,
+				CAST(promoPrice AS DECIMAL(10,2)) / 100.0 AS formattedPromoPrice,
+				GROUP_CONCAT(stocks.size || '-' || stocks.quantity, ' ') AS stocks
+			FROM products JOIN stocks ON products.id = stocks.productId WHERE products.id = ? GROUP BY products.id
+		`, productId, (err, product) => {
 			if (err) {
 				console.log("Erreur lors de la récupération du produit: ", err);
 				res.writeHead(500, "Internal Server Error").end();
@@ -358,12 +369,37 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 									return `<img src="${url}.webp" alt="" srcset="${url}-300w.webp 300w, ${url}-500w.webp 500w, ${url}-1000w.webp 1000w, ${url}-1500w.webp 1500w">`
 								}).join("")}
 							</div>
-						`;
+						`,
+						productInfosHTML = `
+							<div id="text-container">
+								<p id="name">${product.name}</p>
+								${product.promoPrice ? '<p id="promo">EN PROMOTION</p>' : ""}
+							</div>
+							<p id="type">Chaussure ${product.type == "m" ? sexes[product.type] : `pour ${sexes[product.type]}`}</p>
+							${product.promoPrice ? `
+								<div id="prices">
+									<p id="promo-price">${product.formattedPromoPrice}€</p>
+									<p id="price">${product.formattedPrice}€</p>
+								</div>
+							` : `<p id="price">${product.formattedPrice}€</p>`}
+						`,
+						sizesHTML = product.stocks.split(" ").map((stock, i) => {
+							const [size, quantity] = stock.split("-");
+
+							return `
+								<div>
+									<input type="radio" id="${size}" name="size"${quantity == 0 ? " disabled" : ""}>
+									<label for="${size}">${size}</label>
+								</div>
+							`;
+						}).join("").replace('"size">', '"size" checked>');						
 						
 						getPage("/produit", {
 							accountText: userToken ? "Mon compte" : "Se connecter",
 							accountLink: userToken ? "/profil" : "/connexion",
 							productPresentation: productPresentationHTML,
+							productInfos: productInfosHTML,
+							sizes: sizesHTML,
 							linkedProducts: rows.map((row, i) => {
 								const url = `/images/products/${product.supplierName}/${product.type.toUpperCase()}${row.supplierId}/00`;
 

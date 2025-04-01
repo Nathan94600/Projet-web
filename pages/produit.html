@@ -15,15 +15,7 @@
 			{{productPresentation}}
 		</div>
 		<div id="information-container">
-			<div id="text-container">
-				<p id="name">Nike Air Max Plus</p>
-				<p id="promo">EN PROMOTION</p>
-			</div>
-			<p id="type">Chaussure pour homme</p>
-			<div id="prices">
-				<p id="promo-price">149.99€</p>
-				<p id="price">189.99€</p>
-			</div>
+			{{productInfos}}
 			<div id="other-items">
 				{{linkedProducts}}
 			</div>
@@ -31,66 +23,7 @@
 				<fieldset>
 					<legend>Sélectionner une taille</legend>
 					<div id="input-container">
-						<div>
-							<input type="radio" id="38" name="size" checked>
-							<label for="38">38</label>
-						</div>
-						<div>
-							<input type="radio" id="38.5" name="size">
-							<label for="38.5">38.5</label>
-						</div>
-						<div>
-							<input type="radio" id="39" name="size" disabled>
-							<label for="39">39</label>
-						</div>
-						<div>
-							<input type="radio" id="39.5" name="size">
-							<label for="39.5">39.5</label>
-						</div>
-						<div>
-							<input type="radio" id="40" name="size">
-							<label for="40">40</label>
-						</div>
-						<div>
-							<input type="radio" id="40.5" name="size">
-							<label for="40.5">40.5</label>
-						</div>
-						<div>
-							<input type="radio" id="41" name="size" disabled>
-							<label for="41" class="disable">41</label>
-						</div>
-						<div>
-							<input type="radio" id="41.5" name="size">
-							<label for="41.5">41.5</label>
-						</div>
-						<div>
-							<input type="radio" id="42" name="size">
-							<label for="42">42</label>
-						</div>
-						<div>
-							<input type="radio" id="42.5" name="size">
-							<label for="42.5">42.5</label>
-						</div>
-						<div>
-							<input type="radio" id="43" name="size">
-							<label for="43">43</label>
-						</div>
-						<div>
-							<input type="radio" id="43.5" name="size">
-							<label for="43.5">43.5</label>
-						</div>
-						<div>
-							<input type="radio" id="44" name="size">
-							<label for="44">44</label>
-						</div>
-						<div>
-							<input type="radio" id="44.5" name="size">
-							<label for="44.5">44.5</label>
-						</div>
-						<div>
-							<input type="radio" id="45" name="size">
-							<label for="45">45</label>
-						</div>
+						{{sizes}}
 					</div>
 				</fieldset>
 				<button type="submit" id="add">Ajouter au panier</button>

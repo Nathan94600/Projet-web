@@ -99,7 +99,7 @@ body {
 	margin-bottom: 2rem;
 	display: flex;
 	flex-direction: row;
-	justify-content: space-between;
+	/* justify-content: ; */
 }
 
 #other-items .container-link {
