@@ -95,17 +95,28 @@ body {
 }
 
 #other-items {
+	overflow: auto;
 	margin-bottom: 2rem;
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
 }
 
-#other-items img {
-	background: #8a8a8a40;
-	border-radius: 5px;
-	padding: .25rem;
+#other-items .container-link {
+	padding-right: 2rem;
+	min-width: calc((100% - 9vw) / 4);
 	width: calc((100% - 9vw) / 4);
+}
+
+#other-items .container-link.last {
+	padding-right: calc(2rem - .5rem - 4px);
+}
+
+#other-items img {
+	border-radius: 5px;
+	background: #8a8a8a40;
+	padding: .25rem;
+	width: 100%;
 }
 
 .current-item {
