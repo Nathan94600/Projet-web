@@ -1,6 +1,7 @@
 [
 	{
 		"supplierId": "U9060BLK",
+		"soldCount": 40,
 		"name": "New Balance 9060",
 		"price": 18999,
 		"promoPrice": 15000,
@@ -11,6 +12,7 @@
 	},
 	{
 		"supplierId": "U9060FM",
+		"soldCount": 30,
 		"name": "New Balance 9060",
 		"price": 18999,
 		"type": "h",
@@ -20,6 +22,7 @@
 	},
 	{
 		"supplierId": "U9060FNQ",
+		"soldCount": 41,
 		"name": "New Balance 9060",
 		"price": 18999,
 		"promoPrice": 15000,
@@ -30,6 +33,7 @@
 	},
 	{
 		"supplierId": "U740WM2",
+		"soldCount": 98,
 		"name": "New Balance 740",
 		"price": 11999,
 		"type": "f",
@@ -39,6 +43,7 @@
 	},
 	{
 		"supplierId": "U740GR2",
+		"soldCount": 97,
 		"name": "New Balance 740",
 		"price": 11999,
 		"type": "f",
@@ -48,6 +53,7 @@
 	},
 	{
 		"supplierId": "GC9060BM",
+		"soldCount": 12,
 		"name": "New Balance 9060",
 		"price": 15499,
 		"type": "e",
@@ -57,6 +63,7 @@
 	},
 	{
 		"supplierId": "39197501",
+		"soldCount": 61,
 		"name": "Puma Slipstream",
 		"price": 8499,
 		"type": "e",
@@ -66,6 +73,7 @@
 	},
 	{
 		"supplierId": "39884601",
+		"soldCount": 85,
 		"name": "Puma Speedcat",
 		"price": 10999,
 		"type": "m",
@@ -75,6 +83,7 @@
 	},
 	{
 		"supplierId": "39884604",
+		"soldCount": 57,
 		"name": "Puma Speedcat",
 		"price": 10999,
 		"type": "m",
@@ -84,6 +93,7 @@
 	},
 	{
 		"supplierId": "39884602",
+		"soldCount": 62,
 		"name": "Puma Speedcat",
 		"price": 10999,
 		"type": "m",
@@ -93,6 +103,7 @@
 	},
 	{
 		"supplierId": "39884612",
+		"soldCount": 30,
 		"name": "Puma Speedcat",
 		"price": 10999,
 		"promoPrice": 7500,
@@ -103,6 +114,7 @@
 	},
 	{
 		"supplierId": "39884605",
+		"soldCount": 12,
 		"name": "Puma Speedcat",
 		"price": 10999,
 		"type": "h",
@@ -112,6 +124,7 @@
 	},
 	{
 		"supplierId": "604133-050",
+		"soldCount": 32,
 		"name": "Nike Tuned 1",
 		"price": 18999,
 		"type": "h",
@@ -121,6 +134,7 @@
 	},
 	{
 		"supplierId": "604133-139",
+		"soldCount": 64,
 		"name": "Nike Tuned 1",
 		"price": 18999,
 		"type": "h",
@@ -130,6 +144,7 @@
 	},
 	{
 		"supplierId": "FN0237-001",
+		"soldCount": 75,
 		"name": "Nike Air Force 1 Low Ez",
 		"price": 6999,
 		"type": "e",
@@ -139,6 +154,7 @@
 	},
 	{
 		"supplierId": "FN0237-110",
+		"soldCount": 32,
 		"name": "Nike Air Force 1 Low Ez",
 		"price": 6999,
 		"type": "e",
@@ -148,6 +164,7 @@
 	},
 	{
 		"supplierId": "AR3565-004",
+		"soldCount": 98,
 		"name": "Nike Shox R4",
 		"price": 12999,
 		"type": "f",
@@ -157,6 +174,7 @@
 	},
 	{
 		"supplierId": "1203A681-400",
+		"soldCount": 6,
 		"name": "Asics GEL-QUANTUM 360 VIII",
 		"price": 18999,
 		"type": "h",
@@ -166,6 +184,7 @@
 	},
 	{
 		"supplierId": "1203A681-001",
+		"soldCount": 95,
 		"name": "Asics GEL-QUANTUM 360 VIII",
 		"price": 18999,
 		"type": "h",
@@ -175,6 +194,7 @@
 	},
 	{
 		"supplierId": "1201A906-001",
+		"soldCount": 98,
 		"name": "Asics GEL 1130",
 		"price": 10999,
 		"type": "f",
@@ -184,6 +204,7 @@
 	},
 	{
 		"supplierId": "1202A164-116",
+		"soldCount": 24,
 		"name": "Asics GEL 1130",
 		"price": 10999,
 		"type": "f",
@@ -193,6 +214,7 @@
 	},
 	{
 		"supplierId": "1204A177-001",
+		"soldCount": 3,
 		"name": "Asics GEL-VENTURE 6",
 		"price": 7999,
 		"type": "e",
@@ -202,6 +224,7 @@
 	},
 	{
 		"supplierId": "1204A177-020",
+		"soldCount": 15,
 		"name": "Asics GEL-VENTURE 6",
 		"price": 7999,
 		"type": "e",
@@ -211,6 +234,7 @@
 	},
 	{
 		"supplierId": "JR3416",
+		"soldCount": 25,
 		"name": "Adidas Adizero Evo SL",
 		"price": 14999,
 		"type": "h",
@@ -220,6 +244,7 @@
 	},
 	{
 		"supplierId": "JH6206",
+		"soldCount": 44,
 		"name": "Adidas Adizero Evo SL",
 		"price": 14999,
 		"type": "h",
@@ -229,6 +254,7 @@
 	},
 	{
 		"supplierId": "JP7149",
+		"soldCount": 53,
 		"name": "Adidas Adizero Evo SL",
 		"price": 14999,
 		"type": "h",
@@ -238,6 +264,7 @@
 	},
 	{
 		"supplierId": "JR3419",
+		"soldCount": 99,
 		"name": "Adidas Adizero Evo SL",
 		"price": 14999,
 		"type": "h",
@@ -247,6 +274,7 @@
 	},
 	{
 		"supplierId": "JI2063",
+		"soldCount": 75,
 		"name": "Adidas Gazelle Indoor",
 		"price": 11999,
 		"type": "f",
@@ -256,6 +284,7 @@
 	},
 	{
 		"supplierId": "HQ8717",
+		"soldCount": 65,
 		"name": "Adidas Gazelle Indoor",
 		"price": 11999,
 		"promoPrice": 9500,
@@ -266,6 +295,7 @@
 	},
 	{
 		"supplierId": "IH7502",
+		"soldCount": 39,
 		"name": "Adidas Gazelle Indoor",
 		"price": 11999,
 		"promoPrice": 8000,
@@ -276,6 +306,7 @@
 	},
 	{
 		"supplierId": "IH7499",
+		"soldCount": 78,
 		"name": "Adidas Gazelle Indoor",
 		"price": 11999,
 		"promoPrice": 8000,
@@ -286,6 +317,7 @@
 	},
 	{
 		"supplierId": "IE6605",
+		"soldCount": 56,
 		"name": "Adidas Gazelle Indoor",
 		"price": 11999,
 		"type": "f",
@@ -295,6 +327,7 @@
 	},
 	{
 		"supplierId": "JI1371",
+		"soldCount": 90,
 		"name": "Adidas Gazelle Indoor",
 		"price": 11999,
 		"promoPrice": 9000,
@@ -305,6 +338,7 @@
 	},
 	{
 		"supplierId": "HQ6638",
+		"soldCount": 50,
 		"name": "Adidas Campus 00S",
 		"price": 8999,
 		"type": "e",
@@ -314,6 +348,7 @@
 	},
 	{
 		"supplierId": "HQ6507",
+		"soldCount": 16,
 		"name": "Adidas Campus 00S",
 		"price": 8999,
 		"type": "e",
@@ -323,6 +358,7 @@
 	},
 	{
 		"supplierId": "JH6333",
+		"soldCount": 39,
 		"name": "Adidas Campus 00S",
 		"price": 8999,
 		"type": "e",
@@ -332,6 +368,7 @@
 	},
 	{
 		"supplierId": "JI0284",
+		"soldCount": 29,
 		"name": "Adidas Campus 00S",
 		"price": 8999,
 		"type": "e",
@@ -341,6 +378,7 @@
 	},
 	{
 		"supplierId": "JI3985",
+		"soldCount": 58,
 		"name": "Adidas Campus 00S",
 		"price": 9499,
 		"type": "e",

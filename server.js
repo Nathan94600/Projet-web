@@ -225,7 +225,116 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 				);
 			};
 		});
-	} else getPage(url, {
+	} else if (url == "/") db.all("SELECT *, CAST(price AS DECIMAL(10,2)) / 100.0 AS formattedPrice, CAST(promoPrice AS DECIMAL(10,2)) / 100.0 AS formattedPromoPrice FROM products WHERE date > ?", Date.now() - 1209600000 /* 2 semaines */, (err, newProductsRows) => {
+		if (err) {
+			console.log("Erreur lors de la récupération des nouveaux produits: ", err);
+			res.writeHead(500, "Internal Server Error").end();
+		} else db.all("SELECT *, CAST(price AS DECIMAL(10,2)) / 100.0 AS formattedPrice, CAST(promoPrice AS DECIMAL(10,2)) / 100.0 AS formattedPromoPrice FROM products ORDER BY soldCount DESC LIMIT 8", (err, bestProductsRows) => {
+			if (err) {
+				console.log("Erreur lors de la récupération des meilleurs produits: ", err);
+				res.writeHead(500, "Internal Server Error").end();
+			} else db.all("SELECT *, CAST(price AS DECIMAL(10,2)) / 100.0 AS formattedPrice, CAST(promoPrice AS DECIMAL(10,2)) / 100.0 AS formattedPromoPrice FROM products WHERE promoPrice IS NOT NULL LIMIT 8", (err, promoProductsRows) => {
+				if (err) {
+					console.log("Erreur lors de la récupération des produits en promo: ", err);
+					res.writeHead(500, "Internal Server Error").end();
+				} else {
+					const newProductsHTML = newProductsRows.map(product => {
+						const url = `/images/products/${product.supplierName}/${product.type.toUpperCase()}${product.supplierId}/00`;
+		
+						return product.formattedPromoPrice ? `
+							<div class="news-item">
+								<a href="" class="container-link"></a>
+								<img src="${url}-1000w.webp" alt="" class="product-img" srcset="${url}-300w.webp 300w, ${url}-500w.webp 500w, ${url}-1000w.webp 1000w" sizes="20vw">
+								<hr class="separator">
+								<p class="promo">EN PROMOTION</p>
+								<p class="name">${product.name}</p>
+								<p class="type">Chaussure ${product.type == "m" ? sexes[product.type] : `pour ${sexes[product.type]}`}</p>
+								<div class="prices">
+									<p class="promo-price">${product.formattedPromoPrice}€</p>
+									<p class="price">${product.formattedPrice}€</p>
+								</div>
+							</div>
+						` : `
+							<div class="news-item">
+								<a href="" class="container-link"></a>
+								<img src="${url}-1000w.webp" alt="" class="product-img" srcset="${url}-300w.webp 300w, ${url}-500w.webp 500w, ${url}-1000w.webp 1000w" sizes="20vw">
+								<hr class="separator">
+								<p>${product.name}</p>
+								<p class="price">Chaussure ${product.type == "m" ? sexes[product.type] : `pour ${sexes[product.type]}`}</p>
+								<p class="price">${product.formattedPrice}€</p>
+							</div>
+						`;
+					}),
+					bestProductsHTML = bestProductsRows.map(product => {
+						const url = `/images/products/${product.supplierName}/${product.type.toUpperCase()}${product.supplierId}/00`;
+		
+						return product.formattedPromoPrice ? `
+							<div class="best-seller-item">
+								<a href="" class="container-link"></a>
+								<img src="${url}-1000w.webp" alt="" class="product-img" srcset="${url}-300w.webp 300w, ${url}-500w.webp 500w, ${url}-1000w.webp 1000w" sizes="20vw">
+								<hr class="separator">
+								<p class="promo">EN PROMOTION</p>
+								<p class="name">${product.name}</p>
+								<p class="type">Chaussure ${product.type == "m" ? sexes[product.type] : `pour ${sexes[product.type]}`}</p>
+								<div class="prices">
+									<p class="promo-price">${product.formattedPromoPrice}€</p>
+									<p class="price">${product.formattedPrice}€</p>
+								</div>
+							</div>
+						` : `
+							<div class="best-seller-item">
+								<a href="" class="container-link"></a>
+								<img src="${url}-1000w.webp" alt="" class="product-img" srcset="${url}-300w.webp 300w, ${url}-500w.webp 500w, ${url}-1000w.webp 1000w" sizes="20vw">
+								<hr class="separator">
+								<p>${product.name}</p>
+								<p class="price">Chaussure ${product.type == "m" ? sexes[product.type] : `pour ${sexes[product.type]}`}</p>
+								<p class="price">${product.formattedPrice}€</p>
+							</div>
+						`;
+					}),
+					promoProductsHTML = promoProductsRows.map(product => {
+						const url = `/images/products/${product.supplierName}/${product.type.toUpperCase()}${product.supplierId}/00`;
+		
+						return product.formattedPromoPrice ? `
+							<div class="promo-item">
+								<a href="" class="container-link"></a>
+								<img src="${url}-1000w.webp" alt="" class="product-img" srcset="${url}-300w.webp 300w, ${url}-500w.webp 500w, ${url}-1000w.webp 1000w" sizes="20vw">
+								<hr class="separator">
+								<p class="promo">EN PROMOTION</p>
+								<p class="name">${product.name}</p>
+								<p class="type">Chaussure ${product.type == "m" ? sexes[product.type] : `pour ${sexes[product.type]}`}</p>
+								<div class="prices">
+									<p class="promo-price">${product.formattedPromoPrice}€</p>
+									<p class="price">${product.formattedPrice}€</p>
+								</div>
+							</div>
+						` : `
+							<div class="promo-item">
+								<a href="" class="container-link"></a>
+								<img src="${url}-1000w.webp" alt="" class="product-img" srcset="${url}-300w.webp 300w, ${url}-500w.webp 500w, ${url}-1000w.webp 1000w" sizes="20vw">
+								<hr class="separator">
+								<p>${product.name}</p>
+								<p class="price">Chaussure ${product.type == "m" ? sexes[product.type] : `pour ${sexes[product.type]}`}</p>
+								<p class="price">${product.formattedPrice}€</p>
+							</div>
+						`;
+					});
+		
+					getPage(url, {
+						accountText: userToken ? "Mon compte" : "Se connecter",
+						accountLink: userToken ? "/profil" : "/connexion",
+						newProducts: newProductsHTML.join(""),
+						bestProducts: bestProductsHTML.join(""),
+						promoProducts: promoProductsHTML.join(""),
+					}).then(
+						data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { ...headers, "content-type": `text/html`, "content-encoding": compression.encoding }).end(compression.data)),
+						() => res.writeHead(404, "Not found").end()
+					);
+				};
+			});
+		});
+	});
+	else getPage(url, {
 		error: errorMessage ? `<p id="error">${errorMessage}</p>` : "",
 		email: params.get("email") || "",
 		code: params.get("code") || "",
@@ -248,6 +357,7 @@ db.serialize(() => {
 			supplierId VARCHAR(20) NOT NULL,
 			name VARCHAR(50) NOT NULL,
 			price INT NOT NULL,
+			soldCount INT DEFAULT 0,
 			promoPrice INT,
 			type CHAR(1) NOT NULL,
 			colors INT NOT NULL,
@@ -280,10 +390,10 @@ db.serialize(() => {
 		if (err) console.log("Erreur lors de la création des tables: ", err);
 	});
 
-	const reqForProducts = db.prepare("INSERT OR IGNORE INTO products (id, supplierId, name, price, promoPrice, type, colors, date, supplierName) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+	const reqForProducts = db.prepare("INSERT OR IGNORE INTO products (id, supplierId, name, price, promoPrice, type, colors, date, supplierName, soldCount) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
 	products.forEach(product => {
-		reqForProducts.run(randomUUID({ disableEntropyCache: true }), product.supplierId, product.name, product.price, product.promoPrice || null, product.type, product.colors, new Date(product.date).getTime(), product.supplierName, err => {
+		reqForProducts.run(randomUUID({ disableEntropyCache: true }), product.supplierId, product.name, product.price, product.promoPrice || null, product.type, product.colors, new Date(product.date).getTime(), product.supplierName, product.soldCount, err => {
 			if (err) console.log("Erreur lors de l'ajout du produit: ", err);
 		});
 	});
