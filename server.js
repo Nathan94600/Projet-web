@@ -243,7 +243,7 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 		
 						return product.formattedPromoPrice ? `
 							<div class="news-item">
-								<a href="" class="container-link"></a>
+								<a href="/produits/${product.id}" class="container-link"></a>
 								<img src="${url}-1000w.webp" alt="" class="product-img" srcset="${url}-300w.webp 300w, ${url}-500w.webp 500w, ${url}-1000w.webp 1000w" sizes="20vw">
 								<hr class="separator">
 								<p class="promo">EN PROMOTION</p>
@@ -256,7 +256,7 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 							</div>
 						` : `
 							<div class="news-item">
-								<a href="" class="container-link"></a>
+								<a href="/produits/${product.id}" class="container-link"></a>
 								<img src="${url}-1000w.webp" alt="" class="product-img" srcset="${url}-300w.webp 300w, ${url}-500w.webp 500w, ${url}-1000w.webp 1000w" sizes="20vw">
 								<hr class="separator">
 								<p>${product.name}</p>
@@ -270,7 +270,7 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 		
 						return product.formattedPromoPrice ? `
 							<div class="best-seller-item">
-								<a href="" class="container-link"></a>
+								<a href="/produits/${product.id}" class="container-link"></a>
 								<img src="${url}-1000w.webp" alt="" class="product-img" srcset="${url}-300w.webp 300w, ${url}-500w.webp 500w, ${url}-1000w.webp 1000w" sizes="20vw">
 								<hr class="separator">
 								<p class="promo">EN PROMOTION</p>
@@ -283,7 +283,7 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 							</div>
 						` : `
 							<div class="best-seller-item">
-								<a href="" class="container-link"></a>
+								<a href="/produits/${product.id}" class="container-link"></a>
 								<img src="${url}-1000w.webp" alt="" class="product-img" srcset="${url}-300w.webp 300w, ${url}-500w.webp 500w, ${url}-1000w.webp 1000w" sizes="20vw">
 								<hr class="separator">
 								<p>${product.name}</p>
@@ -297,7 +297,7 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 		
 						return product.formattedPromoPrice ? `
 							<div class="promo-item">
-								<a href="" class="container-link"></a>
+								<a href="/produits/${product.id}" class="container-link"></a>
 								<img src="${url}-1000w.webp" alt="" class="product-img" srcset="${url}-300w.webp 300w, ${url}-500w.webp 500w, ${url}-1000w.webp 1000w" sizes="20vw">
 								<hr class="separator">
 								<p class="promo">EN PROMOTION</p>
@@ -310,7 +310,7 @@ function handleGetRequest(url, req, res, params, headers = {}) {
 							</div>
 						` : `
 							<div class="promo-item">
-								<a href="" class="container-link"></a>
+								<a href="/produits/${product.id}" class="container-link"></a>
 								<img src="${url}-1000w.webp" alt="" class="product-img" srcset="${url}-300w.webp 300w, ${url}-500w.webp 500w, ${url}-1000w.webp 1000w" sizes="20vw">
 								<hr class="separator">
 								<p>${product.name}</p>
