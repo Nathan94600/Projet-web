@@ -36,6 +36,8 @@ body {
 }
 
 .news-item, .best-seller-item, .promo-item {
+	text-decoration: none;
+	color: #000;
 	margin: 2vh 3vw;
 	padding: 2rem;
 	border-radius: 15px;
