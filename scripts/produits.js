@@ -11,13 +11,13 @@ const params = new URL(window.location.href).searchParams;
 
 // promos | news
 
-const defaultGenres = params.get("genres") ? (parseInt(params.get("genres")) || 0) : 0,
-defaultMarques = params.get("marques") ? (parseInt(params.get("marques")) || 0) : 0,
-defaultPromos = params.get("promos") ? (parseInt(params.get("promos")) || 0) : 0,
-defaultNews = params.get("news") ? (parseInt(params.get("news")) || 0) : 0,
-defaultPrices = params.get("prices") ? params.get("prices").split(",") : [],
-defaultSizes = params.get("sizes") ? params.get("sizes").split(",") : [],
-defaultColors = params.get("couleurs") ? (parseInt(params.get("couleurs")) || 0) : 0;
+const defaultGenres = parseInt(params.get("genres")) || 0,
+defaultMarques = parseInt(params.get("marques")) || 0,
+defaultPromos = parseInt(params.get("promos")) || 0,
+defaultNews = parseInt(params.get("news")) || 0,
+defaultPrices = params.get("prices")?.split(",") || [],
+defaultSizes = params.get("sizes")?.split(",") || [],
+defaultColors = parseInt(params.get("couleurs")) || 0;
 
 if (params.get("scroll")) filtres.scrollTop = parseInt(params.get("scroll")) || 0;
 
