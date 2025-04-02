@@ -9,8 +9,6 @@ colors = document.querySelectorAll("#colors input");
 
 const params = new URL(window.location.href).searchParams;
 
-// promos | news
-
 const defaultGenres = parseInt(params.get("genres")) || 0,
 defaultMarques = parseInt(params.get("marques")) || 0,
 defaultPromos = parseInt(params.get("promos")) || 0,
