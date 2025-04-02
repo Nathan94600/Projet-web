@@ -153,6 +153,8 @@ label[for="grey"] { background: grey; }
   
   /* Results Section */
 .results {
+    height: calc(100vh - 110px);
+    overflow: auto;
     margin-left: 300px;
     flex: 1;
 }

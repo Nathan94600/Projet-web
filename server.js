@@ -211,7 +211,12 @@ function handleGetRequest(url, req, res, params, cookies, headers = {}) {
 	});
 	else if ((url == "/inscription" || url == "/connexion") && userToken) res.writeHead(302, { location: "/" }).end();
 	else if (url == "/produits") {
-		const conditions = [], promoParams = params.get("promo"), genderParams = params.get("genre"), colorsParams = params.get("couleurs"), newProductsParams = params.get("new"), suppliersParams = params.get("marques");
+		const conditions = [],
+		promoParams = params.get("promo"),
+		genderParams = params.get("genre"),
+		colorsParams = params.get("couleurs"),
+		newProductsParams = params.get("new"),
+		suppliersParams = params.get("marques");
 
 		if (promoParams == "true") conditions.push("promoPrice IS NOT NULL");
 		else if (promoParams == "false") conditions.push("promoPrice IS NULL");
@@ -516,7 +521,7 @@ db.serialize(() => {
 										else {
 											const products = cookies.cart;											
 
-											if (products.includes(`${productId}.${size}`)) res.writeHead(302, { location: `/produits/${productId}?errorMessage=${encodeURIComponent("Cet article est déjà dans votre panier")}` }).end();
+											if (products && products.includes(`${productId}.${size}`)) res.writeHead(302, { location: `/produits/${productId}?errorMessage=${encodeURIComponent("Cet article est déjà dans votre panier")}` }).end();
 											else res.writeHead(302, { location: `/produits/${productId}?successMessage=${encodeURIComponent("Article ajouté au panier")}`, "set-cookie": `cart=${products ? `${products}_` : ""}${productId}.${size}; Max-Age=2592000; Path=/;` }).end();
 										};
 									});
