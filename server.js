@@ -365,7 +365,7 @@ function handleGetRequest(url, req, res, params, cookies, headers = {}) {
 				name,
 				promoPrice,
 				supplier,
-				type,
+				genre,
 				supplierId,
 				CAST(price AS DECIMAL(10,2)) / 100.0 AS formattedPrice,
 				CAST(promoPrice AS DECIMAL(10,2)) / 100.0 AS formattedPromoPrice,
@@ -376,7 +376,7 @@ function handleGetRequest(url, req, res, params, cookies, headers = {}) {
 				console.error("Erreur lors de la récupération du produit: ", err);
 				res.writeHead(500, "Internal Server Error").end();
 			} else if (!product) res.writeHead(404, "Not found").end();
-			else readdir(`./images/products/${supplierNames[product.supplier].toLowerCase().replaceAll(" ", "-")}/${product.genre.toUpperCase()}${product.supplierId}`, (err, files) => {
+			else readdir(`./images/products/${supplierNames[product.supplier].toLowerCase().replaceAll(" ", "-")}/${genderNames[product.genre][0].toUpperCase()}${product.supplierId}`, (err, files) => {
 				if (err) {
 					console.error("Erreur lors de la récupéraction des images du produit: ", err);
 					res.writeHead(500, "Internal Server Error").end();
@@ -430,7 +430,7 @@ function handleGetRequest(url, req, res, params, cookies, headers = {}) {
 								`;
 							}).join("").replace('"size">', '"size" checked>'),
 							linkedProducts: rows.map((row, i) => {
-								const url = `/images/products/${supplierNames[product.supplier].toLowerCase().replaceAll(" ", "-")}/${product.genre.toUpperCase()}${row.supplierId}/00`;
+								const url = `/images/products/${supplierNames[product.supplier].toLowerCase().replaceAll(" ", "-")}/${genderNames[product.genre][0].toUpperCase()}${row.supplierId}/00`;
 
 								return `
 									<a href="/produits/${row.id}" class="container-link ${rows.length - 1 == i ? "last" : ""}">
