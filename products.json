@@ -5,9 +5,9 @@
 		"name": "New Balance 9060",
 		"price": 18999,
 		"promoPrice": 15000,
-		"type": "h",
+		"genre": 1,
 		"colors": 1028,
-		"supplierName": "new-balance",
+		"supplier": 1,
 		"date": "2025-02-15T21:06:24Z"
 	},
 	{
@@ -15,9 +15,9 @@
 		"soldCount": 30,
 		"name": "New Balance 9060",
 		"price": 18999,
-		"type": "h",
+		"genre": 1,
 		"colors": 258,
-		"supplierName": "new-balance",
+		"supplier": 1,
 		"date": "2025-03-07T15:31:36Z"
 	},
 	{
@@ -26,9 +26,9 @@
 		"name": "New Balance 9060",
 		"price": 18999,
 		"promoPrice": 15000,
-		"type": "h",
+		"genre": 1,
 		"colors": 2,
-		"supplierName": "new-balance",
+		"supplier": 1,
 		"date": "2025-03-18T15:11:16Z"
 	},
 	{
@@ -36,9 +36,9 @@
 		"soldCount": 98,
 		"name": "New Balance 740",
 		"price": 11999,
-		"type": "f",
+		"genre": 2,
 		"colors": 256,
-		"supplierName": "new-balance",
+		"supplier": 1,
 		"date": "2025-03-06T07:17:48Z"
 	},
 	{
@@ -46,9 +46,9 @@
 		"soldCount": 97,
 		"name": "New Balance 740",
 		"price": 11999,
-		"type": "f",
+		"genre": 2,
 		"colors": 272,
-		"supplierName": "new-balance",
+		"supplier": 1,
 		"date": "2025-01-12T14:54:30Z"
 	},
 	{
@@ -56,9 +56,9 @@
 		"soldCount": 12,
 		"name": "New Balance 9060",
 		"price": 15499,
-		"type": "e",
+		"genre": 4,
 		"colors": 384,
-		"supplierName": "new-balance",
+		"supplier": 1,
 		"date": "2025-03-11T09:42:37Z"
 	},
 	{
@@ -66,9 +66,9 @@
 		"soldCount": 61,
 		"name": "Puma Slipstream",
 		"price": 8499,
-		"type": "e",
+		"genre": 4,
 		"colors": 256,
-		"supplierName": "puma",
+		"supplier": 2,
 		"date": "2025-01-19T06:10:51Z"
 	},
 	{
@@ -76,9 +76,9 @@
 		"soldCount": 85,
 		"name": "Puma Speedcat",
 		"price": 10999,
-		"type": "m",
+		"genre": 8,
 		"colors": 260,
-		"supplierName": "puma",
+		"supplier": 2,
 		"date": "2025-03-13T14:46:41Z"
 	},
 	{
@@ -86,9 +86,9 @@
 		"soldCount": 57,
 		"name": "Puma Speedcat",
 		"price": 10999,
-		"type": "m",
+		"genre": 8,
 		"colors": 384,
-		"supplierName": "puma",
+		"supplier": 2,
 		"date": "2025-01-05T04:20:29Z"
 	},
 	{
@@ -96,9 +96,9 @@
 		"soldCount": 62,
 		"name": "Puma Speedcat",
 		"price": 10999,
-		"type": "m",
+		"genre": 8,
 		"colors": 257,
-		"supplierName": "puma",
+		"supplier": 2,
 		"date": "2025-02-18T15:19:57Z"
 	},
 	{
@@ -107,9 +107,9 @@
 		"name": "Puma Speedcat",
 		"price": 10999,
 		"promoPrice": 7500,
-		"type": "h",
+		"genre": 1,
 		"colors": 272,
-		"supplierName": "puma",
+		"supplier": 2,
 		"date": "2025-02-16T23:53:33Z"
 	},
 	{
@@ -117,9 +117,9 @@
 		"soldCount": 12,
 		"name": "Puma Speedcat",
 		"price": 10999,
-		"type": "h",
+		"genre": 1,
 		"colors": 1280,
-		"supplierName": "puma",
+		"supplier": 2,
 		"date": "2025-02-03T03:47:50Z"
 	},
 	{
@@ -127,9 +127,9 @@
 		"soldCount": 32,
 		"name": "Nike Tuned 1",
 		"price": 18999,
-		"type": "h",
+		"genre": 1,
 		"colors": 4,
-		"supplierName": "nike",
+		"supplier": 4,
 		"date": "2025-03-31T02:46:00Z"
 	},
 	{
@@ -137,9 +137,9 @@
 		"soldCount": 64,
 		"name": "Nike Tuned 1",
 		"price": 18999,
-		"type": "h",
+		"genre": 1,
 		"colors": 256,
-		"supplierName": "nike",
+		"supplier": 4,
 		"date": "2025-02-01T21:09:51Z"
 	},
 	{
@@ -147,9 +147,9 @@
 		"soldCount": 75,
 		"name": "Nike Air Force 1 Low Ez",
 		"price": 6999,
-		"type": "e",
+		"genre": 4,
 		"colors": 4,
-		"supplierName": "nike",
+		"supplier": 4,
 		"date": "2025-01-09T10:51:19Z"
 	},
 	{
@@ -157,9 +157,9 @@
 		"soldCount": 32,
 		"name": "Nike Air Force 1 Low Ez",
 		"price": 6999,
-		"type": "e",
+		"genre": 4,
 		"colors": 256,
-		"supplierName": "nike",
+		"supplier": 4,
 		"date": "2025-01-17T12:19:05Z"
 	},
 	{
@@ -167,9 +167,9 @@
 		"soldCount": 98,
 		"name": "Nike Shox R4",
 		"price": 12999,
-		"type": "f",
+		"genre": 2,
 		"colors": 4,
-		"supplierName": "nike",
+		"supplier": 4,
 		"date": "2025-03-16T22:56:52Z"
 	},
 	{
@@ -177,9 +177,9 @@
 		"soldCount": 6,
 		"name": "Asics GEL-QUANTUM 360 VIII",
 		"price": 18999,
-		"type": "h",
+		"genre": 1,
 		"colors": 6,
-		"supplierName": "asics",
+		"supplier": 8,
 		"date": "2025-03-16T03:40:00Z"
 	},
 	{
@@ -187,9 +187,9 @@
 		"soldCount": 95,
 		"name": "Asics GEL-QUANTUM 360 VIII",
 		"price": 18999,
-		"type": "h",
+		"genre": 1,
 		"colors": 1028,
-		"supplierName": "asics",
+		"supplier": 8,
 		"date": "2025-02-27T15:11:48Z"
 	},
 	{
@@ -197,9 +197,9 @@
 		"soldCount": 98,
 		"name": "Asics GEL 1130",
 		"price": 10999,
-		"type": "f",
+		"genre": 2,
 		"colors": 4,
-		"supplierName": "asics",
+		"supplier": 8,
 		"date": "2025-01-25T23:11:28Z"
 	},
 	{
@@ -207,9 +207,9 @@
 		"soldCount": 24,
 		"name": "Asics GEL 1130",
 		"price": 10999,
-		"type": "f",
+		"genre": 2,
 		"colors": 256,
-		"supplierName": "asics",
+		"supplier": 8,
 		"date": "2025-01-04T06:41:44Z"
 	},
 	{
@@ -217,9 +217,9 @@
 		"soldCount": 3,
 		"name": "Asics GEL-VENTURE 6",
 		"price": 7999,
-		"type": "e",
+		"genre": 4,
 		"colors": 4,
-		"supplierName": "asics",
+		"supplier": 8,
 		"date": "2025-02-24T03:45:04Z"
 	},
 	{
@@ -227,9 +227,9 @@
 		"soldCount": 15,
 		"name": "Asics GEL-VENTURE 6",
 		"price": 7999,
-		"type": "e",
+		"genre": 4,
 		"colors": 1028,
-		"supplierName": "asics",
+		"supplier": 8,
 		"date": "2025-03-20T12:27:31Z"
 	},
 	{
@@ -237,9 +237,9 @@
 		"soldCount": 25,
 		"name": "Adidas Adizero Evo SL",
 		"price": 14999,
-		"type": "h",
+		"genre": 1,
 		"colors": 16,
-		"supplierName": "adidas",
+		"supplier": 16,
 		"date": "2025-03-26T21:00:40Z"
 	},
 	{
@@ -247,9 +247,9 @@
 		"soldCount": 44,
 		"name": "Adidas Adizero Evo SL",
 		"price": 14999,
-		"type": "h",
+		"genre": 1,
 		"colors": 256,
-		"supplierName": "adidas",
+		"supplier": 16,
 		"date": "2025-02-02T23:14:32Z"
 	},
 	{
@@ -257,9 +257,9 @@
 		"soldCount": 53,
 		"name": "Adidas Adizero Evo SL",
 		"price": 14999,
-		"type": "h",
+		"genre": 1,
 		"colors": 4,
-		"supplierName": "adidas",
+		"supplier": 16,
 		"date": "2025-01-27T18:36:54Z"
 	},
 	{
@@ -267,9 +267,9 @@
 		"soldCount": 99,
 		"name": "Adidas Adizero Evo SL",
 		"price": 14999,
-		"type": "h",
+		"genre": 1,
 		"colors": 1024,
-		"supplierName": "adidas",
+		"supplier": 16,
 		"date": "2025-02-06T11:16:40Z"
 	},
 	{
@@ -277,9 +277,9 @@
 		"soldCount": 75,
 		"name": "Adidas Gazelle Indoor",
 		"price": 11999,
-		"type": "f",
+		"genre": 2,
 		"colors": 1,
-		"supplierName": "adidas",
+		"supplier": 16,
 		"date": "2025-03-30T05:47:09Z"
 	},
 	{
@@ -288,9 +288,9 @@
 		"name": "Adidas Gazelle Indoor",
 		"price": 11999,
 		"promoPrice": 9500,
-		"type": "f",
+		"genre": 2,
 		"colors": 2,
-		"supplierName": "adidas",
+		"supplier": 16,
 		"date": "2025-03-19T13:37:19Z"
 	},
 	{
@@ -299,9 +299,9 @@
 		"name": "Adidas Gazelle Indoor",
 		"price": 11999,
 		"promoPrice": 8000,
-		"type": "f",
+		"genre": 2,
 		"colors": 256,
-		"supplierName": "adidas",
+		"supplier": 16,
 		"date": "2025-02-06T18:15:48Z"
 	},
 	{
@@ -310,9 +310,9 @@
 		"name": "Adidas Gazelle Indoor",
 		"price": 11999,
 		"promoPrice": 8000,
-		"type": "f",
+		"genre": 2,
 		"colors": 32,
-		"supplierName": "adidas",
+		"supplier": 16,
 		"date": "2025-01-14T12:20:54Z"
 	},
 	{
@@ -320,9 +320,9 @@
 		"soldCount": 56,
 		"name": "Adidas Gazelle Indoor",
 		"price": 11999,
-		"type": "f",
+		"genre": 2,
 		"colors": 16,
-		"supplierName": "adidas",
+		"supplier": 16,
 		"date": "2025-02-10T20:22:37Z"
 	},
 	{
@@ -331,9 +331,9 @@
 		"name": "Adidas Gazelle Indoor",
 		"price": 11999,
 		"promoPrice": 9000,
-		"type": "f",
+		"genre": 2,
 		"colors": 128,
-		"supplierName": "adidas",
+		"supplier": 16,
 		"date": "2025-01-03T06:01:24Z"
 	},
 	{
@@ -341,9 +341,9 @@
 		"soldCount": 50,
 		"name": "Adidas Campus 00S",
 		"price": 8999,
-		"type": "e",
+		"genre": 4,
 		"colors": 4,
-		"supplierName": "adidas",
+		"supplier": 16,
 		"date": "2025-01-28T16:49:35Z"
 	},
 	{
@@ -351,9 +351,9 @@
 		"soldCount": 16,
 		"name": "Adidas Campus 00S",
 		"price": 8999,
-		"type": "e",
+		"genre": 4,
 		"colors": 1024,
-		"supplierName": "adidas",
+		"supplier": 16,
 		"date": "2025-02-14T00:08:04Z"
 	},
 	{
@@ -361,9 +361,9 @@
 		"soldCount": 39,
 		"name": "Adidas Campus 00S",
 		"price": 8999,
-		"type": "e",
+		"genre": 4,
 		"colors": 2,
-		"supplierName": "adidas",
+		"supplier": 16,
 		"date": "2025-01-07T03:48:12Z"
 	},
 	{
@@ -371,9 +371,9 @@
 		"soldCount": 29,
 		"name": "Adidas Campus 00S",
 		"price": 8999,
-		"type": "e",
+		"genre": 4,
 		"colors": 128,
-		"supplierName": "adidas",
+		"supplier": 16,
 		"date": "2025-01-26T23:13:51Z"
 	},
 	{
@@ -381,9 +381,9 @@
 		"soldCount": 58,
 		"name": "Adidas Campus 00S",
 		"price": 9499,
-		"type": "e",
+		"genre": 4,
 		"colors": 512,
-		"supplierName": "adidas",
+		"supplier": 16,
 		"date": "2025-02-23T12:13:33Z"
 	}
 ]

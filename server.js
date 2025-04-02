@@ -32,20 +32,24 @@ colors = {
 	[2**9]: "marron",
 	[2**10]: "gris",
 },
-suppliers = {
-	[2**0]: "new-balance",
-	[2**1]: "puma",
-	[2**2]: "nike",
-	[2**3]: "asics",
-	[2**4]: "adidas",
+supplierNames = {
+	[2**0]: "New Balance",
+	[2**1]: "Puma",
+	[2**2]: "Nike",
+	[2**3]: "Asics",
+	[2**4]: "Adidas",
 },
-sexes = {
-	h: "homme",
-	f: "femme",
-	e: "enfant",
-	m: "mixte",
+genderNames = {
+	[2**0]: "homme",
+	[2**1]: "femme",
+	[2**2]: "enfant",
+	[2**3]: "mixte",
 },
 promoValues = {
+	[2**0]: "true",
+	[2**1]: "false",
+},
+newValues = {
 	[2**0]: "true",
 	[2**1]: "false",
 },
@@ -64,13 +68,17 @@ host = process.argv.includes("--ip") ?
 	Object.entries(networkInterfaces()).filter(([name]) => !name.includes("VM")).map(interface => interface[1]).flat().filter(interface => typeof interface != "string" && !interface.internal && interface.family == "IPv4")[0].address || "localhost" :
 	"localhost";
 
+function buildImagePath(product, fileName) {	
+	return `/images/products/${supplierNames[product.supplier].toLowerCase().replaceAll(" ", "-")}/${genderNames[product.genre][0].toUpperCase()}${product.supplierId}/${fileName}`
+};
+
 /**
  * @param { string } password 
  * @param { string } passwordSalt 
  */
 function securePassword(password, passwordSalt = randomBytes(128).toString("hex")) {	
 	return { password: pbkdf2Sync(password, passwordSalt, 1e6, 64, "sha3-512").toString("hex"), passwordSalt };
-}
+};
 
 /**
  * @param { string } acceptEncodingHeader 
@@ -158,31 +166,27 @@ function getPage(pageURL, params = {}) {
 };
 
 function typeToText(type) {
-	return `Chaussure ${type == "m" ? sexes[type] : `pour ${sexes[type]}`}`;
+	return `Chaussure ${type == "m" ? genderNames[type] : `pour ${genderNames[type]}`}`;
 };
 
 function generateProductItem(product, itemName) {
-	const url = `/images/products/${product.supplierName}/${product.type.toUpperCase()}${product.supplierId}/00`;	
+	const url = buildImagePath(product, "00");	
 	
-	return product.formattedPromoPrice ? `
+	return `
 		<a href="/produits/${product.id}" class="${itemName}-item container-link">
 			<img src="${url}-1000w.webp" alt="" class="product-img" srcset="${url}-300w.webp 300w, ${url}-500w.webp 500w, ${url}-1000w.webp 1000w" sizes="20vw">
 			<hr class="separator">
-			<p class="promo">EN PROMOTION</p>
+			${product.formattedPromoPrice ? '<p class="promo">EN PROMOTION</p>' : ""}
 			<p class="name">${product.name}</p>
-			<p class="type">${typeToText(product.type)}</p>
-			<div class="prices">
-				<p class="promo-price">${product.formattedPromoPrice}€</p>
-				<p class="price">${product.formattedPrice}€</p>
-			</div>
-		</a>
-	` : `
-		<a href="/produits/${product.id}" class="${itemName}-item container-link">
-			<img src="${url}-1000w.webp" alt="" class="product-img" srcset="${url}-300w.webp 300w, ${url}-500w.webp 500w, ${url}-1000w.webp 1000w" sizes="20vw">
-			<hr class="separator">
-			<p>${product.name}</p>
-			<p class="type">${typeToText(product.type)}</p>
-			<p class="price">${product.formattedPrice}€</p>
+			<p class="type">${typeToText(product.genre)}</p>
+			${product.formattedPromoPrice ?
+				`
+					<div class="prices">
+						<p class="promo-price">${product.formattedPromoPrice}€</p>
+						<p class="price">${product.formattedPrice}€</p>
+					</div>` :
+				`<p class="price">${product.formattedPrice}€</p>`
+			}
 		</a>
 	`;
 };
@@ -215,39 +219,81 @@ function handleGetRequest(url, req, res, params, cookies, headers = {}) {
 	});
 	else if ((url == "/inscription" || url == "/connexion") && userToken) res.writeHead(302, { location: "/" }).end();
 	else if (url == "/produits") {
-		const conditions = [],
-		genderParams = params.get("genres"),
-		suppliersParams = params.get("marques"),
-		promosParams = params.get("promos"),
-		newsProductsParams = params.get("news"),
+		let conditions = [];
+
+		const genders = params.get("genres"),
+		suppliers = params.get("marques"),
+		promos = params.get("promos"),
+		news = params.get("news"),
 		pricesParams = params.get("prices"),
 		sizesParams = params.get("sizes"),
 		colorsParams = params.get("couleurs");
 
-		if (promosParams == "true") conditions.push("promoPrice IS NOT NULL");
-		else if (promosParams == "false") conditions.push("promoPrice IS NULL");
+		if (genders) conditions.push(`(${
+			Object.keys(genderNames)
+				.filter(value => (genders & value) == value)
+				.map(value => `genre = ${value}`)
+				.join(" OR ")
+		})`);
 
-		if (genderParams == "h") conditions.push("type = 'h' OR type = 'm'");
-		else if (genderParams == "f") conditions.push("type = 'f' OR type = 'm'");
-		else if (genderParams == "e") conditions.push("type = 'e'");
-		else if (genderParams == "m") conditions.push("type = 'm'");
+		if (suppliers) conditions.push(`(${
+			Object.keys(supplierNames)
+				.filter(value => (suppliers & value) == value)
+				.map(value => `supplier = ${value}`)
+				.join(" OR ")
+		})`);
 
-		const colorsCondition = Object.keys(colors).filter(color => (colorsParams & color) == color).map(color => `(colors & ${color}) = ${color}`).join(" OR ");
-
-		if (colorsCondition) conditions.push(`(${colorsCondition})`);
-
-		if (newsProductsParams == "true") conditions.push(`date > ${Date.now() - 1209600000 /* 2 semaines */}`);
-		else if (newsProductsParams == "false") conditions.push(`date <= ${Date.now() - 1209600000 /* 2 semaines */}`);
-
-		const suppliersCondition = Object.keys(suppliers).filter(supplier => (suppliersParams & supplier) == supplier).map(supplier => `supplierName = "${suppliers[supplier]}"`).join(" OR ");
-
-		if (suppliersCondition) conditions.push(`(${suppliersCondition})`);		
+		if (promos) conditions.push(`(${
+			Object.keys(promoValues)
+				.filter(value => (promos & value) == value)
+				.map(value => `promoPrice IS${value == "1" ? " NOT" : ""} NULL`)
+				.join(" OR ")
+		})`);
 		
-		db.all(`SELECT *, CAST(price AS DECIMAL(10,2)) / 100.0 AS formattedPrice, CAST(promoPrice AS DECIMAL(10,2)) / 100.0 AS formattedPromoPrice FROM products${conditions.length != 0 ? ` WHERE ${conditions.join(" AND ")}` : ""}`, (err, rows) => {
+		if (news) conditions.push(`(${
+			Object.keys(newValues)
+				.filter(value => (news & value) == value)
+				.map(value => `date ${value == "1" ? ">" : "<="} ${Date.now() - 1209600000 /* 2 semaines */}`)
+				.join(" OR ")
+		})`);
+
+		if (pricesParams) conditions.push(pricesParams
+			.split(",")
+			.map(prices => (prices.split("-").map(price => parseInt(price * 100))))
+			.filter(prices => !isNaN(prices[0]) && (!prices[1] || prices[0] < prices[1]))
+			.map(prices => `COALESCE(promoPrice, price) ${prices[1] ? `BETWEEN ${prices[0]} AND ${prices[1]}` : `> ${prices[0]}`}`).join(" OR ")
+		);
+
+		if (sizesParams) {
+			const validSizes = sizesParams.split(",").map(size => parseFloat(size)).filter(size => !isNaN(size));
+
+			if (validSizes.length != 0) conditions.push(`
+				EXISTS (
+					SELECT 1 FROM stocks WHERE productId = products.id AND quantity > 0 AND size IN (${validSizes.join(", ")})
+				)
+			`);
+		};
+
+		if (colorsParams) conditions.push(`(${
+			Object.keys(colors)
+				.filter(color => (colorsParams & color) == color)
+				.map(color => `(colors & ${color}) = ${color}`)
+				.join(" OR ")
+			})`);
+
+		conditions = conditions.filter(condition => condition && condition != "()");
+
+		db.all(`
+			SELECT
+				products.*,
+				CAST(price AS DECIMAL(10,2)) / 100.0 AS formattedPrice,
+				CAST(promoPrice AS DECIMAL(10,2)) / 100.0 AS formattedPromoPrice
+			FROM products${conditions.length != 0 ? ` WHERE ${conditions.join(" AND ")}` : ""};
+		`, (err, rows) => {
 			if (err) {
 				console.error("Erreur lors de la récupération des produits: ", err);
 				res.writeHead(500, "Internal Server Error").end();
-			} else db.all("SELECT DISTINCT size FROM stocks ORDER BY size ASC", (err, sizes) => {				
+			} else db.all("SELECT DISTINCT size FROM stocks ORDER BY size ASC;", (err, sizes) => {				
 				if (err) {
 					console.error("Erreur lors de la récupération des tailles: ", err);
 
@@ -255,10 +301,10 @@ function handleGetRequest(url, req, res, params, cookies, headers = {}) {
 				} else getPage(url, {
 					products: rows.map(product => `
 						<a href="/produits/${product.id}" class="product-card">
-							<img src="/images/products/${product.supplierName}/${product.type.toUpperCase()}${product.supplierId}/01-300w.webp" alt="Running Shoes">
+							<img src="${buildImagePath(product, "01-300w.webp")}" alt="Running Shoes">
 							<div class="product-info">
 								<h3>${product.name}</h3>
-								<p class="price">${typeToText(product.type)}</p>
+								<p class="price">${typeToText(product.genre)}</p>
 								<p class="price">${product.formattedPrice}€</p>
 								${product.formattedPromoPrice ? `<p class="promo-price">${product.formattedPromoPrice}€</p>` : ""}
 							</div>
@@ -279,7 +325,13 @@ function handleGetRequest(url, req, res, params, cookies, headers = {}) {
 				);
 			})
 		});
-	} else if (url == "/") db.all("SELECT *, CAST(price AS DECIMAL(10,2)) / 100.0 AS formattedPrice, CAST(promoPrice AS DECIMAL(10,2)) / 100.0 AS formattedPromoPrice FROM products WHERE date > ?", Date.now() - 1209600000 /* 2 semaines */, (err, newProductsRows) => {
+	} else if (url == "/") db.all(`
+		SELECT
+			*,
+			CAST(price AS DECIMAL(10,2)) / 100.0 AS formattedPrice,
+			CAST(promoPrice AS DECIMAL(10,2)) / 100.0 AS formattedPromoPrice
+		FROM products WHERE date > ?
+	`, Date.now() - 1209600000 /* 2 semaines */, (err, newProductsRows) => {
 		if (err) {
 			console.error("Erreur lors de la récupération des nouveaux produits: ", err);
 			res.writeHead(500, "Internal Server Error").end();
@@ -312,7 +364,7 @@ function handleGetRequest(url, req, res, params, cookies, headers = {}) {
 			SELECT
 				name,
 				promoPrice,
-				supplierName,
+				supplier,
 				type,
 				supplierId,
 				CAST(price AS DECIMAL(10,2)) / 100.0 AS formattedPrice,
@@ -324,16 +376,20 @@ function handleGetRequest(url, req, res, params, cookies, headers = {}) {
 				console.error("Erreur lors de la récupération du produit: ", err);
 				res.writeHead(500, "Internal Server Error").end();
 			} else if (!product) res.writeHead(404, "Not found").end();
-			else readdir(`./images/products/${product.supplierName}/${product.type.toUpperCase()}${product.supplierId}`, (err, files) => {
+			else readdir(`./images/products/${supplierNames[product.supplier].toLowerCase().replaceAll(" ", "-")}/${product.genre.toUpperCase()}${product.supplierId}`, (err, files) => {
 				if (err) {
 					console.error("Erreur lors de la récupéraction des images du produit: ", err);
 					res.writeHead(500, "Internal Server Error").end();
-				} else db.all("SELECT id, supplierId FROM products WHERE supplierName = ? AND type = ? AND name = ?", [product.supplierName, product.type, product.name], (err, rows) => {
+				} else db.all("SELECT id, supplierId FROM products WHERE supplier = ? AND genre = ? AND name = ?", [
+					product.supplier,
+					product.genre,
+					product.name
+				], (err, rows) => {
 					if (err) {
 						console.error("Erreur lors de la récupéraction des produits liés : ", err);
 						res.writeHead(500, "Internal Server Error").end();
 					} else {
-						const firstImageURL = `/images/products/${product.supplierName}/${product.type.toUpperCase()}${product.supplierId}/01`;						
+						const firstImageURL = buildImagePath(product, "01");						
 						
 						getPage("/produit", {
 							accountText: userToken ? "Mon compte" : "Se connecter",
@@ -344,7 +400,7 @@ function handleGetRequest(url, req, res, params, cookies, headers = {}) {
 								<div id="images-container">
 									<img src="${firstImageURL}.webp" alt="" id="current-presentation" srcset="${firstImageURL}-300w.webp 300w, ${firstImageURL}-500w.webp 500w, ${firstImageURL}-1000w.webp 1000w, ${firstImageURL}-1500w.webp 1500w">
 									${files.filter(file => !file.includes("-")).slice(2).map(file => {
-										const url = `/images/products/${product.supplierName}/${product.type.toUpperCase()}${product.supplierId}/${file.split(".")[0]}`;
+										const url = buildImagePath(product, file.split(".")[0]);
 
 										return `<img src="${url}.webp" alt="" srcset="${url}-300w.webp 300w, ${url}-500w.webp 500w, ${url}-1000w.webp 1000w, ${url}-1500w.webp 1500w">`
 									}).join("")}
@@ -355,7 +411,7 @@ function handleGetRequest(url, req, res, params, cookies, headers = {}) {
 									<p id="name">${product.name}</p>
 									${product.promoPrice ? '<p id="promo">EN PROMOTION</p>' : ""}
 								</div>
-								<p id="type">${typeToText(product.type)}</p>
+								<p id="type">${typeToText(product.genre)}</p>
 								${product.promoPrice ? `
 									<div id="prices">
 										<p id="promo-price">${product.formattedPromoPrice}€</p>
@@ -374,7 +430,7 @@ function handleGetRequest(url, req, res, params, cookies, headers = {}) {
 								`;
 							}).join("").replace('"size">', '"size" checked>'),
 							linkedProducts: rows.map((row, i) => {
-								const url = `/images/products/${product.supplierName}/${product.type.toUpperCase()}${row.supplierId}/00`;
+								const url = `/images/products/${supplierNames[product.supplier].toLowerCase().replaceAll(" ", "-")}/${product.genre.toUpperCase()}${row.supplierId}/00`;
 
 								return `
 									<a href="/produits/${row.id}" class="container-link ${rows.length - 1 == i ? "last" : ""}">
@@ -418,12 +474,10 @@ db.serialize(() => {
 			price INT NOT NULL,
 			soldCount INT DEFAULT 0,
 			promoPrice INT,
-			type CHAR(1) NOT NULL,
+			genre INT NOT NULL,
 			colors INT NOT NULL,
 			date INT NOT NULL,
-			supplierName VARCHAR(20) NOT NULL,
-			CHECK (type IN ('h', 'f', 'e', 'm')),
-			CHECK (supplierName IN ('new-balance', 'puma', 'nike', 'asics', 'adidas'))
+			supplier INT NOT NULL
 		);
 
 		CREATE UNIQUE INDEX IF NOT EXISTS indexSupplierId ON products(supplierId);
@@ -460,39 +514,70 @@ db.serialize(() => {
 		if (err) console.error("Erreur lors de la création des tables: ", err);
 	});
 
-	const reqForProducts = db.prepare("INSERT OR IGNORE INTO products (id, supplierId, name, price, promoPrice, type, colors, date, supplierName, soldCount) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+	const reqForProducts = db.prepare(`
+		INSERT OR IGNORE INTO products (
+			id,
+			supplierId,
+			name,
+			price,
+			promoPrice,
+			genre,
+			colors,
+			date,
+			supplier,
+			soldCount
+		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+	`);
 
 	products.forEach(product => {
-		reqForProducts.run(randomUUID({ disableEntropyCache: true }), product.supplierId, product.name, product.price, product.promoPrice || null, product.type, product.colors, new Date(product.date).getTime(), product.supplierName, product.soldCount, err => {
-			if (err) console.error("Erreur lors de l'ajout du produit: ", err);
-		});
+		reqForProducts.run(
+			randomUUID({ disableEntropyCache: true }),
+			product.supplierId,
+			product.name,
+			product.price,
+			product.promoPrice || null,
+			product.genre,
+			product.colors,
+			new Date(product.date).getTime(),
+			product.supplier,
+			product.soldCount,
+			err => {
+				if (err) console.error("Erreur lors de l'ajout du produit: ", err);
+			}
+		);
 	});
 
 	reqForProducts.finalize(err => {
 		if (err) console.error("Erreur lors de la finalisation de la requête: ", err);
 	});
 
-	const reqForStocks = db.prepare("INSERT OR IGNORE INTO stocks (id, productId, quantity, size) VALUES (?, ?, ?, ?)");
+	const reqForStocks = db.prepare("INSERT OR IGNORE INTO stocks (id, productId, quantity, size) VALUES (?, ?, ?, ?);");
 
 	Promise.all(stocks.map(stock => new Promise((resolve, reject) => {
-		db.get("SELECT id FROM products WHERE supplierId = ?", stock.supplierId, (err, row) => {
+		db.get("SELECT id FROM products WHERE supplierId = ?;", stock.supplierId, (err, row) => {
 			if (err) {
 				console.error("Erreur lors de la récupération de l'id du produit: ", err);
 				reject(err);
 			} else if (!row) {
 				console.error("Produit introuvable: ", stock.supplierId);
 				reject(new Error("Produit introuvable"));
-			} else Object.entries(stock.quantities).forEach(([size, quantity]) => reqForStocks.run(randomUUID({ disableEntropyCache: true }), row.id, quantity, size, err => {
-				if (err) {
-					console.error("Erreur lors de l'ajout du stock: ", err);
-					reject(err);
-				} else resolve();
-			}));
-		})
+			} else Object.entries(stock.quantities).forEach(([size, quantity]) => reqForStocks.run(
+				randomUUID({ disableEntropyCache: true }),
+				row.id,
+				quantity,
+				size,
+				err => {
+					if (err) {
+						console.error("Erreur lors de l'ajout du stock: ", err);
+						reject(err);
+					} else resolve();
+				}
+			));
+		});
 	}))).then(() => {
 		reqForStocks.finalize(err => {
 			if (err) console.error("Erreur lors de la finalisation de la requête: ", err);
-			else db.run("COMMIT", err => {
+			else db.run("COMMIT;", err => {
 				if (err) console.error("Erreur lors de la validation de la transaction: ", err);
 				else createServer((req, res) => {
 					const { pathname: url, searchParams } = new URL(req.url, "http://localhost:8080"), cookies = Object.fromEntries(req.headers.cookie?.split(";").map(cookie => cookie.trim().split("=")) || []), userToken = cookies?.token;									
@@ -502,7 +587,7 @@ db.serialize(() => {
 							if (userToken) {
 								const userId = userToken.split(".")?.at(-1);
 								
-								db.get("SELECT * FROM users WHERE id = ?", userId, (err, row) => {
+								db.get("SELECT * FROM users WHERE id = ?;", userId, (err, row) => {
 									if (err) {
 										console.error("Erreur lors de la vérification du token: ", err);
 
