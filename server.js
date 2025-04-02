@@ -45,6 +45,10 @@ sexes = {
 	e: "enfant",
 	m: "mixte",
 },
+promoValues = {
+	[2**0]: "true",
+	[2**1]: "false",
+},
 transporter = createTransport({
 	service: "outlook",
 	host: "smtp-mail.outlook.com",
@@ -212,14 +216,16 @@ function handleGetRequest(url, req, res, params, cookies, headers = {}) {
 	else if ((url == "/inscription" || url == "/connexion") && userToken) res.writeHead(302, { location: "/" }).end();
 	else if (url == "/produits") {
 		const conditions = [],
-		promoParams = params.get("promo"),
-		genderParams = params.get("genre"),
-		colorsParams = params.get("couleurs"),
-		newProductsParams = params.get("new"),
-		suppliersParams = params.get("marques");
+		genderParams = params.get("genres"),
+		suppliersParams = params.get("marques"),
+		promosParams = params.get("promos"),
+		newsProductsParams = params.get("news"),
+		pricesParams = params.get("prices"),
+		sizesParams = params.get("sizes"),
+		colorsParams = params.get("couleurs");
 
-		if (promoParams == "true") conditions.push("promoPrice IS NOT NULL");
-		else if (promoParams == "false") conditions.push("promoPrice IS NULL");
+		if (promosParams == "true") conditions.push("promoPrice IS NOT NULL");
+		else if (promosParams == "false") conditions.push("promoPrice IS NULL");
 
 		if (genderParams == "h") conditions.push("type = 'h' OR type = 'm'");
 		else if (genderParams == "f") conditions.push("type = 'f' OR type = 'm'");
@@ -230,8 +236,8 @@ function handleGetRequest(url, req, res, params, cookies, headers = {}) {
 
 		if (colorsCondition) conditions.push(`(${colorsCondition})`);
 
-		if (newProductsParams == "true") conditions.push(`date > ${Date.now() - 1209600000 /* 2 semaines */}`);
-		else if (newProductsParams == "false") conditions.push(`date <= ${Date.now() - 1209600000 /* 2 semaines */}`);
+		if (newsProductsParams == "true") conditions.push(`date > ${Date.now() - 1209600000 /* 2 semaines */}`);
+		else if (newsProductsParams == "false") conditions.push(`date <= ${Date.now() - 1209600000 /* 2 semaines */}`);
 
 		const suppliersCondition = Object.keys(suppliers).filter(supplier => (suppliersParams & supplier) == supplier).map(supplier => `supplierName = "${suppliers[supplier]}"`).join(" OR ");
 
