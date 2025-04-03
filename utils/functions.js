@@ -343,12 +343,12 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 						() => res.writeHead(404, "Not found").end()
 					);
 				});
-			} else db.all("SELECT * FROM carts WHERE userId = ?;", user.id, (err, productsInCart) => {				
+			} else db.all("SELECT * FROM carts WHERE userId = ?;", user.id, (err, productsInCart) => {								
 				if (err) {
 					console.log("Erreur lors de la récupération du panier: ", err);
 					res.writeHead(500, "Internal Server Error").end();
 				} else db.all(`
-					SELECT
+					SELECT DISTINCT
 						products.*,
 						quantity,
 						stocks.size,
@@ -358,7 +358,7 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 					JOIN carts ON products.id = carts.productId
 					JOIN stocks ON products.id = stocks.productId
 					WHERE carts.userId = ?${productsInCart.length != 0 ? ` AND (${Array(productsInCart.length).fill("(products.id = ? AND stocks.size = ?)").join(" OR ")})` : ""};
-				`, [user.id, ...productsInCart.flatMap(product => [product.productId, product.size])], (err, products) => {					
+				`, [user.id, ...productsInCart.flatMap(product => [product.productId, product.size])], (err, products) => {										
 					if (err) {
 						console.log("[2] Erreur lors de la récupération des produits dans le panier: ", err);
 						res.writeHead(500, "Internal Server Error").end();
