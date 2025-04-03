@@ -72,6 +72,33 @@ function buildImagePath(product, fileName) {
 	return `/images/products/${supplierNames[product.supplier].toLowerCase().replaceAll(" ", "-")}/${genderNames[product.genre][0].toUpperCase()}${product.supplierId}/${fileName}`
 };
 
+function generateProductItemInCart(product) {
+	return product.quantity != 0 ? `
+		<div id="article_ajouté">
+			<img src="${buildImagePath(product, "01.webp")}" alt="airforce1" style="height: 5cm;"> 
+			<div id="description">
+				<div id="nom_prix">
+					<p style="font-weight: 600;">${product.name}</p> 
+					<p style="text-align: right; font-weight: 600;" id="prix">${product.formattedPrice}€</p>
+				</div>
+				<p style="color: gray;">${typeToText(product.genre)}</p>
+				<p style="color: gray;">Taille / Pointure : <u>${product.size}</u></p>
+				<div id="like-poubelle" style="display: flex;">
+					<label class="container">
+						<input type="checkbox">
+						<svg id="Layer_1" version="1.0" viewBox="0 0 24 24" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M16.4,4C14.6,4,13,4.9,12,6.3C11,4.9,9.4,4,7.6,4C4.5,4,2,6.5,2,9.6C2,14,12,22,12,22s10-8,10-12.4C22,6.5,19.5,4,16.4,4z"></path></svg>
+						<p style="color:gray; margin-left: 1cm;"> Ajouter aux favoris </p>
+					</label>        
+					<label class="poubelle">
+						<img src="/images/assets/poubelle.png" style="height: 28px; margin-top: 37px;" alt="">
+						<p style="color:gray;">Retirer l'article</p>
+					</label> 
+				</div>
+			</div>
+		</div>
+	` : `PLUS DISPO`
+}
+
 /**
  * @param { string } password 
  * @param { string } passwordSalt 
@@ -387,37 +414,16 @@ function handleGetRequest(url, req, res, params, cookies, headers = {}) {
 					FROM products
 					JOIN stocks ON products.id = stocks.productId
 					WHERE (${Array(productsInCart.length).fill("(products.id = ? AND size = ?)").join(" OR ")});
-				`, productsInCart.flatMap(product => product.split("*")), (err, rows) => {
+				`, productsInCart.flatMap(product => product.split("*")), (err, products) => {
 					if (err) {
 						console.error("Erreur lors de la récupération des produits dans le panier: ", err);
 						res.writeHead(500, "Internal Server Error").end();
 					} else getPage(url, {
 						accountText: userToken ? "Mon compte" : "Se connecter",
 						accountLink: userToken ? "/profil" : "/connexion",
-						products: rows.length == 0 ? "<p>Il n'y a aucun article dans ton panier.</p>" : rows.map(product => product.quantity != 0 ? `
-							<div id="article_ajouté">
-								<img src="${buildImagePath(product, "01.webp")}" alt="airforce1" style="height: 5cm;"> 
-								<div id="description">
-									<div id="nom_prix">
-										<p style="font-weight: 600;">${product.name}</p> 
-										<p style="text-align: right; font-weight: 600;" id="prix">${product.formattedPrice}€</p>
-									</div>
-									<p style="color: gray;">${typeToText(product.genre)}</p>
-									<p style="color: gray;">Taille / Pointure : <u>${product.size}</u></p>
-									<div id="like-poubelle" style="display: flex;">
-										<label class="container">
-											<input type="checkbox">
-											<svg id="Layer_1" version="1.0" viewBox="0 0 24 24" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M16.4,4C14.6,4,13,4.9,12,6.3C11,4.9,9.4,4,7.6,4C4.5,4,2,6.5,2,9.6C2,14,12,22,12,22s10-8,10-12.4C22,6.5,19.5,4,16.4,4z"></path></svg>
-											<p style="color:gray; margin-left: 1cm;"> Ajouter aux favoris </p>
-										</label>        
-										<label class="poubelle">
-											<img src="/images/assets/poubelle.png" style="height: 28px; margin-top: 37px;" alt="">
-											<p style="color:gray;">Retirer l'article</p>
-										</label> 
-									</div>
-								</div>
-							</div>
-						` : `PLUS DISPO`).join(`<div class="ligne"></div>`)
+						products: products.length == 0 ?
+							"<p>Il n'y a aucun article dans ton panier.</p>" :
+							products.map(product => generateProductItemInCart(product)).join(`<div class="ligne"></div>`)
 					}).then(
 						data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, {
 							...headers,
@@ -450,30 +456,9 @@ function handleGetRequest(url, req, res, params, cookies, headers = {}) {
 					} else getPage(url, {
 						accountText: userToken ? "Mon compte" : "Se connecter",
 						accountLink: userToken ? "/profil" : "/connexion",
-						products: products.length == 0 ? "<p>Il n'y a aucun article dans ton panier.</p>" : products.map(product => product.quantity != 0 ? `
-							<div id="article_ajouté">
-								<img src="${buildImagePath(product, "01.webp")}" alt="airforce1" style="height: 5cm;"> 
-								<div id="description">
-									<div id="nom_prix">
-										<p style="font-weight: 600;">${product.name}</p> 
-										<p style="text-align: right; font-weight: 600;" id="prix">${product.formattedPrice}€</p>
-									</div>
-									<p style="color: gray;">${typeToText(product.genre)}</p>
-									<p style="color: gray;">Taille / Pointure : <u>${product.size}</u></p>
-									<div id="like-poubelle" style="display: flex;">
-										<label class="container">
-											<input type="checkbox">
-											<svg id="Layer_1" version="1.0" viewBox="0 0 24 24" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M16.4,4C14.6,4,13,4.9,12,6.3C11,4.9,9.4,4,7.6,4C4.5,4,2,6.5,2,9.6C2,14,12,22,12,22s10-8,10-12.4C22,6.5,19.5,4,16.4,4z"></path></svg>
-											<p style="color:gray; margin-left: 1cm;"> Ajouter aux favoris </p>
-										</label>        
-										<label class="poubelle">
-											<img src="/images/assets/poubelle.png" style="height: 28px; margin-top: 37px;" alt="">
-											<p style="color:gray;">Retirer l'article</p>
-										</label> 
-									</div>
-								</div>
-							</div>
-						` : `PLUS DISPO`).join(`<div class="ligne"></div>`)
+						products: products.length == 0 ?
+							"<p>Il n'y a aucun article dans ton panier.</p>" :
+							products.map(product => generateProductItemInCart(product)).join(`<div class="ligne"></div>`)
 					}).then(
 						data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, {
 							...headers,
@@ -510,37 +495,16 @@ function handleGetRequest(url, req, res, params, cookies, headers = {}) {
 				FROM products
 				JOIN stocks ON products.id = stocks.productId
 				WHERE (${Array(productsInCart.length).fill("(products.id = ? AND size = ?)").join(" OR ")});
-			`, productsInCart.flatMap(product => product.split("*")), (err, rows) => {
+			`, productsInCart.flatMap(product => product.split("*")), (err, products) => {
 				if (err) {
 					console.error("Erreur lors de la récupération des produits dans le panier: ", err);
 					res.writeHead(500, "Internal Server Error").end();
 				} else getPage(url, {
 					accountText: userToken ? "Mon compte" : "Se connecter",
 					accountLink: userToken ? "/profil" : "/connexion",
-					products: rows.length == 0 ? "<p>Il n'y a aucun article dans ton panier.</p>" : rows.map(product => product.quantity != 0 ? `
-						<div id="article_ajouté">
-	            <img src="${buildImagePath(product, "01.webp")}" alt="airforce1" style="height: 5cm;"> 
-    	        <div id="description">
-      		      <div id="nom_prix">
-				          <p style="font-weight: 600;">${product.name}</p> 
-        			    <p style="text-align: right; font-weight: 600;" id="prix">${product.formattedPrice}€</p>
-		            </div>
-    			      <p style="color: gray;">${typeToText(product.genre)}</p>
-          			<p style="color: gray;">Taille / Pointure : <u>${product.size}</u></p>
-          			<div id="like-poubelle" style="display: flex;">
-            			<label class="container">
-	              		<input type="checkbox">
-  	            		<svg id="Layer_1" version="1.0" viewBox="0 0 24 24" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M16.4,4C14.6,4,13,4.9,12,6.3C11,4.9,9.4,4,7.6,4C4.5,4,2,6.5,2,9.6C2,14,12,22,12,22s10-8,10-12.4C22,6.5,19.5,4,16.4,4z"></path></svg>
-    	          		<p style="color:gray; margin-left: 1cm;"> Ajouter aux favoris </p>
-            			</label>        
-            			<label class="poubelle">
-              			<img src="/images/assets/poubelle.png" style="height: 28px; margin-top: 37px;" alt="">
-                		<p style="color:gray;">Retirer l'article</p>
-              		</label> 
-          			</div>
-        			</div>
-        		</div>
-					` : `PLUS DISPO`).join(`<div class="ligne"></div>`)
+					products: products.length == 0 ?
+						"<p>Il n'y a aucun article dans ton panier.</p>" :
+						products.map(product => generateProductItemInCart(product)).join(`<div class="ligne"></div>`)
 				}).then(
 					data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, {
 						...headers,
