@@ -25,3 +25,4 @@ hamburger.addEventListener("click", () => {
     hamburgerMenu.classList.toggle("active");
     hamburger.classList.toggle("open");
 });
+
