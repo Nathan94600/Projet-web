@@ -1,36 +1,35 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/styles/components/header.css" />
-    <link rel="stylesheet" href="/styles/mdp_oublie_2.css" />
-    <title>XYZ | Accueil</title>
-    <link rel="icon" href="./images/assets/xing-logo-svgrepo-com.svg" />
-  </head>
-  <body>
-    [header]
-    {{error}}
-    <div id="mdp">
-      <h2>Rénitialiser votre mot de passe.</h2>
-      <form action="/password-reset/confirm" method="post" class="valider">
-        <input type="text" name="code" style="display: none;" required value="{{code}}"/>
-        <input type="code" name="email" style="display: none;" required value="{{email}}"/>
-        <label for="mot_de_passe" id="mot_de_passe">Nouveau mot de passe</label>
-        <input type="password" name="mot_de_passe" id="mot_de_passe" required minlength="8" maxlength="20"/>
-        <label for="mot_de_passe_verif" id="code1">Confirmer le mot de passe</label>
-        <input type="password" name="mot_de_passe_verif" id="mot_de_passe_verif" minlength="8" maxlength="20"/>
-        <br>
-        <button class="payment-method">
-          <span class="button_top">Modifier</span>
-        </button>
-
-        <p id="help">
-          Si vous rencontrez des difficultés à réinitialser votre mot de passe,
-          contacter le support à l'adresse mail suivant : support@xyz.com
-        </p>
-      </form>
-    </div>
-    <script src="/scripts/header.js"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/styles/components/header.css" />
+  <link rel="stylesheet" href="/styles/mdp_oublie_2.css" />
+  <title>XYZ | Accueil</title>
+  <link rel="icon" href="./images/assets/xing-logo-svgrepo-com.svg" />
+  <script src="/scripts/header.js"></script>
+</head>
+<body>
+  [header]
+  {{error}}
+  <div id="mdp">
+    <h2>Rénitialiser votre mot de passe.</h2>
+    <form action="/password-reset/confirm" method="post" class="valider">
+      <input type="text" name="code" style="display: none;" required value="{{code}}"/>
+      <input type="code" name="email" style="display: none;" required value="{{email}}"/>
+      <label for="mot_de_passe" id="mot_de_passe">Nouveau mot de passe</label>
+      <input type="password" name="mot_de_passe" id="mot_de_passe" required minlength="8" maxlength="20"/>
+      <label for="mot_de_passe_verif" id="code1">Confirmer le mot de passe</label>
+      <input type="password" name="mot_de_passe_verif" id="mot_de_passe_verif" minlength="8" maxlength="20"/>
+      <br>
+      <button class="payment-method">
+        <span class="button_top">Modifier</span>
+      </button>
+      <p id="help">
+        Si vous rencontrez des difficultés à réinitialser votre mot de passe,
+        contacter le support à l'adresse mail suivant : support@xyz.com
+      </p>
+    </form>
+  </div>
+</body>
 </html>

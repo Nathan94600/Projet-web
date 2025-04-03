@@ -7,14 +7,14 @@ prices = document.querySelectorAll("#prices input"),
 sizes = document.querySelectorAll("#sizes input"),
 colors = document.querySelectorAll("#colors input");
 
-const params = new URL(window.location.href).searchParams;
+const params = new URL(window.location.href).searchParams, search = params.get("search") || "";
 
 const defaultGenres = parseInt(params.get("genres")) || 0,
 defaultMarques = parseInt(params.get("marques")) || 0,
 defaultPromos = parseInt(params.get("promos")) || 0,
 defaultNews = parseInt(params.get("news")) || 0,
-defaultPrices = params.get("prices")?.split(",") || [],
-defaultSizes = params.get("sizes")?.split(",") || [],
+defaultPrices = params.get("prices") ? params.get("prices").split(",") : [],
+defaultSizes = params.get("sizes") ? params.get("sizes").split(",") : [],
 defaultColors = parseInt(params.get("couleurs")) || 0;
 
 if (params.get("scroll")) filtres.scrollTop = parseInt(params.get("scroll")) || 0;
@@ -27,6 +27,7 @@ genres.forEach(input => {
 	input.addEventListener("change", () => window.location.assign(
 		"/produits?" +
 		`scroll=${filtres.scrollTop}` +
+		`&search=${search}` +
 		`&marques=${defaultMarques}` +
 		`&promos=${defaultPromos}` +
 		`&news=${defaultNews}` +
@@ -45,6 +46,7 @@ marques.forEach(input => {
 	input.addEventListener("change", () => window.location.assign(
 		"/produits?" +
 		`scroll=${filtres.scrollTop}` +
+		`&search=${search}` +
 		`&genres=${defaultGenres}` +
 		`&promos=${defaultPromos}` +
 		`&news=${defaultNews}` +
@@ -63,6 +65,7 @@ promos.forEach(input => {
 	input.addEventListener("change", () => window.location.assign(
 		"/produits?" +
 		`scroll=${filtres.scrollTop}` +
+		`&search=${search}` +
 		`&genres=${defaultGenres}` +
 		`&marques=${defaultMarques}` +
 		`&news=${defaultNews}` +
@@ -81,6 +84,7 @@ news.forEach(input => {
 	input.addEventListener("change", () => window.location.assign(
 		"/produits?" +
 		`scroll=${filtres.scrollTop}` +
+		`&search=${search}` +
 		`&genres=${defaultGenres}` +
 		`&marques=${defaultMarques}` +
 		`&promos=${defaultPromos}` +
@@ -100,9 +104,13 @@ prices.forEach(input => {
 		if (input.checked) defaultPrices.push(value);
 		else defaultPrices.splice(defaultPrices.indexOf(value), 1);
 
+		console.log(prices, defaultPrices);
+		
+
 		window.location.assign(
 			"/produits?" +
 			`scroll=${filtres.scrollTop}` +
+			`&search=${search}` +
 			`&genres=${defaultGenres}` +
 			`&marques=${defaultMarques}` +
 			`&promos=${defaultPromos}` +
@@ -121,11 +129,12 @@ sizes.forEach(input => {
 
 	input.addEventListener("change", () => {
 		if (input.checked) defaultSizes.push(value);
-		else defaultSizes.splice(defaultSizes.indexOf(value), 1);
+		else defaultSizes.splice(defaultSizes.indexOf(value), 1);		
 
 		window.location.assign(
 			"/produits?" +
 			`scroll=${filtres.scrollTop}` +
+			`&search=${search}` +
 			`&genres=${defaultGenres}` +
 			`&marques=${defaultMarques}` + 
 			`&promos=${defaultPromos}` + 
@@ -145,6 +154,7 @@ colors.forEach(input => {
 	input.addEventListener("change", () => window.location.assign(
 		"/produits?" +
 		`scroll=${filtres.scrollTop}` +
+		`&search=${search}` +
 		`&genres=${defaultGenres}` +
 		`&marques=${defaultMarques}` +
 		`&promos=${defaultPromos}` +

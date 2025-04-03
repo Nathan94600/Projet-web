@@ -137,6 +137,7 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 		else compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { ...headers, "content-type": `application/javascript`, "content-encoding": compression.encoding }).end(compression.data));
 	});
 	else if ((url == "/inscription" || url == "/connexion") && userToken) res.writeHead(302, { location: "/" }).end();
+	else if (url == "/profil" && !userToken) res.writeHead(302, { location: "/connexion" }).end();
 	else if (url == "/produits") {
 		let conditions = [];
 
@@ -146,7 +147,8 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 		news = params.get("news"),
 		pricesParams = params.get("prices"),
 		sizesParams = params.get("sizes"),
-		colorsParams = params.get("couleurs");
+		colorsParams = params.get("couleurs"),
+		searchParams = params.get("search");
 
 		if (genders) conditions.push(`(${
 			Object.keys(GENDER_NAMES)
@@ -192,6 +194,8 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 				)
 			`);
 		};
+
+		if (searchParams) conditions.push(`name LIKE "%${searchParams}%" OR supplierId = "${searchParams}" OR id = "${searchParams}"`);
 
 		if (colorsParams) conditions.push(`(${
 			Object.keys(COLORS)
@@ -306,7 +310,7 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 					FROM products
 					JOIN stocks ON products.id = stocks.productId
 					WHERE (${Array(productsInCart.length).fill("(products.id = ? AND size = ?)").join(" OR ")});
-				`, productsInCart.flatMap(product => product.split("*")), (err, products) => {
+				`, productsInCart.flatMap(product => product.split("*")), (err, products) => {			
 					if (err) {
 						console.error("[1] Erreur lors de la récupération des produits dans le panier: ", err);
 						res.writeHead(500, "Internal Server Error").end();
@@ -340,8 +344,8 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 					FROM products
 					JOIN carts ON products.id = carts.productId
 					JOIN stocks ON products.id = stocks.productId
-					WHERE carts.userId = ? AND (${Array(productsInCart.length).fill("(products.id = ? AND stocks.size = ?)").join(" OR ")});
-				`, [user.id, ...productsInCart.flatMap(product => [product.productId, product.size])], (err, products) => {
+					WHERE carts.userId = ?${productsInCart.length != 0 ? ` AND (${Array(productsInCart.length).fill("(products.id = ? AND stocks.size = ?)").join(" OR ")})` : ""};
+				`, [user.id, ...productsInCart.flatMap(product => [product.productId, product.size])], (err, products) => {					
 					if (err) {
 						console.log("[2] Erreur lors de la récupération des produits dans le panier: ", err);
 						res.writeHead(500, "Internal Server Error").end();

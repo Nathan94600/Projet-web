@@ -1,44 +1,42 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/styles/components/header.css" />
-    <link rel="stylesheet" href="/styles/mdp_oublie.css" />
-    <title>XYZ | Accueil</title>
-    <link rel="icon" href="./images/assets/xing-logo-svgrepo-com.svg" />
-  </head>
-  <body>
-    [header]
-    {{error}}
-    <div id="mdp">
-      <h2>Rénitialisez votre mot de passe.</h2>
-      <form action="/password-reset/request" method="post">
-        <label for="mail" id="mail">Votre adresse e-mail</label>
-        <input type="email" name="mail" id="mail" required value="{{email}}"/>
-        <div>
-          <button class="payment-method" style="margin-top: 10px;">
-            <span class="button_top">Recevoir le code</span>
-          </button>
-          <p style="margin-top: 7px;">Demande possible dans 10 secondes.</p>
-        </div>
-      </form>
-
-      <form action="/password-reset/verify" method="post" class="valider">
-        <input type="text" name="email" value="{{email}}" style="display: none;"/>
-        <label for="code" id="code1">Code à 8 caractères</label>
-        <input type="text" name="code" id="code" minlength="8" maxlength="8"/>
-        <br>
-        <button class="payment-method">
-          <span class="button_top">Valider</span>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/styles/components/header.css" />
+  <link rel="stylesheet" href="/styles/mdp_oublie.css" />
+  <title>XYZ | Accueil</title>
+  <link rel="icon" href="./images/assets/xing-logo-svgrepo-com.svg" />
+  <script src="/scripts/header.js" defer></script>
+</head>
+<body>
+  [header]
+  {{error}}
+  <div id="mdp">
+    <h2>Rénitialisez votre mot de passe.</h2>
+    <form action="/password-reset/request" method="post">
+      <label for="mail" id="mail">Votre adresse e-mail</label>
+      <input type="email" name="mail" id="mail" required value="{{email}}"/>
+      <div>
+        <button class="payment-method" style="margin-top: 10px;">
+          <span class="button_top">Recevoir le code</span>
         </button>
-
-        <p id="help">
-          Si vous rencontrez des difficultés à réinitialser votre mot de passe,
-          contacter le support à l'adresse mail suivant : support@xyz.com
-        </p>
-      </form>
-    </div>
-    <script src="/scripts/header.js"></script>
-  </body>
+        <p style="margin-top: 7px;">Demande possible dans 10 secondes.</p>
+      </div>
+    </form>
+    <form action="/password-reset/verify" method="post" class="valider">
+      <input type="text" name="email" value="{{email}}" style="display: none;"/>
+      <label for="code" id="code1">Code à 8 caractères</label>
+      <input type="text" name="code" id="code" minlength="8" maxlength="8"/>
+      <br>
+      <button class="payment-method">
+        <span class="button_top">Valider</span>
+      </button>
+      <p id="help">
+        Si vous rencontrez des difficultés à réinitialser votre mot de passe,
+        contacter le support à l'adresse mail suivant : support@xyz.com
+      </p>
+    </form>
+  </div>
+</body>
 </html>
