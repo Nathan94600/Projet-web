@@ -16,7 +16,7 @@ body {
 }
 
 #news-container, #best-sellers-container, #promos-container {
-	overflow-x: scroll;
+	overflow-x: auto;
 	display: flex;
 	flex-direction: row;
 }
