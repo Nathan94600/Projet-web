@@ -78,10 +78,10 @@ function getPage(pageURL, params = {}) {
 		readFile(`./pages${pageURL == "/" ? "/index" : pageURL}.html`, (err, data) => {
 			if (err) reject(err);
 			else {
-				let pageCode = data.toString(), components = pageCode.match(COMPONENT_REGEX);
+				let pageCode = data.toString(), components = pageCode.match(COMPONENT_REGEX), componentsLoaded = 0;				
 
-				if (components) components.forEach((value, index) => {					
-					const componentName = value.replace(/[\\\[\]]/g, "");
+				if (components) components.forEach(value => {
+					const componentName = value.replace(/[\\\[\]]/g, "");					
 
 					readFile(`./components/${componentName}.html`, (err, data) => {
 						if (err) reject(err);
@@ -92,9 +92,11 @@ function getPage(pageURL, params = {}) {
 								const variableName = variable.replace(/[{}\\]/g, "");
 
 								pageCode = pageCode.replace(`{{${variableName}}}`, params[variableName]);
-							});							
+							});
+							
+							componentsLoaded++;
 
-							if (index + 1 == components.length) resolve(pageCode);
+							if (componentsLoaded == components.length) resolve(pageCode);							
 						};
 					});
 				});
