@@ -96,9 +96,9 @@ h2 {
 
 #error {
     color: #ff0000;
-    width: calc(100% - 1rem);
+    width: max-content;
     padding: 1rem;
-    margin: 0 1rem;
+    margin: auto;
     background: rgba(197, 25, 25, 0.25);
     border-radius: 10px;
     border: 2px solid #ff0000;

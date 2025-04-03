@@ -221,23 +221,23 @@ db.serialize(() => {
 										let errorMessage = "";
 
 										if (!email) errorMessage = "Vous devez mettre un email";
-										else if (!emailRegexp.test(email)) errorMessage = "Vous devez mettre un email valide";
+										else if (!EMAIL_REGEX.test(email)) errorMessage = "Vous devez mettre un email valide";
 										else if (!password) errorMessage = "Vous devez mettre un mot de passe";
 										else if (password.length > 20 || password.length < 8) errorMessage = "Votre mot de passe doit contenir entre 8 et 20 caractères";
 
-										if (errorMessage) res.writeHead(302, { location: `/inscription?error=${encodeURIComponent(errorMessage)}` }).end();
+										if (errorMessage) res.writeHead(302, { location: `/inscription?errorMessage=${encodeURIComponent(errorMessage)}` }).end();
 										else db.get("SELECT * FROM users WHERE email = ?", email, (err, row) => {								
 											if (err) {
 												console.error("Erreur lors de la vérication de l'email: ", err);
 
 												res.writeHead(302, {
-													location: `/connexion?error=${encodeURIComponent("Erreur lors de la vérification de l'email")}`
+													location: `/connexion?errorMessage=${encodeURIComponent("Erreur lors de la vérification de l'email")}`
 												}).end();
 											} else if (!row) res.writeHead(302, {
-												location: `/connexion?error=${encodeURIComponent("Aucun compte n'est associé à cet email")}`
+												location: `/connexion?errorMessage=${encodeURIComponent("Aucun compte n'est associé à cet email")}`
 											}).end();
 											else if (row.password != securePassword(password, row.password_salt).password) res.writeHead(302, {
-												location: `/connexion?error=${encodeURIComponent("Mot de passe incorrect")}`
+												location: `/connexion?errorMessage=${encodeURIComponent("Mot de passe incorrect")}`
 											}).end();
 											else res.writeHead(302, {
 												location: "/", "set-cookie": `token=${randomBytes(64).toString('hex')}.${row.id}; Path=/;`
@@ -264,7 +264,7 @@ db.serialize(() => {
 										else if (password.length > 20 || password.length < 8 || password2.length > 20 || password2.length < 8) errorMessage = "Votre mot de passe doit contenir entre 8 et 20 caractères";
 										else if (password != password2) errorMessage = "Les mots de passe ne correspondent pas";
 
-										if (errorMessage) res.writeHead(302, { location: `/inscription?error=${encodeURIComponent(errorMessage)}` }).end();
+										if (errorMessage) res.writeHead(302, { location: `/inscription?errorMessage=${encodeURIComponent(errorMessage)}` }).end();
 										else {
 											const { password: encryptedPassword, passwordSalt } = securePassword(password),
 											userId = randomUUID({ disableEntropyCache: true });
@@ -274,10 +274,10 @@ db.serialize(() => {
 													console.error("Erreur lors de la vérication de l'email: ", err);
 
 													res.writeHead(302, {
-														location: `/inscription?error=${encodeURIComponent("Erreur lors de la vérification de l'email")}`
+														location: `/inscription?errorMessage=${encodeURIComponent("Erreur lors de la vérification de l'email")}`
 													}).end();
 												} else if (row) res.writeHead(302, {
-													location: `/inscription?error=${encodeURIComponent("Cet email est déjà utilisé")}`
+													location: `/inscription?errorMessage=${encodeURIComponent("Cet email est déjà utilisé")}`
 												}).end();
 												else db.run(
 													"INSERT INTO users (id, email, username, password, password_salt) VALUES (?, ?, ?, ?, ?)",
@@ -287,7 +287,7 @@ db.serialize(() => {
 															console.error("Erreur lors de la création du compte : ", err);
 
 															res.writeHead(302, {
-																location: `/inscription?error=${encodeURIComponent("Erreur lors de la création du compte ")}`
+																location: `/inscription?errorMessage=${encodeURIComponent("Erreur lors de la création du compte ")}`
 															}).end();
 														} else res.writeHead(302, {
 															location: "/", "set-cookie": `token=${randomBytes(64).toString('hex')}.${userId}; Path=/;`
@@ -307,13 +307,13 @@ db.serialize(() => {
 										if (!mail) errorMessage = "Vous devez mettre un email";
 										else if (!EMAIL_REGEX.test(mail)) errorMessage = "Vous devez mettre un email valide";
 
-										if (errorMessage) res.writeHead(302, { location: `/mdp_oublie?error=${encodeURIComponent(errorMessage)}` }).end();
+										if (errorMessage) res.writeHead(302, { location: `/mdp_oublie?errorMessage=${encodeURIComponent(errorMessage)}` }).end();
 										else db.get("SELECT * FROM users WHERE email = ?", mail, (err, row) => {
 											if (err) res.writeHead(302, {
-												location: `/mdp_oublie?error=${encodeURIComponent("Erreur lors de la vérification de l'email")}`
+												location: `/mdp_oublie?errorMessage=${encodeURIComponent("Erreur lors de la vérification de l'email")}`
 											}).end();
 											else if (!row) res.writeHead(302, {
-												location: `/mdp_oublie?error=${encodeURIComponent("Aucun compte n'est associé à cet email")}`
+												location: `/mdp_oublie?errorMessage=${encodeURIComponent("Aucun compte n'est associé à cet email")}`
 											}).end();
 											else transporter.sendMail({
 												from: senderEmail,
@@ -322,7 +322,7 @@ db.serialize(() => {
 												text: "Voici votre code de réinitialisation de mot de passe: " + (passwordResetCodes[mail] = randomBytes(4).toString("hex"))
 											}, err => {
 												if (err) res.writeHead(302, {
-													location: `/mdp_oublie?error=${encodeURIComponent("Erreur lors de l'envoi du mail")}`
+													location: `/mdp_oublie?errorMessage=${encodeURIComponent("Erreur lors de l'envoi du mail")}`
 												}).end();
 												else res.writeHead(302, { location: `/mdp_oublie?email=${mail}` }).end();
 											});
@@ -340,7 +340,7 @@ db.serialize(() => {
 										else if (!code) errorMessage = "Vous devez mettre un code de réinitialisation";
 										else if (code != passwordResetCodes[email]) errorMessage = "Le code de réinitialisation est incorrect";							
 
-										if (errorMessage) res.writeHead(302, { location: `/mdp_oublie?error=${encodeURIComponent(errorMessage)}` }).end();
+										if (errorMessage) res.writeHead(302, { location: `/mdp_oublie?errorMessage=${encodeURIComponent(errorMessage)}` }).end();
 										else res.writeHead(302, { location: `/mdp_oublie_2?email=${email}&code=${code}` }).end();
 									});
 									break;
@@ -365,13 +365,13 @@ db.serialize(() => {
 										else if (password.length > 20 || password.length < 8 || password2.length > 20 || password2.length < 8) errorMessage = "Votre mot de passe doit contenir entre 8 et 20 caractères";
 										else if (password != password2) errorMessage = "Les mots de passe ne correspondent pas";				
 
-										if (errorMessage) res.writeHead(302, { location: `/mdp_oublie?error=${encodeURIComponent(errorMessage)}` }).end();
+										if (errorMessage) res.writeHead(302, { location: `/mdp_oublie?errorMessage=${encodeURIComponent(errorMessage)}` }).end();
 										else {
 											const { password: pwd, passwordSalt } = securePassword(password);
 
 											db.run(`UPDATE users SET password = ?, password_salt = ? WHERE email = ?`, [pwd, passwordSalt, email], err => {											
 												if (err) res.writeHead(302, {
-													location: `/mdp_oublie_2?error=${encodeURIComponent("Erreur lors de la réinitialisation du mot de passe")}`
+													location: `/mdp_oublie_2?errorMessage=${encodeURIComponent("Erreur lors de la réinitialisation du mot de passe")}`
 												}).end();
 												else res.writeHead(302, { location: "/" }).end();
 											});

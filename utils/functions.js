@@ -121,7 +121,10 @@ function getPage(pageURL, params = {}) {
  * @param { Record<string, string> } headers - Les en-têtes supplémentaires à ajouter à la réponse.
  */
 function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {	
-	const userToken = cookies.token, errorMessage = params.get("errorMessage"), successMessage = params.get("successMessage");	
+	const userToken = cookies.token, errorMessage = params.get("errorMessage"), successMessage = params.get("successMessage");
+
+	console.log("error", errorMessage, params);
+	
 
 	if (url.startsWith("/images/")) readFile(`.${url}`, (err, data) => {
 		if (err) res.writeHead(404, "Not found").end();
@@ -306,7 +309,7 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 					FROM products
 					JOIN stocks ON products.id = stocks.productId
 					WHERE (${Array(productsInCart.length).fill("(products.id = ? AND size = ?)").join(" OR ")});
-				`, productsInCart.flatMap(product => product.split("*")), (err, products) => {
+				`, productsInCart.flatMap(product => product.split("*")), (err, products) => {			
 					if (err) {
 						console.error("[1] Erreur lors de la récupération des produits dans le panier: ", err);
 						res.writeHead(500, "Internal Server Error").end();
