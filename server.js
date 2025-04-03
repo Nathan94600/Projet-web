@@ -8,6 +8,7 @@ const { createServer } = require("http"),
 	products = require("./products.json"),
 	stocks = require("./stocks.json"),
 	{ securePassword, handleGetRequest } = require("./utils/functions");
+const { EMAIL_REGEX } = require("./utils/constants");
 
 // Variables
 const db = new Database("database.db", err => {
@@ -255,7 +256,7 @@ db.serialize(() => {
 										let errorMessage = "";
 
 										if (!email) errorMessage = "Vous devez mettre un email";
-										else if (!emailRegexp.test(email)) errorMessage = "Vous devez mettre un email valide";
+										else if (!EMAIL_REGEX.test(email)) errorMessage = "Vous devez mettre un email valide";
 										else if (!username) errorMessage = "Vous devez mettre un nom d'utilisateur";
 										else if (!password) errorMessage = "Vous devez mettre un mot de passe";
 										else if (!password2) errorMessage = "Vous devez confirmer votre mot de passe";
@@ -304,7 +305,7 @@ db.serialize(() => {
 										let errorMessage = "";
 
 										if (!mail) errorMessage = "Vous devez mettre un email";
-										else if (!emailRegexp.test(mail)) errorMessage = "Vous devez mettre un email valide";
+										else if (!EMAIL_REGEX.test(mail)) errorMessage = "Vous devez mettre un email valide";
 
 										if (errorMessage) res.writeHead(302, { location: `/mdp_oublie?error=${encodeURIComponent(errorMessage)}` }).end();
 										else db.get("SELECT * FROM users WHERE email = ?", mail, (err, row) => {
@@ -335,7 +336,7 @@ db.serialize(() => {
 										let errorMessage = "";
 
 										if (!email) errorMessage = "Vous devez mettre un email";
-										else if (!emailRegexp.test(email)) errorMessage = "Vous devez mettre un email valide";
+										else if (!EMAIL_REGEX.test(email)) errorMessage = "Vous devez mettre un email valide";
 										else if (!code) errorMessage = "Vous devez mettre un code de réinitialisation";
 										else if (code != passwordResetCodes[email]) errorMessage = "Le code de réinitialisation est incorrect";							
 
@@ -355,7 +356,7 @@ db.serialize(() => {
 		
 										if (
 											!email ||
-											!emailRegexp.test(email) ||
+											!EMAIL_REGEX.test(email) ||
 											!code ||
 											code != passwordResetCodes[email]
 										) errorMessage = "Problème lors de la réinitialisation du mot de passe";

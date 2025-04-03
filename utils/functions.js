@@ -308,7 +308,7 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 					WHERE (${Array(productsInCart.length).fill("(products.id = ? AND size = ?)").join(" OR ")});
 				`, productsInCart.flatMap(product => product.split("*")), (err, products) => {
 					if (err) {
-						console.error("Erreur lors de la récupération des produits dans le panier: ", err);
+						console.error("[1] Erreur lors de la récupération des produits dans le panier: ", err);
 						res.writeHead(500, "Internal Server Error").end();
 					} else getPage(url, {
 						accountText: userToken ? "Mon compte" : "Se connecter",
@@ -343,7 +343,7 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 					WHERE carts.userId = ? AND (${Array(productsInCart.length).fill("(products.id = ? AND stocks.size = ?)").join(" OR ")});
 				`, [user.id, ...productsInCart.flatMap(product => [product.productId, product.size])], (err, products) => {
 					if (err) {
-						console.log("Erreur lors de la récupération des produits dans le panier: ", err);
+						console.log("[2] Erreur lors de la récupération des produits dans le panier: ", err);
 						res.writeHead(500, "Internal Server Error").end();
 					} else getPage(url, {
 						accountText: userToken ? "Mon compte" : "Se connecter",
@@ -389,7 +389,7 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 				WHERE (${Array(productsInCart.length).fill("(products.id = ? AND size = ?)").join(" OR ")});
 			`, productsInCart.flatMap(product => product.split("*")), (err, products) => {
 				if (err) {
-					console.error("Erreur lors de la récupération des produits dans le panier: ", err);
+					console.error("[3] Erreur lors de la récupération des produits dans le panier: ", err);
 					res.writeHead(500, "Internal Server Error").end();
 				} else getPage(url, {
 					accountText: userToken ? "Mon compte" : "Se connecter",
