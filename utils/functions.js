@@ -146,7 +146,8 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 		news = params.get("news"),
 		pricesParams = params.get("prices"),
 		sizesParams = params.get("sizes"),
-		colorsParams = params.get("couleurs");
+		colorsParams = params.get("couleurs"),
+		searchParams = params.get("search");
 
 		if (genders) conditions.push(`(${
 			Object.keys(GENDER_NAMES)
@@ -192,6 +193,8 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 				)
 			`);
 		};
+
+		if (searchParams) conditions.push(`name LIKE "%${searchParams}%" OR supplierId = "${searchParams}" OR id = "${searchParams}"`);
 
 		if (colorsParams) conditions.push(`(${
 			Object.keys(COLORS)
