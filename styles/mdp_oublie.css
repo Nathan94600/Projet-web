@@ -39,6 +39,8 @@ margin-top: 30px;
 
 #code {
     margin-top: 3px;
+    border-radius: 10px;
+    height: 30px;
 }
 
 .payment-method {
@@ -77,11 +79,6 @@ margin-top: 30px;
     transform: translateY(0);
   }
 
-  input {
-    border-radius: 10px;
-    height: 30px;
-  }
-
   .valider {
     flex-direction: column;
     display: flex;
@@ -89,4 +86,7 @@ margin-top: 30px;
 
   #mail {
     font-weight: 600;
+    border-radius: 10px;
+    height: 30px;
   }
+

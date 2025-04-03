@@ -83,7 +83,7 @@ h2 {
 }
 
 #btn-container {
-    font-family: Iner;
+    font-family: Inter;
     font-weight: 500;
 }
 
@@ -168,6 +168,7 @@ h2 {
 
     .container-l {
         height: 50vh; /* Adjust height for better scaling */
+        display: none; /* Masque le conteneur gauche */
     }
 
     .container-l img {
