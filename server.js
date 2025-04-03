@@ -148,7 +148,9 @@ db.serialize(() => {
 			else db.run("COMMIT;", err => {
 				if (err) console.error("Erreur lors de la validation de la transaction: ", err);
 				else createServer((req, res) => {
-					const { pathname: url, searchParams } = new URL(req.url, "http://localhost:8080"), cookies = Object.fromEntries(req.headers.cookie?.split(";").map(cookie => cookie.trim().split("=")) || []), userToken = cookies?.token;									
+					const { pathname: url, searchParams } = new URL(req.url, "http://localhost:8080"),
+					cookies = Object.fromEntries(req.headers.cookie?.split(";").map(cookie => cookie.trim().split("=")) || []),
+					userToken = cookies?.token;									
 
 					switch (req.method) {
 						case "GET":
@@ -160,7 +162,15 @@ db.serialize(() => {
 										console.error("Erreur lors de la vérification du token: ", err);
 
 										res.writeHead(500, "Internal Server Error").end();
-									} else handleGetRequest(db, url, req, res, searchParams, cookies, !row ? { "set-cookie": "token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; Path=/;" } : {});
+									} else handleGetRequest(
+										db,
+										url,
+										req,
+										res,
+										searchParams,
+										cookies,
+										!row ? { "set-cookie": "token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; Path=/;" } : {}
+									);
 								});
 							} else handleGetRequest(db, url, req, res, searchParams, cookies);
 							break;
@@ -170,18 +180,36 @@ db.serialize(() => {
 							switch (url) {
 								case "/cart/add":
 									req.on("data", chunk => body += chunk).on("end", () => {
-										const params = new URLSearchParams(body), productId = params.get("id"), size = parseFloat(params.get("size")), userId = userToken?.split(".")?.at(-1);
+										const params = new URLSearchParams(body),
+										productId = params.get("id"),
+										size = parseFloat(params.get("size")),
+										userId = userToken?.split(".")?.at(-1);
 
-										if (!size) res.writeHead(302, { location: `/produits/${productId}?errorMessage=${encodeURIComponent("Taille invalide")}` }).end();
-										else if (userToken) db.run("INSERT INTO carts (id, userId, productId, size) VALUES (?, ?, ?, ?)", [randomUUID({ disableEntropyCache: true }), userId, productId, size], err => {
-											if (err) res.writeHead(302, { location: `/produits/${productId}?errorMessage=${encodeURIComponent("Erreur lors de l'ajout du produit au panier' ")}` }).end();
-											else res.writeHead(302, { location: `/produits/${productId}?successMessage=${encodeURIComponent("Article ajouté au panier")}` }).end();
-										});
+										if (!size) res.writeHead(302, {
+											location: `/produits/${productId}?errorMessage=${encodeURIComponent("Taille invalide")}`
+										}).end();
+										else if (userToken) db.run(
+											"INSERT INTO carts (id, userId, productId, size) VALUES (?, ?, ?, ?)",
+											[randomUUID({ disableEntropyCache: true }), userId, productId, size],
+											err => {
+												if (err) res.writeHead(302, {
+													location: `/produits/${productId}?errorMessage=${encodeURIComponent("Erreur lors de l'ajout du produit au panier")}`
+												}).end();
+												else res.writeHead(302, {
+													location: `/produits/${productId}?successMessage=${encodeURIComponent("Article ajouté au panier")}`
+												}).end();
+											}
+										);
 										else {
 											const products = cookies.cart;											
 
-											if (products && products.includes(`${productId}*${size}`)) res.writeHead(302, { location: `/produits/${productId}?errorMessage=${encodeURIComponent("Cet article est déjà dans votre panier")}` }).end();
-											else res.writeHead(302, { location: `/produits/${productId}?successMessage=${encodeURIComponent("Article ajouté au panier")}`, "set-cookie": `cart=${products ? `${products}_` : ""}${productId}*${size}; Max-Age=2592000; Path=/;` }).end();
+											if (products && products.includes(`${productId}*${size}`)) res.writeHead(302, {
+												location: `/produits/${productId}?errorMessage=${encodeURIComponent("Cet article est déjà dans votre panier")}`
+											}).end();
+											else res.writeHead(302, {
+												location: `/produits/${productId}?successMessage=${encodeURIComponent("Article ajouté au panier")}`,
+												"set-cookie": `cart=${products ? `${products}_` : ""}${productId}*${size}; Max-Age=2592000; Path=/;`
+											}).end();
 										};
 									});
 									break;
@@ -201,16 +229,28 @@ db.serialize(() => {
 											if (err) {
 												console.error("Erreur lors de la vérication de l'email: ", err);
 
-												res.writeHead(302, { location: `/connexion?error=${encodeURIComponent("Erreur lors de la vérification de l'email")}` }).end();
-											} else if (!row) res.writeHead(302, { location: `/connexion?error=${encodeURIComponent("Aucun compte n'est associé à cet email")}` }).end();
-											else if (row.password != securePassword(password, row.password_salt).password) res.writeHead(302, { location: `/connexion?error=${encodeURIComponent("Mot de passe incorrect")}` }).end();
-											else res.writeHead(302, { location: "/", "set-cookie": `token=${randomBytes(64).toString('hex')}.${row.id}; Path=/;` }).end();
+												res.writeHead(302, {
+													location: `/connexion?error=${encodeURIComponent("Erreur lors de la vérification de l'email")}`
+												}).end();
+											} else if (!row) res.writeHead(302, {
+												location: `/connexion?error=${encodeURIComponent("Aucun compte n'est associé à cet email")}`
+											}).end();
+											else if (row.password != securePassword(password, row.password_salt).password) res.writeHead(302, {
+												location: `/connexion?error=${encodeURIComponent("Mot de passe incorrect")}`
+											}).end();
+											else res.writeHead(302, {
+												location: "/", "set-cookie": `token=${randomBytes(64).toString('hex')}.${row.id}; Path=/;`
+											}).end();
 										});
 									});
 									break;
 								case "/inscription":
 									req.on("data", chunk => body += chunk).on("end", () => {
-										const params = new URLSearchParams(body), email = params.get("email"), username = params.get("username"), password = params.get("password"), password2 = params.get("password2");
+										const params = new URLSearchParams(body),
+										email = params.get("email"),
+										username = params.get("username"),
+										password = params.get("password"),
+										password2 = params.get("password2");
 
 										let errorMessage = "";
 
@@ -225,21 +265,34 @@ db.serialize(() => {
 
 										if (errorMessage) res.writeHead(302, { location: `/inscription?error=${encodeURIComponent(errorMessage)}` }).end();
 										else {
-											const { password: encryptedPassword, passwordSalt } = securePassword(password), userId = randomUUID({ disableEntropyCache: true });
+											const { password: encryptedPassword, passwordSalt } = securePassword(password),
+											userId = randomUUID({ disableEntropyCache: true });
 
 											db.get("SELECT * FROM users WHERE email = ?", email, (err, row) => {
 												if (err) {
 													console.error("Erreur lors de la vérication de l'email: ", err);
 
-													res.writeHead(302, { location: `/inscription?error=${encodeURIComponent("Erreur lors de la vérification de l'email")}` }).end();
-												} else if (row) res.writeHead(302, { location: `/inscription?error=${encodeURIComponent("Cet email est déjà utilisé")}` }).end();
-												else db.run(`INSERT INTO users (id, email, username, password, password_salt) VALUES (?, ?, ?, ?, ?)`, [userId, email, username, encryptedPassword, passwordSalt], err => {
-													if (err) {
-														console.error("Erreur lors de la création du compte : ", err);
+													res.writeHead(302, {
+														location: `/inscription?error=${encodeURIComponent("Erreur lors de la vérification de l'email")}`
+													}).end();
+												} else if (row) res.writeHead(302, {
+													location: `/inscription?error=${encodeURIComponent("Cet email est déjà utilisé")}`
+												}).end();
+												else db.run(
+													"INSERT INTO users (id, email, username, password, password_salt) VALUES (?, ?, ?, ?, ?)",
+													[userId, email, username, encryptedPassword, passwordSalt],
+													err => {
+														if (err) {
+															console.error("Erreur lors de la création du compte : ", err);
 
-														res.writeHead(302, { location: `/inscription?error=${encodeURIComponent("Erreur lors de la création du compte ")}` }).end();
-													} else res.writeHead(302, { location: "/", "set-cookie": `token=${randomBytes(64).toString('hex')}.${userId}; Path=/;` }).end();
-												});
+															res.writeHead(302, {
+																location: `/inscription?error=${encodeURIComponent("Erreur lors de la création du compte ")}`
+															}).end();
+														} else res.writeHead(302, {
+															location: "/", "set-cookie": `token=${randomBytes(64).toString('hex')}.${userId}; Path=/;`
+														}).end();
+													}
+												);
 											});
 										};
 									});
@@ -255,15 +308,21 @@ db.serialize(() => {
 
 										if (errorMessage) res.writeHead(302, { location: `/mdp_oublie?error=${encodeURIComponent(errorMessage)}` }).end();
 										else db.get("SELECT * FROM users WHERE email = ?", mail, (err, row) => {
-											if (err) res.writeHead(302, { location: `/mdp_oublie?error=${encodeURIComponent("Erreur lors de la vérification de l'email")}` }).end();
-											else if (!row) res.writeHead(302, { location: `/mdp_oublie?error=${encodeURIComponent("Aucun compte n'est associé à cet email")}` }).end();
+											if (err) res.writeHead(302, {
+												location: `/mdp_oublie?error=${encodeURIComponent("Erreur lors de la vérification de l'email")}`
+											}).end();
+											else if (!row) res.writeHead(302, {
+												location: `/mdp_oublie?error=${encodeURIComponent("Aucun compte n'est associé à cet email")}`
+											}).end();
 											else transporter.sendMail({
 												from: senderEmail,
 												to: mail,
 												subject: "Code de réinitialisation de mot de passe",
 												text: "Voici votre code de réinitialisation de mot de passe: " + (passwordResetCodes[mail] = randomBytes(4).toString("hex"))
 											}, err => {
-												if (err) res.writeHead(302, { location: `/mdp_oublie?error=${encodeURIComponent("Erreur lors de l'envoi du mail")}` }).end();
+												if (err) res.writeHead(302, {
+													location: `/mdp_oublie?error=${encodeURIComponent("Erreur lors de l'envoi du mail")}`
+												}).end();
 												else res.writeHead(302, { location: `/mdp_oublie?email=${mail}` }).end();
 											});
 										});
@@ -310,7 +369,9 @@ db.serialize(() => {
 											const { password: pwd, passwordSalt } = securePassword(password);
 
 											db.run(`UPDATE users SET password = ?, password_salt = ? WHERE email = ?`, [pwd, passwordSalt, email], err => {											
-												if (err) res.writeHead(302, { location: `/mdp_oublie_2?error=${encodeURIComponent("Erreur lors de la réinitialisation du mot de passe")}` }).end();
+												if (err) res.writeHead(302, {
+													location: `/mdp_oublie_2?error=${encodeURIComponent("Erreur lors de la réinitialisation du mot de passe")}`
+												}).end();
 												else res.writeHead(302, { location: "/" }).end();
 											});
 										};
