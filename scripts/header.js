@@ -17,7 +17,6 @@ window.addEventListener("scroll", () => {
     } else {
         header.classList.remove("sticky");
     }
-
     lastScrollY = window.scrollY;
 });
 
@@ -25,16 +24,4 @@ window.addEventListener("scroll", () => {
 hamburger.addEventListener("click", () => {
     hamburgerMenu.classList.toggle("active");
     hamburger.classList.toggle("open");
-
-    // Add profile, search, and basket to the hamburger menu
-    if (hamburgerMenu.classList.contains("active")) {
-        const clonedActionContainer = actionContainer.cloneNode(true);
-        clonedActionContainer.id = "hamburger-action-container"; // Avoid duplicate IDs
-        hamburgerMenu.appendChild(clonedActionContainer);
-    } else {
-        const existingActionContainer = document.querySelector("#hamburger-action-container");
-        if (existingActionContainer) {
-            existingActionContainer.remove();
-        }
-    }
 });
