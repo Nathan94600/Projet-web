@@ -137,6 +137,7 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 		else compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { ...headers, "content-type": `application/javascript`, "content-encoding": compression.encoding }).end(compression.data));
 	});
 	else if ((url == "/inscription" || url == "/connexion") && userToken) res.writeHead(302, { location: "/" }).end();
+	else if (url == "/profil" && !userToken) res.writeHead(302, { location: "/connexion" }).end();
 	else if (url == "/produits") {
 		let conditions = [];
 
