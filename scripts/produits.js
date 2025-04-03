@@ -5,7 +5,8 @@ promos = document.querySelectorAll("#promos input"),
 news = document.querySelectorAll("#news input"),
 prices = document.querySelectorAll("#prices input"),
 sizes = document.querySelectorAll("#sizes input"),
-colors = document.querySelectorAll("#colors input");
+colors = document.querySelectorAll("#colors input"),
+sortOption = document.querySelector(".sort-select");
 
 const params = new URL(window.location.href).searchParams, search = params.get("search") || "";
 
@@ -15,9 +16,24 @@ defaultPromos = parseInt(params.get("promos")) || 0,
 defaultNews = parseInt(params.get("news")) || 0,
 defaultPrices = params.get("prices") ? params.get("prices").split(",") : [],
 defaultSizes = params.get("sizes") ? params.get("sizes").split(",") : [],
-defaultColors = parseInt(params.get("couleurs")) || 0;
+defaultColors = parseInt(params.get("couleurs")) || 0,
+defaultSortOption = params.get("sort-by") || "initial";
 
 if (params.get("scroll")) filtres.scrollTop = parseInt(params.get("scroll")) || 0;
+
+sortOption.addEventListener("change", () => window.location.assign(
+	"/produits?" +
+	`scroll=${filtres.scrollTop}` +
+	`&sort-by=${sortOption.value}` +
+	`&search=${search}` +
+	`&marques=${defaultMarques}` +
+	`&promos=${defaultPromos}` +
+	`&news=${defaultNews}` +
+	`&prices=${defaultPrices}` +
+	`&sizes=${defaultSizes}` +
+	`&couleurs=${defaultColors}` +
+	`&genres=${defaultGenres}`
+));
 
 genres.forEach(input => {
 	const value = parseInt(input.value);
@@ -27,6 +43,7 @@ genres.forEach(input => {
 	input.addEventListener("change", () => window.location.assign(
 		"/produits?" +
 		`scroll=${filtres.scrollTop}` +
+		`&sort-by=${defaultSortOption}` +
 		`&search=${search}` +
 		`&marques=${defaultMarques}` +
 		`&promos=${defaultPromos}` +
@@ -46,6 +63,7 @@ marques.forEach(input => {
 	input.addEventListener("change", () => window.location.assign(
 		"/produits?" +
 		`scroll=${filtres.scrollTop}` +
+		`&sort-by=${defaultSortOption}` +
 		`&search=${search}` +
 		`&genres=${defaultGenres}` +
 		`&promos=${defaultPromos}` +
@@ -65,6 +83,7 @@ promos.forEach(input => {
 	input.addEventListener("change", () => window.location.assign(
 		"/produits?" +
 		`scroll=${filtres.scrollTop}` +
+		`&sort-by=${defaultSortOption}` +
 		`&search=${search}` +
 		`&genres=${defaultGenres}` +
 		`&marques=${defaultMarques}` +
@@ -84,6 +103,7 @@ news.forEach(input => {
 	input.addEventListener("change", () => window.location.assign(
 		"/produits?" +
 		`scroll=${filtres.scrollTop}` +
+		`&sort-by=${defaultSortOption}` +
 		`&search=${search}` +
 		`&genres=${defaultGenres}` +
 		`&marques=${defaultMarques}` +
@@ -110,6 +130,7 @@ prices.forEach(input => {
 		window.location.assign(
 			"/produits?" +
 			`scroll=${filtres.scrollTop}` +
+			`&sort-by=${defaultSortOption}` +
 			`&search=${search}` +
 			`&genres=${defaultGenres}` +
 			`&marques=${defaultMarques}` +
@@ -134,6 +155,7 @@ sizes.forEach(input => {
 		window.location.assign(
 			"/produits?" +
 			`scroll=${filtres.scrollTop}` +
+			`&sort-by=${defaultSortOption}` +
 			`&search=${search}` +
 			`&genres=${defaultGenres}` +
 			`&marques=${defaultMarques}` + 
@@ -154,6 +176,7 @@ colors.forEach(input => {
 	input.addEventListener("change", () => window.location.assign(
 		"/produits?" +
 		`scroll=${filtres.scrollTop}` +
+		`&sort-by=${defaultSortOption}` +
 		`&search=${search}` +
 		`&genres=${defaultGenres}` +
 		`&marques=${defaultMarques}` +

@@ -157,7 +157,34 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 		pricesParams = params.get("prices"),
 		sizesParams = params.get("sizes"),
 		colorsParams = params.get("couleurs"),
-		searchParams = params.get("search");		
+		searchParams = params.get("search"),
+		sortOption = params.get("sort-by");
+
+		let sortSQLPart = ""
+
+		switch (sortOption) {
+			case "ascName":
+				sortSQLPart = " ORDER BY name ASC";
+				break;
+			case "descName":
+				sortSQLPart = " ORDER BY name DESC";
+				break;
+			case "ascPrice":
+				sortSQLPart = " ORDER BY COALESCE(promoPrice, price) ASC";
+				break;
+			case "descPrice":
+				sortSQLPart = " ORDER BY COALESCE(promoPrice, price) DESC";
+				break;
+			case "ascSales":
+				sortSQLPart = " ORDER BY soldCount ASC";
+				break;
+			case "descSales":
+				sortSQLPart = " ORDER BY soldCount DESC";
+				break;
+			case "date":
+				sortSQLPart = " ORDER BY date DESC";
+				break;
+		}
 
 		if (genders) conditions.push(`(${
 			Object.keys(GENDER_NAMES)
@@ -220,7 +247,7 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 				products.*,
 				CAST(price AS DECIMAL(10,2)) / 100.0 AS formattedPrice,
 				CAST(promoPrice AS DECIMAL(10,2)) / 100.0 AS formattedPromoPrice
-			FROM products${conditions.length != 0 ? ` WHERE ${conditions.join(" AND ")}` : ""};
+			FROM products${conditions.length != 0 ? ` WHERE ${conditions.join(" AND ")}` : ""}${sortSQLPart};
 		`, (err, rows) => {
 			if (err) {
 				console.error("Erreur lors de la récupération des produits: ", err);
@@ -250,7 +277,17 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
             	<input type="checkbox" name="size" value="${size}" id="${size}">
           	  <label class="size-label" for="${size}">${size}</label>
           	</div>
-					`).join("")
+					`).join(""),
+					sortOptions: `
+						<option id="initial" value="initial"${sortSQLPart == "" ? " selected" : ""}>Résultats initiaux</option>
+    	      <option id="ascName" value="ascName"${sortOption == "ascName" ? " selected" : ""}>Nom: A à Z</option>
+  	        <option id="descName" value="descName"${sortOption == "descName" ? " selected" : ""}>Nom: Z à A</option>
+	          <option id="ascPrice" value="ascPrice"${sortOption == "ascPrice" ? " selected" : ""}>Prix: Croissant</option>
+      	    <option id="descPrice" value="descPrice"${sortOption == "descPrice" ? " selected" : ""}>Prix: Décroissant</option>
+        	  <option id="ascSales" value="ascSales"${sortOption == "ascSales" ? " selected" : ""}>Meilleurs ventes: Croissant</option>
+  		      <option id="descSales" value="descSales"${sortOption == "descSales" ? " selected" : ""}>Meilleurs ventes: Décroissant</option>
+	          <option id="date" value="date"${sortOption == "date" ? " selected" : ""}>Date d'arrivée (Nouveautés en premiers)</option>
+					`
 				}).then(
 					data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { ...headers, "content-type": `text/html`, "content-encoding": compression.encoding }).end(compression.data)),
 					() => res.writeHead(404, "Not found").end()
