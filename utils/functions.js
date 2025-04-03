@@ -28,15 +28,20 @@ function generateProductItemInCart(product) {
 				<p style="color: gray;">${typeToText(product.genre)}</p>
 				<p style="color: gray;">Taille / Pointure : <u>${product.size}</u></p>
 				<div id="like-poubelle" style="display: flex;">
-					<label class="container">
-						<input type="checkbox">
-						<svg id="Layer_1" version="1.0" viewBox="0 0 24 24" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M16.4,4C14.6,4,13,4.9,12,6.3C11,4.9,9.4,4,7.6,4C4.5,4,2,6.5,2,9.6C2,14,12,22,12,22s10-8,10-12.4C22,6.5,19.5,4,16.4,4z"></path></svg>
-						<p style="color:gray; margin-left: 1cm;"> Ajouter aux favoris </p>
-					</label>        
-					<label class="poubelle">
-						<img src="/images/assets/poubelle.png" style="height: 28px; margin-top: 37px;" alt="">
-						<p style="color:gray;">Retirer l'article</p>
-					</label> 
+					<form method="post" action="/favorites/add" class="favoris-form">
+						<button type="submit" class="favoris-btn">
+							<svg height="28" version="1.0" viewBox="0 0 24 24" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M16.4,4C14.6,4,13,4.9,12,6.3C11,4.9,9.4,4,7.6,4C4.5,4,2,6.5,2,9.6C2,14,12,22,12,22s10-8,10-12.4C22,6.5,19.5,4,16.4,4z"></path></svg>
+						</button>
+						<label style="color:gray;" for="product">Ajouter aux favoris</label>
+						<input type="text" name="product" value="${product.id}_${product.size}" style="display: none;">
+					</form>
+					<form method="post" action="/cart/remove" class="remove-form">
+						<button type="submit" class="poubelle-btn">
+							<img src="/images/assets/poubelle.png" height="28" alt="">
+						</button>
+						<label style="color:gray;" for="product">Retirer l'article</label>
+						<input type="text" name="product" value="${product.id}_${product.size}" style="display: none;">
+					</form>
 				</div>
 			</div>
 		</div>

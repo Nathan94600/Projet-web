@@ -145,12 +145,33 @@ h2 {
   text-align: right;
 }
 
-label {
+.favoris-form, .remove-form {
+  margin-left: 2.5rem;
+  margin-top: 37px;
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
   width: 50%;
 }
 
-#like_poubelle {
-  display: flex;
+.favoris-btn, .poubelle-btn {
+  border: none;
+  background: none;
+  width: max-content;
+  cursor: pointer;
+}
+
+.favoris-btn svg {
+  fill: gray;
+}
+
+.favoris-form label, .remove-form label {
+  margin-top: 10px;
+  width: 100%;
+}
+
+label {
+  width: 50%;
 }
 
 #articles {
