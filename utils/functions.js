@@ -317,9 +317,15 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 					} else getPage(url, {
 						accountText: userToken ? "Mon compte" : "Se connecter",
 						accountLink: userToken ? "/profil" : "/connexion",
-						products: products.length == 0 ?
-							"<p>Il n'y a aucun article dans ton panier.</p>" :
-							products.map(product => generateProductItemInCart(product)).join(`<div class="ligne"></div>`)
+						...(products.length == 0 ? {
+							products: "<p>Il n'y a aucun article dans ton panier.</p>",
+							productPrices: 0,
+							total: 0,
+						} : {
+							products: products.map(product => generateProductItemInCart(product)).join(`<div class="ligne"></div>`),
+							productPrices: products.reduce((prevValue, currProduct) => prevValue + (currProduct.formattedPromoPrice || currProduct.formattedPrice), 0),
+							total: products.reduce((prevValue, currProduct) => prevValue + (currProduct.formattedPromoPrice || currProduct.formattedPrice), 0),
+						})
 					}).then(
 						data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, {
 							...headers,
@@ -352,9 +358,15 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 					} else getPage(url, {
 						accountText: userToken ? "Mon compte" : "Se connecter",
 						accountLink: userToken ? "/profil" : "/connexion",
-						products: products.length == 0 ?
-							"<p>Il n'y a aucun article dans ton panier.</p>" :
-							products.map(product => generateProductItemInCart(product)).join(`<div class="ligne"></div>`)
+						...(products.length == 0 ? {
+							products: "<p>Il n'y a aucun article dans ton panier.</p>",
+							productPrices: 0,
+							total: 0,
+						} : {
+							products: products.map(product => generateProductItemInCart(product)).join(`<div class="ligne"></div>`),
+							productPrices: products.reduce((prevValue, currProduct) => prevValue + (currProduct.formattedPromoPrice || currProduct.formattedPrice), 0),
+							total: products.reduce((prevValue, currProduct) => prevValue + (currProduct.formattedPromoPrice || currProduct.formattedPrice), 0),
+						})
 					}).then(
 						data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, {
 							...headers,
@@ -372,7 +384,9 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 			if (productsInCart.length == 0) getPage(url, {
 				accountText: userToken ? "Mon compte" : "Se connecter",
 				accountLink: userToken ? "/profil" : "/connexion",
-				products: "<p>Il n'y a aucun article dans ton panier.</p>"
+				products: "<p>Il n'y a aucun article dans ton panier.</p>",
+				productPrices: 0,
+				total: 0
 			}).then(
 				data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, {
 					...headers,
@@ -398,9 +412,15 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 				} else getPage(url, {
 					accountText: userToken ? "Mon compte" : "Se connecter",
 					accountLink: userToken ? "/profil" : "/connexion",
-					products: products.length == 0 ?
-						"<p>Il n'y a aucun article dans ton panier.</p>" :
-						products.map(product => generateProductItemInCart(product)).join(`<div class="ligne"></div>`)
+					...(products.length == 0 ? {
+						products: "<p>Il n'y a aucun article dans ton panier.</p>",
+						productPrices: 0,
+						total: 0,
+					} : {
+						products: products.map(product => generateProductItemInCart(product)).join(`<div class="ligne"></div>`),
+						productPrices: products.reduce((prevValue, currProduct) => prevValue + (currProduct.formattedPromoPrice || currProduct.formattedPrice), 0),
+						total: products.reduce((prevValue, currProduct) => prevValue + (currProduct.formattedPromoPrice || currProduct.formattedPrice), 0),
+					})
 				}).then(
 					data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, {
 						...headers,
