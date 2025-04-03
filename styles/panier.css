@@ -129,6 +129,14 @@ h2 {
   width: 50%;
 }
 
+.ligne {
+  height: 1px;
+  background: gray;
+  border-radius: 1px;
+  width: 100%;
+  margin-top: 15px;
+}
+
 #nom_prix {
   display: flex;
 }
