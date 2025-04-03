@@ -121,10 +121,7 @@ function getPage(pageURL, params = {}) {
  * @param { Record<string, string> } headers - Les en-têtes supplémentaires à ajouter à la réponse.
  */
 function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {	
-	const userToken = cookies.token, errorMessage = params.get("errorMessage"), successMessage = params.get("successMessage");
-
-	console.log("error", errorMessage, params);
-	
+	const userToken = cookies.token, errorMessage = params.get("errorMessage"), successMessage = params.get("successMessage");	
 
 	if (url.startsWith("/images/")) readFile(`.${url}`, (err, data) => {
 		if (err) res.writeHead(404, "Not found").end();
