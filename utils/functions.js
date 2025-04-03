@@ -19,7 +19,9 @@ function buildImagePath(product, fileName) {
 function generateProductItemInCart(product) {
 	return product.quantity != 0 ? `
 		<div id="article_ajouté">
-			<img src="${buildImagePath(product, "01.webp")}" alt="airforce1" style="height: 5cm;"> 
+			<a href="/produits/${product.id}">
+				<img src="${buildImagePath(product, "01.webp")}" alt="airforce1" style="height: 5cm;"> 
+			</a>
 			<div id="description">
 				<div id="nom_prix">
 					<p style="font-weight: 600;">${product.name}</p> 
