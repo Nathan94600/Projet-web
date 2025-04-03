@@ -150,12 +150,12 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 		pricesParams = params.get("prices"),
 		sizesParams = params.get("sizes"),
 		colorsParams = params.get("couleurs"),
-		searchParams = params.get("search");
+		searchParams = params.get("search");		
 
 		if (genders) conditions.push(`(${
 			Object.keys(GENDER_NAMES)
-				.filter(value => (genders & value) == value)
-				.map(value => `genre = ${value}`)
+				.filter(value => (genders & value) == value && parseInt(value) > 0)
+				.map(value => `genre = ${parseInt(value)}`)
 				.join(" OR ")
 		})`);
 
@@ -180,12 +180,12 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 				.join(" OR ")
 		})`);
 
-		if (pricesParams) conditions.push(pricesParams
+		if (pricesParams) conditions.push(`(${pricesParams
 			.split(",")
 			.map(prices => (prices.split("-").map(price => parseInt(price * 100))))
 			.filter(prices => !isNaN(prices[0]) && (!prices[1] || prices[0] < prices[1]))
-			.map(prices => `COALESCE(promoPrice, price) ${prices[1] ? `BETWEEN ${prices[0]} AND ${prices[1]}` : `> ${prices[0]}`}`).join(" OR ")
-		);
+			.map(prices => `(COALESCE(promoPrice, price) ${prices[1] ? `BETWEEN ${prices[0]} AND ${prices[1]}` : `> ${prices[0]}`})`).join(" OR ")
+		})`);
 
 		if (sizesParams) {
 			const validSizes = sizesParams.split(",").map(size => parseFloat(size)).filter(size => !isNaN(size));
@@ -206,7 +206,7 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 				.join(" OR ")
 			})`);
 
-		conditions = conditions.filter(condition => condition && condition != "()");
+		conditions = conditions.filter(condition => condition && condition != "()");		
 
 		db.all(`
 			SELECT
