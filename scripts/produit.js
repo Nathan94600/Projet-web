@@ -7,10 +7,7 @@ for (const img of images) {
 		currPresentationImgLastPartWithoutExtension = `/${currPresentation.src.split("/").at(-1).split(".")[0]}`;
 
 		if (img.id != "current-presentation") {
-			const imgLastPartWithoutExtension = `/${img.src.split("/").at(-1).split(".")[0]}`;
-			
-			console.log(currPresentationImgLastPartWithoutExtension, imgLastPartWithoutExtension);
-			
+			const imgLastPartWithoutExtension = `/${img.src.split("/").at(-1).split(".")[0]}`;			
 			
 			displayImg.src = displayImg.src.replace(currPresentationImgLastPartWithoutExtension, imgLastPartWithoutExtension);
 			displayImg.srcset = displayImg.srcset.replaceAll(currPresentationImgLastPartWithoutExtension, imgLastPartWithoutExtension);
