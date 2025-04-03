@@ -172,6 +172,11 @@ header {
     #search-form input {
         width: 100px;
     }
+
+        #account-container p,
+    #cart-container p {
+        display: none; /* Masque les textes */
+    }
 }
 
 /* Responsive styles for larger tablets */
@@ -179,4 +184,5 @@ header {
     #search-form input {
         width: 120px;
     }
+    
 }
