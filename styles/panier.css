@@ -121,10 +121,6 @@ h2 {
   transform: scale(1.1);
 }
 
-.container input:checked ~ svg {
-  fill: #E3474F;
-}
-
 #nom_prix p {
   width: 50%;
 }
@@ -159,6 +155,10 @@ h2 {
   background: none;
   width: max-content;
   cursor: pointer;
+}
+
+form[action="/favorites/remove"] .favoris-btn svg {
+  fill: #E3474F;
 }
 
 .favoris-btn svg {

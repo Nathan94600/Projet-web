@@ -16,7 +16,7 @@ function buildImagePath(product, fileName) {
 	return `/images/products/${SUPPLIER_NAMES[product.supplier].toLowerCase().replaceAll(" ", "-")}/${GENDER_NAMES[product.genre][0].toUpperCase()}${product.supplierId}/${fileName}`
 };
 
-function generateProductItemInCart(product) {
+function generateProductItemInCart(product, favoriteProduct) {
 	return product.quantity != 0 ? `
 		<div id="article_ajouté">
 			<a href="/produits/${product.id}">
@@ -30,12 +30,13 @@ function generateProductItemInCart(product) {
 				<p style="color: gray;">${typeToText(product.genre)}</p>
 				<p style="color: gray;">Taille / Pointure : <u>${product.size}</u></p>
 				<div id="like-poubelle" style="display: flex;">
-					<form method="post" action="/favorites/add" class="favoris-form">
+					<form method="post" action="/favorites/${favoriteProduct ? "remove" : "add"}" class="favoris-form">
 						<button type="submit" class="favoris-btn">
 							<svg height="28" version="1.0" viewBox="0 0 24 24" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M16.4,4C14.6,4,13,4.9,12,6.3C11,4.9,9.4,4,7.6,4C4.5,4,2,6.5,2,9.6C2,14,12,22,12,22s10-8,10-12.4C22,6.5,19.5,4,16.4,4z"></path></svg>
 						</button>
-						<label style="color:gray;" for="product">Ajouter aux favoris</label>
-						<input type="text" name="product" value="${product.id}_${product.size}" style="display: none;">
+						<label style="color:gray;" for="product">${favoriteProduct ? "Retirer des favoris" : "Ajouter aux favoris"}</label>
+						<input type="text" name="location" value="/panier" style="display: none;">
+						<input type="text" name="productId" value="${product.id}" style="display: none;">
 					</form>
 					<form method="post" action="/cart/remove" class="remove-form">
 						<button type="submit" class="poubelle-btn">
@@ -368,7 +369,7 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 							productPrices: 0,
 							total: 0,
 						} : {
-							products: products.map(product => generateProductItemInCart(product)).join(`<div class="ligne"></div>`),
+							products: products.map(product => generateProductItemInCart(product, false)).join(`<div class="ligne"></div>`),
 							productPrices: products.reduce((prevValue, currProduct) => prevValue + (currProduct.formattedPromoPrice || currProduct.formattedPrice), 0),
 							total: products.reduce((prevValue, currProduct) => prevValue + (currProduct.formattedPromoPrice || currProduct.formattedPrice), 0),
 						})
@@ -392,12 +393,17 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 						quantity,
 						stocks.size,
 						CAST(price AS DECIMAL(10,2)) / 100.0 AS formattedPrice,
-						CAST(promoPrice AS DECIMAL(10,2)) / 100.0 AS formattedPromoPrice
+						CAST(promoPrice AS DECIMAL(10,2)) / 100.0 AS formattedPromoPrice,
+						CASE 
+      			  WHEN favorites.id IS NOT NULL THEN TRUE 
+			        ELSE FALSE 
+    				END AS isFavorite
 					FROM products
 					JOIN carts ON products.id = carts.productId
 					JOIN stocks ON products.id = stocks.productId
+					LEFT JOIN favorites ON products.id = favorites.productId AND favorites.userId = ?
 					WHERE carts.userId = ?${productsInCart.length != 0 ? ` AND (${Array(productsInCart.length).fill("(products.id = ? AND stocks.size = ?)").join(" OR ")})` : ""};
-				`, [user.id, ...productsInCart.flatMap(product => [product.productId, product.size])], (err, products) => {										
+				`, [user.id, user.id, ...productsInCart.flatMap(product => [product.productId, product.size])], (err, products) => {										
 					if (err) {
 						console.log("[2] Erreur lors de la récupération des produits dans le panier: ", err);
 						res.writeHead(500, "Internal Server Error").end();
@@ -409,7 +415,7 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 							productPrices: 0,
 							total: 0,
 						} : {
-							products: products.map(product => generateProductItemInCart(product)).join(`<div class="ligne"></div>`),
+							products: products.map(product => generateProductItemInCart(product, product.isFavorite)).join(`<div class="ligne"></div>`),
 							productPrices: products.reduce((prevValue, currProduct) => prevValue + (currProduct.formattedPromoPrice || currProduct.formattedPrice), 0),
 							total: products.reduce((prevValue, currProduct) => prevValue + (currProduct.formattedPromoPrice || currProduct.formattedPrice), 0),
 						})
@@ -463,7 +469,7 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 						productPrices: 0,
 						total: 0,
 					} : {
-						products: products.map(product => generateProductItemInCart(product)).join(`<div class="ligne"></div>`),
+						products: products.map(product => generateProductItemInCart(product, false)).join(`<div class="ligne"></div>`),
 						productPrices: products.reduce((prevValue, currProduct) => prevValue + (currProduct.formattedPromoPrice || currProduct.formattedPrice), 0),
 						total: products.reduce((prevValue, currProduct) => prevValue + (currProduct.formattedPromoPrice || currProduct.formattedPrice), 0),
 					})
