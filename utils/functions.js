@@ -340,8 +340,8 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 					FROM products
 					JOIN carts ON products.id = carts.productId
 					JOIN stocks ON products.id = stocks.productId
-					WHERE carts.userId = ? AND (${Array(productsInCart.length).fill("(products.id = ? AND stocks.size = ?)").join(" OR ")});
-				`, [user.id, ...productsInCart.flatMap(product => [product.productId, product.size])], (err, products) => {
+					WHERE carts.userId = ?${productsInCart.length != 0 ? ` AND (${Array(productsInCart.length).fill("(products.id = ? AND stocks.size = ?)").join(" OR ")})` : ""};
+				`, [user.id, ...productsInCart.flatMap(product => [product.productId, product.size])], (err, products) => {					
 					if (err) {
 						console.log("[2] Erreur lors de la récupération des produits dans le panier: ", err);
 						res.writeHead(500, "Internal Server Error").end();
