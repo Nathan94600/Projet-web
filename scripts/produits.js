@@ -1,11 +1,11 @@
 const filtres = document.querySelector(".filtres"),
-genres = document.querySelectorAll("#genres input"),
-marques = document.querySelectorAll("#marques input"),
-promos = document.querySelectorAll("#promos input"),
-news = document.querySelectorAll("#news input"),
-prices = document.querySelectorAll("#prices input"),
-sizes = document.querySelectorAll("#sizes input"),
-colors = document.querySelectorAll("#colors input"),
+genres = document.querySelectorAll("#genres .checkbox-container input"),
+marques = document.querySelectorAll("#marques .checkbox-container input"),
+promos = document.querySelectorAll("#promos .checkbox-container input"),
+news = document.querySelectorAll("#news .checkbox-container input"),
+prices = document.querySelectorAll("#prices .checkbox-container input"),
+sizes = document.querySelectorAll("#sizes .size-grid input"),
+colors = document.querySelectorAll("#colors .color-options input"),
 sortOption = document.querySelector(".sort-select");
 
 const params = new URL(window.location.href).searchParams, search = params.get("search") || "";

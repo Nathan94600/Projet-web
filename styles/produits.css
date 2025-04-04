@@ -143,7 +143,7 @@ label[for="white"] { background: white; border: 1px solid black; }
 label[for="brown"] { background: #644117; }
 label[for="grey"] { background: grey; }
 
-#colors input:checked ~ label {
+#colors div input:checked ~ label {
     transform: scale(1.2);
 }
   
@@ -157,6 +157,44 @@ label[for="grey"] { background: grey; }
     overflow: auto;
     margin-left: 300px;
     flex: 1;
+}
+
+.filter-title {
+    cursor: pointer;
+    margin-bottom: 12px;
+    color: #4a4a4a;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+}
+
+.filter-title span {
+    font-size: 1.2rem;
+    font-weight: normal;
+}
+
+.toggle:checked ~ .checkbox-container {
+    display: block;
+}
+
+.toggle:checked ~ .size-grid {
+    display: grid;
+}
+
+.toggle:checked ~ .color-options {
+    display: flex;
+}
+
+.filter-title span::before {
+    content: "+";  
+}
+
+.toggle:checked + .filter-title span::before {
+    content: "-";
+}
+
+.checkbox-container, .size-grid, .color-options {
+    display: none;
 }
   
 .results-header {
