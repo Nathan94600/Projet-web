@@ -46,3 +46,9 @@ node server --ip      # Lance le serveur en détectant l'IP de l'interface
 ```
 
 2. Aller sur le lien affiché dans le terminal
+
+# Todolist
+
+- Faire le style et/ou html pour les produits dans le panier qui sont plus en stock
+- Faire le responsive de toutes les pages
+- Réorganiser les fichiers `.js` utilisé pour le backend 
