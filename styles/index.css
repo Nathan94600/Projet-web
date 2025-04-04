@@ -35,6 +35,10 @@ body {
 	margin-left: 5rem;
 }
 
+.news-item:last-child, .best-seller-item:last-child, .promo-item:last-child {
+	margin-right: 0;
+}
+
 .news-item, .best-seller-item, .promo-item {
 	text-decoration: none;
 	color: #000;
