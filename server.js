@@ -2,13 +2,12 @@
 const { createServer } = require("http"),
 	{ createTransport } = require("nodemailer"),
 	{ Database } = require("sqlite3"),
-	{ randomUUID, randomBytes } = require("crypto"),
+	{ randomUUID } = require("crypto"),
 	{ networkInterfaces } = require("os"),
 	{ email: senderEmail, password } = require("./config.json"),
 	products = require("./products.json"),
 	stocks = require("./stocks.json"),
-	{ securePassword, handleGetRequest } = require("./utils/functions"),
-	{ EMAIL_REGEX } = require("./utils/constants"),
+	{ handleGetRequest } = require("./utils/functions"),
 	{ readdir, stat } = require("fs");
 
 const routes = {
@@ -52,9 +51,9 @@ function setRoutes(path, defaultPath = null) {
 						if (filesRead == files.length) resolve()
 					}, reason => reject(reason));
 					else {
-						filesRead++;
+						filesRead++;						
 
-						routes[`${path}/${file.split(".")[0]}`.replace(defaultPath, "")] = require(`${path}/${file}`);
+						routes[`${path}/${file.split(".")[0]}`.replace(defaultPath || path, "")] = require(`${path}/${file}`);
 
 						if (filesRead == files.length) resolve();
 					};
@@ -220,7 +219,7 @@ setRoutes("./routes").then(() => {
 									});
 								} else handleGetRequest(db, url, req, res, searchParams, cookies);
 								break;
-							case "POST":
+							case "POST":								
 								if (routes[url]) routes[url](req, res, {
 									userToken,
 									searchParams,

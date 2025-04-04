@@ -1,3 +1,5 @@
+const { randomUUID } = require("crypto");
+
 module.exports = (req, res, { userToken, db }) => {
 	if (req.method == "POST") {
 		let body = "";
