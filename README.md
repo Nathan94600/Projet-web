@@ -51,4 +51,10 @@ node server --ip      # Lance le serveur en détectant l'IP de l'interface
 
 - Faire le style et/ou html pour les produits dans le panier qui sont plus en stock
 - Faire le responsive de toutes les pages
-- Réorganiser les fichiers `.js` utilisé pour le backend 
+- Réorganiser les fichiers `.js` utilisé pour le backend
+- Modifier les produits dans le panier pour inclure et afficher les promos
+- Faire le footer
+- Régler les problèmes du header
+- Modifier le bas de la page du panier (à partir de la section `Nos articles du moment`)
+- Ajouter les favoris et les données de l'utilisateur dans la page de son compte
+- Ajout la possibilité de modifer/supprimer son compte
