@@ -22,13 +22,18 @@ body {
 }
 
 #marques-container {
+	height: 10vw;
+	overflow-y: hidden;
+	overflow-x: auto;
 	display: flex;
+	min-height: 50px;
 	flex-direction: row;
 	justify-content: space-around;
 }
 
 .marque img {
 	height: 100%;
+	margin-right: 2rem;
 }
 
 .news-item:first-child, .best-seller-item:first-child, .promo-item:first-child {
