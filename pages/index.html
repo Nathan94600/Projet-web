@@ -12,12 +12,17 @@
 </head>
 <body>
   [header]
-  <img
-    src="/images/presentations/nike-tn-shark.webp"
-    alt=""
-    id="presentation-img"
-    srcset="/images/presentations/nike-tn-shark-1535w.webp 1535w, /images/presentations/nike-tn-shark-1920w.webp 1920w, /images/presentations/nike-tn-shark-2560w.webp 2560w, /images/presentations/nike-tn-shark.webp 3840w"
-  >
+  <picture>
+    <source media="(max-width: 639px)" srcset="/images/presentations/nike-tn-shark-480w.webp">
+    <source media="(min-width: 640px) and (max-width: 959px)" srcset="/images/presentations/nike-tn-shark-640w.webp">
+    <source media="(min-width: 960px) and (max-width: 1289px)" srcset="/images/presentations/nike-tn-shark-960w.webp">
+    <source media="(min-width: 1280px) and (max-width: 1534px)" srcset="/images/presentations/nike-tn-shark-1280w.webp">
+    <source media="(min-width: 1535px) and (max-width: 1919px)" srcset="/images/presentations/nike-tn-shark-1535w.webp">
+    <source media="(min-width: 1920px) and (max-width: 2559px)" srcset="/images/presentations/nike-tn-shark-1920w.webp">
+    <source media="(min-width: 2560px) and (max-width: 3839px)" srcset="/images/presentations/nike-tn-shark-2560w.webp">
+    <source media="(min-width: 3840px)" srcset="/images/presentations/nike-tn-shark.webp">
+    <img src="/images/presentations/nike-tn-shark.webp" alt="" id="presentation-img">
+  </picture>
   <section id="news">
     <h3>Nouveautés</h3>
     <div id="news-container">
