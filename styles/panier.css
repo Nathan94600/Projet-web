@@ -201,26 +201,26 @@ label {
   margin-top: 7rem;
 }
 
-#news, #marques, #best-sellers, #promos {
+#best-sellers {
 	display: flex;
 	flex-direction: column;
 }
 
-#news h3, #marques h3, #best-sellers h3, #promos h3 {
+#best-sellers h3 {
 	margin: 2rem 5rem;
 }
 
-#news-container, #best-sellers-container, #promos-container {
+#best-sellers-container {
 	overflow-x: auto;
 	display: flex;
 	flex-direction: row;
 }
 
-.news-item:first-child, .best-seller-item:first-child, .promo-item:first-child {
+.best-seller-item:first-child {
 	margin-left: 5rem;
 }
 
-.news-item, .best-seller-item, .promo-item {
+.best-seller-item {
 	text-decoration: none;
 	color: #000;
 	margin: 2vh 3vw;
@@ -231,14 +231,14 @@ label {
 	box-shadow: inset 4px 4px 5px #8a8a8a, 4px 4px 5px #8a8a8a;
 }
 
-.news-item img, .best-seller-item img, .promo-item img {
+.best-seller-item img {
 	display: block;
 	margin: auto;
 	width: 20vw;
 	min-width: 200px;
 }
 
-.news-item hr, .best-seller-item hr , .promo-item hr  {
+.best-seller-item hr {
 	border: none;
 	margin: 1rem auto;
 	background: #000;
@@ -246,7 +246,7 @@ label {
 	width: 85%;
 }
 
-.news-item p, .best-seller-item p , .promo-item p {
+.best-seller-item p {
 	margin: .5rem 0;
 }
 
@@ -259,17 +259,22 @@ label {
 	color: #6F6F6F;
 }
 
-.news-item > .price, .best-seller-item > .price, .promo-item > .price {
+.best-seller-item > .price {
 	margin-bottom: calc(1lh + .5rem);
 }
 
-.news-item .prices p, .best-seller-item .prices p, .promo-item .prices p {
+.best-seller-item .prices p {
 	display: inline;
 }
 
 .prices .price {
 	margin-left: 1rem;
 	text-decoration: line-through
+}
+
+#payment-buttons {
+  display: flex;
+  justify-content: space-evenly;
 }
 
 /* Responsive styles for tablets */
@@ -358,4 +363,18 @@ label {
     margin-top: 0.5cm;
     margin-left: 0.5cm;
   }
+}
+
+@media (max-width: 1800px) {
+	#best-sellers h3 {
+		margin: 2rem 3rem;
+	}
+
+	.best-seller-item:first-child {
+		margin-left: 3rem;
+	}
+
+	.best-seller-item:last-child {
+		margin-right: 3rem;
+	}
 }
