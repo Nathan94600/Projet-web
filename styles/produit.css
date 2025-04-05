@@ -34,11 +34,11 @@ body {
 
 
 #container {
-	height: calc(100vh - 10vw - 70px);
-	width: calc(90vw);
+	width: auto;
 	display: flex;
 	flex-direction: row;
-	margin: calc(10vw - 70px) 0 0 10vw;
+	justify-content: space-around;
+	margin: 5vw 2vw;
 }
 
 #presentation-container {
@@ -46,27 +46,26 @@ body {
 	display: flex;
 	flex-direction: column;
 	width: 45vw;
-	margin-right: calc(7.5vw);
 	box-shadow: inset 4px 4px 5px #8a8a8a, 4px 4px 5px #8a8a8a;
 	border-radius: 15px;
-	height: calc(100vh - 10vw - 70px);
+	height: min-content;
+	position: relative;
 }
 
 #display {
-	margin-top: 2.5vw;
-	height: 50%;
-	/* width: calc(100% - 5vw); */
+	margin: 2.5vw 0;
+	width: 40%;
 }
 
 #presentation-container hr {
-	margin: auto;
+	margin: 2rem;
 	background: #000;
 	height: 2px;
 	width: 80%;
 }
 
 .favoris-form {
-	left: 10vw;
+	left: 0;
 	margin: 2rem;
 	justify-self: left;
 	position: absolute;
@@ -156,8 +155,7 @@ form[action="/favorites/remove"] .favoris-btn svg {
 
 #other-items .container-link {
 	padding-right: 2rem;
-	min-width: calc((100% - 9vw) / 4);
-	width: calc((100% - 9vw) / 4);
+	min-width: max(calc((100% - 9vw) / 4), 5rem);
 }
 
 #other-items .container-link.last {
@@ -227,7 +225,7 @@ input:disabled ~ label {
 #add {
 	border: #000 2px solid;
 	border-radius: 15px;
-	padding: 1vw;
+	padding: 1rem;
 	align-self: center;
 	margin-top: auto;
 	width: max-content;
@@ -258,5 +256,63 @@ input:disabled ~ label {
 	to {
 		border: #000 2px solid;
 		box-shadow: none;
+	}
+}
+
+@media (max-width: 1230px) {
+	hr {
+		display: none;
+	}
+
+	#text-container {
+		flex-direction: column-reverse;
+	}
+
+	#promo, #name {
+		width: 100%;
+		margin-top: .5rem;
+		text-align: left;
+	}
+
+	#container {
+		align-items: center;
+		flex-direction: column;
+		margin: 2vw;
+		width: calc(100% - 4vw);
+	}
+
+	#presentation-container, #information-container {
+		margin-top: 2rem;
+		width: 75%;
+	}
+
+	#information-container {
+		margin-top: 2rem;
+	}
+
+	#input-container {
+		display: flex;
+		width: 100%;
+		flex-wrap: wrap;
+	}
+
+	#input-container div {
+		width: calc(100% / 6 - calc(8vw / 6));
+		height: 4rem;
+	}
+
+	#add {
+		margin-top: 2rem;
+	}
+
+	#text-container, #prices, #information-container > #name, #information-container > #price {
+		margin-bottom: .5rem;
+	}
+}
+
+@media (max-width: 600px) {
+	#input-container div {
+		width: calc(100% / 4 - calc(8vw / 4));
+		height: 3rem;
 	}
 }
