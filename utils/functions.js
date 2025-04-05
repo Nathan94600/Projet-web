@@ -368,21 +368,140 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 		else res.writeHead(302, { location: "/connexion" }).end();
 	} else if (url == "/index" || url == "/produit") res.writeHead(404, "Not found").end();
 	else if (url == "/panier") {
-		if (userToken) db.get("SELECT * FROM users WHERE id = ?;", userToken.split(".")?.at(-1), (err, user) => {
-			if (err) {
-				console.error("Erreur lors de la vérification du token: ", err);
-				res.writeHead(500, "Internal Server Error").end();
-			} else if (!user) {
+		db.all("SELECT *, CAST(price AS DECIMAL(10,2)) / 100.0 AS formattedPrice, CAST(promoPrice AS DECIMAL(10,2)) / 100.0 AS formattedPromoPrice FROM products ORDER BY soldCount DESC LIMIT 8", (err, bestProducts) => {
+			if (userToken) db.get("SELECT * FROM users WHERE id = ?;", userToken.split(".")?.at(-1), (err, user) => {
+				if (err) {
+					console.error("Erreur lors de la vérification du token: ", err);
+					res.writeHead(500, "Internal Server Error").end();
+				} else if (!user) {
+					const productsInCart = cookies.cart?.split("_") || [];
+		
+					if (productsInCart.length == 0) getPage(url, {
+						bestProducts: bestProducts.map(product => generateProductItem(product, "best-seller")).join(""),
+						accountText: userToken ? "Mon compte" : "Se connecter",
+						accountLink: userToken ? "/profil" : "/connexion",
+						products: "<p>Il n'y a aucun article dans ton panier.</p>",
+						sousTotalSansPromo: "",
+						totalSansPromo: "",
+						productPrices: '<p style="text-align: end; font-weight: 600;">0€</p>',
+						total: '<p style="text-align: end; font-weight: 600;">0€</p>',
+					}).then(
+						data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, {
+							...headers,
+							"content-type": `text/html`,
+							"content-encoding": compression.encoding
+						}).end(compression.data)),
+						() => res.writeHead(404, "Not found").end()
+					);
+					else db.all(`
+						SELECT
+							products.*,
+							quantity,
+							size,
+							CAST(price AS DECIMAL(10,2)) / 100.0 AS formattedPrice,
+							CAST(promoPrice AS DECIMAL(10,2)) / 100.0 AS formattedPromoPrice
+						FROM products
+						JOIN stocks ON products.id = stocks.productId
+						WHERE (${Array(productsInCart.length).fill("(products.id = ? AND size = ?)").join(" OR ")});
+					`, productsInCart.flatMap(product => product.split("*")), (err, products) => {
+						const productsPriceWithoutPromo = products.reduce((prevVal, currVal) => prevVal + currVal.formattedPrice, 0),	
+						productsPriceWithPromo = products.reduce((prevVal, currVal) => prevVal + (currVal.formattedPromoPrice || currVal.formattedPrice), 0),
+						promo = productsPriceWithoutPromo != productsPriceWithPromo;
+		
+						if (err) {
+							console.error("[1] Erreur lors de la récupération des produits dans le panier: ", err);
+							res.writeHead(500, "Internal Server Error").end();
+						} else getPage(url, {
+							bestProducts: bestProducts.map(product => generateProductItem(product, "best-seller")).join(""),
+							accountText: userToken ? "Mon compte" : "Se connecter",
+							accountLink: userToken ? "/profil" : "/connexion",
+							sousTotalSansPromo: promo ? `<p style="text-align: end; font-weight: 600;" class="without-promo">${productsPriceWithoutPromo}€</p>` : "",
+							totalSansPromo: promo ? `<p style="text-align: end; font-weight: 600;" class="without-promo">${productsPriceWithoutPromo}€</p>` : "",
+							...(products.length == 0 ? {
+								products: "<p>Il n'y a aucun article dans ton panier.</p>",
+								productPrices: '<p style="text-align: end; font-weight: 600;">0€</p>',
+								total: '<p style="text-align: end; font-weight: 600;">0€</p>',
+							} : {
+								products: products.map(product => generateProductItemInCart(product, true, product.isFavorite)).join(`<div class="ligne"></div>`),
+								productPrices: `<p style="text-align: end; font-weight: 600;" ${promo ? "class='promo'" : ""}>${productsPriceWithPromo}€</p>`,
+								total: `<p style="text-align: end; font-weight: 600;" ${promo ? "class='promo'" : ""}>${productsPriceWithPromo}€</p>`,
+							})
+						}).then(
+							data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, {
+								...headers,
+								"content-type": `text/html`,
+								"content-encoding": compression.encoding,
+								"set-cookie": "token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; Path=/;"
+							}).end(compression.data)),
+							() => res.writeHead(404, "Not found").end()
+						);
+					});
+				} else db.all("SELECT * FROM carts WHERE userId = ?;", user.id, (err, productsInCart) => {				
+					if (err) {
+						console.log("Erreur lors de la récupération du panier: ", err);
+						res.writeHead(500, "Internal Server Error").end();
+					} else db.all(`
+						SELECT DISTINCT
+							products.*,
+							quantity,
+							stocks.size,
+							CAST(price AS DECIMAL(10,2)) / 100.0 AS formattedPrice,
+							CAST(promoPrice AS DECIMAL(10,2)) / 100.0 AS formattedPromoPrice,
+							CASE 
+								WHEN favorites.id IS NOT NULL THEN TRUE 
+								ELSE FALSE 
+							END AS isFavorite
+						FROM products
+						JOIN carts ON products.id = carts.productId
+						JOIN stocks ON products.id = stocks.productId
+						LEFT JOIN favorites ON products.id = favorites.productId AND favorites.userId = ?
+						WHERE carts.userId = ?${productsInCart.length != 0 ? ` AND (${Array(productsInCart.length).fill("(products.id = ? AND stocks.size = ?)").join(" OR ")})` : ""};
+					`, [user.id, user.id, ...productsInCart.flatMap(product => [product.productId, product.size])], (err, products) => {			
+						const productsPriceWithoutPromo = products.reduce((prevVal, currVal) => prevVal + currVal.formattedPrice, 0),	
+						productsPriceWithPromo = products.reduce((prevVal, currVal) => prevVal + (currVal.formattedPromoPrice || currVal.formattedPrice), 0),
+						promo = productsPriceWithoutPromo != productsPriceWithPromo;
+					
+						if (err) {
+							console.log("[2] Erreur lors de la récupération des produits dans le panier: ", err);
+							res.writeHead(500, "Internal Server Error").end();
+						} else getPage(url, {
+							bestProducts: bestProducts.map(product => generateProductItem(product, "best-seller")).join(""),
+							accountText: userToken ? "Mon compte" : "Se connecter",
+							accountLink: userToken ? "/profil" : "/connexion",
+							sousTotalSansPromo: promo ? `<p style="text-align: end; font-weight: 600;" class="without-promo">${productsPriceWithoutPromo}€</p>` : "",
+							totalSansPromo: promo ? `<p style="text-align: end; font-weight: 600;" class="without-promo">${productsPriceWithoutPromo}€</p>` : "",
+							...(products.length == 0 ? {
+								products: "<p>Il n'y a aucun article dans ton panier.</p>",
+								productPrices: '<p style="text-align: end; font-weight: 600;">0€</p>',
+								total: '<p style="text-align: end; font-weight: 600;">0€</p>',
+							} : {
+								products: products.map(product => generateProductItemInCart(product, true, product.isFavorite)).join(`<div class="ligne"></div>`),
+								productPrices: `<p style="text-align: end; font-weight: 600;" ${promo ? "class='promo'" : ""}>${productsPriceWithPromo}€</p>`,
+								total: `<p style="text-align: end; font-weight: 600;" ${promo ? "class='promo'" : ""}>${productsPriceWithPromo}€</p>`,
+							})
+						}).then(
+							data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, {
+								...headers,
+								"content-type": `text/html`,
+								"content-encoding": compression.encoding
+							}).end(compression.data)),
+							() => res.writeHead(404, "Not found").end()
+						);
+					});
+				});
+			});
+			else {
 				const productsInCart = cookies.cart?.split("_") || [];
 	
 				if (productsInCart.length == 0) getPage(url, {
+					bestProducts: bestProducts.map(product => generateProductItem(product, "best-seller")).join(""),
 					accountText: userToken ? "Mon compte" : "Se connecter",
 					accountLink: userToken ? "/profil" : "/connexion",
 					products: "<p>Il n'y a aucun article dans ton panier.</p>",
-					sousTotalSansPromo: "",
-					totalSansPromo: "",
 					productPrices: '<p style="text-align: end; font-weight: 600;">0€</p>',
 					total: '<p style="text-align: end; font-weight: 600;">0€</p>',
+					sousTotalSansPromo: "",
+					totalSansPromo: "",
 				}).then(
 					data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, {
 						...headers,
@@ -407,9 +526,10 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 					promo = productsPriceWithoutPromo != productsPriceWithPromo;
 	
 					if (err) {
-						console.error("[1] Erreur lors de la récupération des produits dans le panier: ", err);
+						console.error("[3] Erreur lors de la récupération des produits dans le panier: ", err);
 						res.writeHead(500, "Internal Server Error").end();
 					} else getPage(url, {
+						bestProducts: bestProducts.map(product => generateProductItem(product, "best-seller")).join(""),
 						accountText: userToken ? "Mon compte" : "Se connecter",
 						accountLink: userToken ? "/profil" : "/connexion",
 						sousTotalSansPromo: promo ? `<p style="text-align: end; font-weight: 600;" class="without-promo">${productsPriceWithoutPromo}€</p>` : "",
@@ -419,59 +539,7 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 							productPrices: '<p style="text-align: end; font-weight: 600;">0€</p>',
 							total: '<p style="text-align: end; font-weight: 600;">0€</p>',
 						} : {
-							products: products.map(product => generateProductItemInCart(product, true, product.isFavorite)).join(`<div class="ligne"></div>`),
-							productPrices: `<p style="text-align: end; font-weight: 600;" ${promo ? "class='promo'" : ""}>${productsPriceWithPromo}€</p>`,
-							total: `<p style="text-align: end; font-weight: 600;" ${promo ? "class='promo'" : ""}>${productsPriceWithPromo}€</p>`,
-						})
-					}).then(
-						data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, {
-							...headers,
-							"content-type": `text/html`,
-							"content-encoding": compression.encoding,
-							"set-cookie": "token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; Path=/;"
-						}).end(compression.data)),
-						() => res.writeHead(404, "Not found").end()
-					);
-				});
-			} else db.all("SELECT * FROM carts WHERE userId = ?;", user.id, (err, productsInCart) => {				
-				if (err) {
-					console.log("Erreur lors de la récupération du panier: ", err);
-					res.writeHead(500, "Internal Server Error").end();
-				} else db.all(`
-					SELECT DISTINCT
-						products.*,
-						quantity,
-						stocks.size,
-						CAST(price AS DECIMAL(10,2)) / 100.0 AS formattedPrice,
-						CAST(promoPrice AS DECIMAL(10,2)) / 100.0 AS formattedPromoPrice,
-						CASE 
-      			  WHEN favorites.id IS NOT NULL THEN TRUE 
-			        ELSE FALSE 
-    				END AS isFavorite
-					FROM products
-					JOIN carts ON products.id = carts.productId
-					JOIN stocks ON products.id = stocks.productId
-					LEFT JOIN favorites ON products.id = favorites.productId AND favorites.userId = ?
-					WHERE carts.userId = ?${productsInCart.length != 0 ? ` AND (${Array(productsInCart.length).fill("(products.id = ? AND stocks.size = ?)").join(" OR ")})` : ""};
-				`, [user.id, user.id, ...productsInCart.flatMap(product => [product.productId, product.size])], (err, products) => {			
-					const productsPriceWithoutPromo = products.reduce((prevVal, currVal) => prevVal + currVal.formattedPrice, 0),	
-					productsPriceWithPromo = products.reduce((prevVal, currVal) => prevVal + (currVal.formattedPromoPrice || currVal.formattedPrice), 0),
-					promo = productsPriceWithoutPromo != productsPriceWithPromo;
-				
-					if (err) {
-						console.log("[2] Erreur lors de la récupération des produits dans le panier: ", err);
-						res.writeHead(500, "Internal Server Error").end();
-					} else getPage(url, {
-						accountText: userToken ? "Mon compte" : "Se connecter",
-						accountLink: userToken ? "/profil" : "/connexion",
-						sousTotalSansPromo: promo ? `<p style="text-align: end; font-weight: 600;" class="without-promo">${productsPriceWithoutPromo}€</p>` : "",
-						totalSansPromo: promo ? `<p style="text-align: end; font-weight: 600;" class="without-promo">${productsPriceWithoutPromo}€</p>` : "",
-						...(products.length == 0 ? {
-							products: "<p>Il n'y a aucun article dans ton panier.</p>",
-							productPrices: '<p style="text-align: end; font-weight: 600;">0€</p>',
-							total: '<p style="text-align: end; font-weight: 600;">0€</p>',
-						} : {
-							products: products.map(product => generateProductItemInCart(product, true, product.isFavorite)).join(`<div class="ligne"></div>`),
+							products: products.map(product => generateProductItemInCart(product, false, false)).join(`<div class="ligne"></div>`),
 							productPrices: `<p style="text-align: end; font-weight: 600;" ${promo ? "class='promo'" : ""}>${productsPriceWithPromo}€</p>`,
 							total: `<p style="text-align: end; font-weight: 600;" ${promo ? "class='promo'" : ""}>${productsPriceWithPromo}€</p>`,
 						})
@@ -484,69 +552,8 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 						() => res.writeHead(404, "Not found").end()
 					);
 				});
-			});
+			};
 		});
-		else {
-			const productsInCart = cookies.cart?.split("_") || [];
-
-			if (productsInCart.length == 0) getPage(url, {
-				accountText: userToken ? "Mon compte" : "Se connecter",
-				accountLink: userToken ? "/profil" : "/connexion",
-				products: "<p>Il n'y a aucun article dans ton panier.</p>",
-				productPrices: '<p style="text-align: end; font-weight: 600;">0€</p>',
-				total: '<p style="text-align: end; font-weight: 600;">0€</p>',
-				sousTotalSansPromo: "",
-				totalSansPromo: "",
-			}).then(
-				data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, {
-					...headers,
-					"content-type": `text/html`,
-					"content-encoding": compression.encoding
-				}).end(compression.data)),
-				() => res.writeHead(404, "Not found").end()
-			);
-			else db.all(`
-				SELECT
-					products.*,
-					quantity,
-					size,
-					CAST(price AS DECIMAL(10,2)) / 100.0 AS formattedPrice,
-					CAST(promoPrice AS DECIMAL(10,2)) / 100.0 AS formattedPromoPrice
-				FROM products
-				JOIN stocks ON products.id = stocks.productId
-				WHERE (${Array(productsInCart.length).fill("(products.id = ? AND size = ?)").join(" OR ")});
-			`, productsInCart.flatMap(product => product.split("*")), (err, products) => {
-				const productsPriceWithoutPromo = products.reduce((prevVal, currVal) => prevVal + currVal.formattedPrice, 0),	
-				productsPriceWithPromo = products.reduce((prevVal, currVal) => prevVal + (currVal.formattedPromoPrice || currVal.formattedPrice), 0),
-				promo = productsPriceWithoutPromo != productsPriceWithPromo;
-
-				if (err) {
-					console.error("[3] Erreur lors de la récupération des produits dans le panier: ", err);
-					res.writeHead(500, "Internal Server Error").end();
-				} else getPage(url, {
-					accountText: userToken ? "Mon compte" : "Se connecter",
-					accountLink: userToken ? "/profil" : "/connexion",
-					sousTotalSansPromo: promo ? `<p style="text-align: end; font-weight: 600;" class="without-promo">${productsPriceWithoutPromo}€</p>` : "",
-					totalSansPromo: promo ? `<p style="text-align: end; font-weight: 600;" class="without-promo">${productsPriceWithoutPromo}€</p>` : "",
-					...(products.length == 0 ? {
-						products: "<p>Il n'y a aucun article dans ton panier.</p>",
-						productPrices: '<p style="text-align: end; font-weight: 600;">0€</p>',
-						total: '<p style="text-align: end; font-weight: 600;">0€</p>',
-					} : {
-						products: products.map(product => generateProductItemInCart(product, false, false)).join(`<div class="ligne"></div>`),
-						productPrices: `<p style="text-align: end; font-weight: 600;" ${promo ? "class='promo'" : ""}>${productsPriceWithPromo}€</p>`,
-						total: `<p style="text-align: end; font-weight: 600;" ${promo ? "class='promo'" : ""}>${productsPriceWithPromo}€</p>`,
-					})
-				}).then(
-					data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, {
-						...headers,
-						"content-type": `text/html`,
-						"content-encoding": compression.encoding
-					}).end(compression.data)),
-					() => res.writeHead(404, "Not found").end()
-				);
-			});
-		};
 	} else if (url.startsWith("/produits/")) {
 		const productId = url.split("/").at(-1), userId = userToken?.split(".")?.at(-1);
 

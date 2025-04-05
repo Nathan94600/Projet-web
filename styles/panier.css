@@ -201,6 +201,77 @@ label {
   margin-top: 7rem;
 }
 
+#news, #marques, #best-sellers, #promos {
+	display: flex;
+	flex-direction: column;
+}
+
+#news h3, #marques h3, #best-sellers h3, #promos h3 {
+	margin: 2rem 5rem;
+}
+
+#news-container, #best-sellers-container, #promos-container {
+	overflow-x: auto;
+	display: flex;
+	flex-direction: row;
+}
+
+.news-item:first-child, .best-seller-item:first-child, .promo-item:first-child {
+	margin-left: 5rem;
+}
+
+.news-item, .best-seller-item, .promo-item {
+	text-decoration: none;
+	color: #000;
+	margin: 2vh 3vw;
+	padding: 2rem;
+	border-radius: 15px;
+	min-width: 200px;
+	display: inline-table;
+	box-shadow: inset 4px 4px 5px #8a8a8a, 4px 4px 5px #8a8a8a;
+}
+
+.news-item img, .best-seller-item img, .promo-item img {
+	display: block;
+	margin: auto;
+	width: 20vw;
+	min-width: 200px;
+}
+
+.news-item hr, .best-seller-item hr , .promo-item hr  {
+	border: none;
+	margin: 1rem auto;
+	background: #000;
+	height: 2px;
+	width: 85%;
+}
+
+.news-item p, .best-seller-item p , .promo-item p {
+	margin: .5rem 0;
+}
+
+.promo, .promo-price {
+	font-weight: 600;
+	color: #ff9500;
+}
+
+.type {
+	color: #6F6F6F;
+}
+
+.news-item > .price, .best-seller-item > .price, .promo-item > .price {
+	margin-bottom: calc(1lh + .5rem);
+}
+
+.news-item .prices p, .best-seller-item .prices p, .promo-item .prices p {
+	display: inline;
+}
+
+.prices .price {
+	margin-left: 1rem;
+	text-decoration: line-through
+}
+
 /* Responsive styles for tablets */
 @media (max-width: 1024px) {
   #panier {
