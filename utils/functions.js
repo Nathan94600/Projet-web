@@ -362,48 +362,6 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 					data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { ...headers, "content-type": `text/html`, "content-encoding": compression.encoding }).end(compression.data)),
 					() => res.writeHead(404, "Not found").end()
 				);
-				
-				// } else db.all(`
-				// 	SELECT DISTINCT
-				// 		products.*,
-				// 		quantity,
-				// 		stocks.size,
-				// 		CAST(price AS DECIMAL(10,2)) / 100.0 AS formattedPrice,
-				// 		CAST(promoPrice AS DECIMAL(10,2)) / 100.0 AS formattedPromoPrice,
-				// 		CASE 
-      	// 		  WHEN favorites.id IS NOT NULL THEN TRUE 
-			  //       ELSE FALSE 
-    		// 		END AS isFavorite
-				// 	FROM products
-				// 	JOIN carts ON products.id = carts.productId
-				// 	JOIN stocks ON products.id = stocks.productId
-				// 	LEFT JOIN favorites ON products.id = favorites.productId AND favorites.userId = ?
-				// 	WHERE carts.userId = ?${productsInCart.length != 0 ? ` AND (${Array(productsInCart.length).fill("(products.id = ? AND stocks.size = ?)").join(" OR ")})` : ""};
-				// `, [user.id, user.id, ...productsInCart.flatMap(product => [product.productId, product.size])], (err, products) => {										
-				// 	if (err) {
-				// 		console.log("[2] Erreur lors de la récupération des produits dans le panier: ", err);
-				// 		res.writeHead(500, "Internal Server Error").end();
-				// 	} else getPage(url, {
-				// 		accountText: userToken ? "Mon compte" : "Se connecter",
-				// 		accountLink: userToken ? "/profil" : "/connexion",
-				// 		...(products.length == 0 ? {
-				// 			products: "<p>Il n'y a aucun article dans ton panier.</p>",
-				// 			productPrices: 0,
-				// 			total: 0,
-				// 		} : {
-				// 			products: products.map(product => generateProductItemInCart(product, true, product.isFavorite)).join(`<div class="ligne"></div>`),
-				// 			productPrices: products.reduce((prevValue, currProduct) => prevValue + (currProduct.formattedPromoPrice || currProduct.formattedPrice), 0),
-				// 			total: products.reduce((prevValue, currProduct) => prevValue + (currProduct.formattedPromoPrice || currProduct.formattedPrice), 0),
-				// 		})
-				// 	}).then(
-				// 		data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, {
-				// 			...headers,
-				// 			"content-type": `text/html`,
-				// 			"content-encoding": compression.encoding
-				// 		}).end(compression.data)),
-				// 		() => res.writeHead(404, "Not found").end()
-				// 	);
-				// });
 			});
 		});
 		else res.writeHead(302, { location: "/connexion" }).end();
