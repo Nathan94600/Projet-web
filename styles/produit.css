@@ -156,6 +156,7 @@ form[action="/favorites/remove"] .favoris-btn svg {
 }
 
 #other-items .container-link {
+	max-width: 0;
 	padding-right: 2rem;
 	min-width: max(calc((100% - 9vw) / 4), 5rem);
 }
