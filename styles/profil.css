@@ -171,3 +171,44 @@ a {
     transform: scaleX(1.4) scaleY(1.6);
     opacity: 0;
   }
+
+.favorite-item {
+  width: max-content;
+  margin-top: 2rem;  
+  display: flex;
+  flex-direction: column;
+}
+
+.favorite-item p {
+  margin: 0;
+}
+
+#no-favorites {
+  margin: 0;
+  margin-top: 2rem;
+}
+
+#favoris-form {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+#favoris-form button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+#favoris-form svg {
+  fill: #E3474F;
+}
+
+#favoris-form span {
+  font-size: 1rem;
+  color: grey;
+  margin: 1rem;
+}

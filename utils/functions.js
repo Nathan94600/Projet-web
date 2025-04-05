@@ -328,7 +328,86 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 			});
 		});
 	});
-	else if (url == "/index" || url == "/produit") res.writeHead(404, "Not found").end();
+	else if (url == "/profil") {
+		if (userToken) db.get("SELECT * FROM users WHERE id = ?;", userToken.split(".")?.at(-1), (err, user) => {
+			if (err) {
+				console.error("Erreur lors de la vérification du token: ", err);
+				res.writeHead(500, "Internal Server Error").end();
+			} else if (!user) res.writeHead(302, { location: "/connexion" }).end();
+			else db.all("SELECT products.* FROM products JOIN favorites ON products.id = favorites.productId WHERE userId = ?;", user.id, (err, products) => {												
+				if (err) {
+					console.log("Erreur lors de la récupération du panier: ", err);
+					res.writeHead(500, "Internal Server Error").end();
+				} else getPage(url, {
+					accountText: userToken ? "Mon compte" : "Se connecter",
+					accountLink: userToken ? "/profil" : "/connexion",
+					favorites: products.length == 0 ? "<p id='no-favorites'>Il n'y a aucun article dans tes favoris.</p>" : products.map(product => `
+						<div class="favorite-item">
+							<p style="font-weight: 600;">${product.name}</p> 
+							<p style="color: gray;">${typeToText(product.genre)}</p>
+							<a href="/produits/${product.id}">
+								<img src="${buildImagePath(product, "00.webp")}" alt="airforce1" style="height: 5cm;"> 
+							</a>
+							<form method="post" action="/favorites/remove" id="favoris-form">
+								<button type="submit" class="favoris-btn">
+									<svg height="28" version="1.0" viewBox="0 0 24 24" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M16.4,4C14.6,4,13,4.9,12,6.3C11,4.9,9.4,4,7.6,4C4.5,4,2,6.5,2,9.6C2,14,12,22,12,22s10-8,10-12.4C22,6.5,19.5,4,16.4,4z"></path></svg>
+									<span>Retirer des favoris</span>
+								</button>
+								<input type="text" name="location" value="/profil" style="display: none;">
+								<input type="text" name="productId" value="${product.id}" style="display: none;">
+							</form>
+						</div>
+					`).join(""),
+				}).then(
+					data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { ...headers, "content-type": `text/html`, "content-encoding": compression.encoding }).end(compression.data)),
+					() => res.writeHead(404, "Not found").end()
+				);
+				
+				// } else db.all(`
+				// 	SELECT DISTINCT
+				// 		products.*,
+				// 		quantity,
+				// 		stocks.size,
+				// 		CAST(price AS DECIMAL(10,2)) / 100.0 AS formattedPrice,
+				// 		CAST(promoPrice AS DECIMAL(10,2)) / 100.0 AS formattedPromoPrice,
+				// 		CASE 
+      	// 		  WHEN favorites.id IS NOT NULL THEN TRUE 
+			  //       ELSE FALSE 
+    		// 		END AS isFavorite
+				// 	FROM products
+				// 	JOIN carts ON products.id = carts.productId
+				// 	JOIN stocks ON products.id = stocks.productId
+				// 	LEFT JOIN favorites ON products.id = favorites.productId AND favorites.userId = ?
+				// 	WHERE carts.userId = ?${productsInCart.length != 0 ? ` AND (${Array(productsInCart.length).fill("(products.id = ? AND stocks.size = ?)").join(" OR ")})` : ""};
+				// `, [user.id, user.id, ...productsInCart.flatMap(product => [product.productId, product.size])], (err, products) => {										
+				// 	if (err) {
+				// 		console.log("[2] Erreur lors de la récupération des produits dans le panier: ", err);
+				// 		res.writeHead(500, "Internal Server Error").end();
+				// 	} else getPage(url, {
+				// 		accountText: userToken ? "Mon compte" : "Se connecter",
+				// 		accountLink: userToken ? "/profil" : "/connexion",
+				// 		...(products.length == 0 ? {
+				// 			products: "<p>Il n'y a aucun article dans ton panier.</p>",
+				// 			productPrices: 0,
+				// 			total: 0,
+				// 		} : {
+				// 			products: products.map(product => generateProductItemInCart(product, true, product.isFavorite)).join(`<div class="ligne"></div>`),
+				// 			productPrices: products.reduce((prevValue, currProduct) => prevValue + (currProduct.formattedPromoPrice || currProduct.formattedPrice), 0),
+				// 			total: products.reduce((prevValue, currProduct) => prevValue + (currProduct.formattedPromoPrice || currProduct.formattedPrice), 0),
+				// 		})
+				// 	}).then(
+				// 		data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, {
+				// 			...headers,
+				// 			"content-type": `text/html`,
+				// 			"content-encoding": compression.encoding
+				// 		}).end(compression.data)),
+				// 		() => res.writeHead(404, "Not found").end()
+				// 	);
+				// });
+			});
+		});
+		else res.writeHead(302, { location: "/connexion" }).end();
+	} else if (url == "/index" || url == "/produit") res.writeHead(404, "Not found").end();
 	else if (url == "/panier") {
 		if (userToken) db.get("SELECT * FROM users WHERE id = ?;", userToken.split(".")?.at(-1), (err, user) => {
 			if (err) {
