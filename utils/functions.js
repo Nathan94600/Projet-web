@@ -24,8 +24,9 @@ function generateProductItemInCart(product, userConnected, favoriteProduct) {
 			</a>
 			<div id="description">
 				<div id="nom_prix">
-					<p style="font-weight: 600;">${product.name}</p> 
-					<p style="text-align: right; font-weight: 600;" id="prix">${product.formattedPrice}€</p>
+					<p class="product-name">${product.name}</p>
+					${product.formattedPromoPrice ? `<p class="promo-price">${product.formattedPromoPrice}€</p>` : ""}
+					<p class="price">${product.formattedPrice}€</p>
 				</div>
 				<p style="color: gray;">${typeToText(product.genre)}</p>
 				<p style="color: gray;">Taille / Pointure : <u>${product.size}</u></p>
@@ -377,7 +378,11 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 				if (productsInCart.length == 0) getPage(url, {
 					accountText: userToken ? "Mon compte" : "Se connecter",
 					accountLink: userToken ? "/profil" : "/connexion",
-					products: "<p>Il n'y a aucun article dans ton panier.</p>"
+					products: "<p>Il n'y a aucun article dans ton panier.</p>",
+					sousTotalSansPromo: "",
+					totalSansPromo: "",
+					productPrices: '<p style="text-align: end; font-weight: 600;">0€</p>',
+					total: '<p style="text-align: end; font-weight: 600;">0€</p>',
 				}).then(
 					data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, {
 						...headers,
@@ -396,21 +401,27 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 					FROM products
 					JOIN stocks ON products.id = stocks.productId
 					WHERE (${Array(productsInCart.length).fill("(products.id = ? AND size = ?)").join(" OR ")});
-				`, productsInCart.flatMap(product => product.split("*")), (err, products) => {			
+				`, productsInCart.flatMap(product => product.split("*")), (err, products) => {
+					const productsPriceWithoutPromo = products.reduce((prevVal, currVal) => prevVal + currVal.formattedPrice, 0),	
+					productsPriceWithPromo = products.reduce((prevVal, currVal) => prevVal + (currVal.formattedPromoPrice || currVal.formattedPrice), 0),
+					promo = productsPriceWithoutPromo != productsPriceWithPromo;
+	
 					if (err) {
 						console.error("[1] Erreur lors de la récupération des produits dans le panier: ", err);
 						res.writeHead(500, "Internal Server Error").end();
 					} else getPage(url, {
 						accountText: userToken ? "Mon compte" : "Se connecter",
 						accountLink: userToken ? "/profil" : "/connexion",
+						sousTotalSansPromo: promo ? `<p style="text-align: end; font-weight: 600;" class="without-promo">${productsPriceWithoutPromo}€</p>` : "",
+						totalSansPromo: promo ? `<p style="text-align: end; font-weight: 600;" class="without-promo">${productsPriceWithoutPromo}€</p>` : "",
 						...(products.length == 0 ? {
 							products: "<p>Il n'y a aucun article dans ton panier.</p>",
-							productPrices: 0,
-							total: 0,
+							productPrices: '<p style="text-align: end; font-weight: 600;">0€</p>',
+							total: '<p style="text-align: end; font-weight: 600;">0€</p>',
 						} : {
-							products: products.map(product => generateProductItemInCart(product, false, false)).join(`<div class="ligne"></div>`),
-							productPrices: products.reduce((prevValue, currProduct) => prevValue + (currProduct.formattedPromoPrice || currProduct.formattedPrice), 0),
-							total: products.reduce((prevValue, currProduct) => prevValue + (currProduct.formattedPromoPrice || currProduct.formattedPrice), 0),
+							products: products.map(product => generateProductItemInCart(product, true, product.isFavorite)).join(`<div class="ligne"></div>`),
+							productPrices: `<p style="text-align: end; font-weight: 600;" ${promo ? "class='promo'" : ""}>${productsPriceWithPromo}€</p>`,
+							total: `<p style="text-align: end; font-weight: 600;" ${promo ? "class='promo'" : ""}>${productsPriceWithPromo}€</p>`,
 						})
 					}).then(
 						data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, {
@@ -422,7 +433,7 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 						() => res.writeHead(404, "Not found").end()
 					);
 				});
-			} else db.all("SELECT * FROM carts WHERE userId = ?;", user.id, (err, productsInCart) => {								
+			} else db.all("SELECT * FROM carts WHERE userId = ?;", user.id, (err, productsInCart) => {				
 				if (err) {
 					console.log("Erreur lors de la récupération du panier: ", err);
 					res.writeHead(500, "Internal Server Error").end();
@@ -442,21 +453,27 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 					JOIN stocks ON products.id = stocks.productId
 					LEFT JOIN favorites ON products.id = favorites.productId AND favorites.userId = ?
 					WHERE carts.userId = ?${productsInCart.length != 0 ? ` AND (${Array(productsInCart.length).fill("(products.id = ? AND stocks.size = ?)").join(" OR ")})` : ""};
-				`, [user.id, user.id, ...productsInCart.flatMap(product => [product.productId, product.size])], (err, products) => {										
+				`, [user.id, user.id, ...productsInCart.flatMap(product => [product.productId, product.size])], (err, products) => {			
+					const productsPriceWithoutPromo = products.reduce((prevVal, currVal) => prevVal + currVal.formattedPrice, 0),	
+					productsPriceWithPromo = products.reduce((prevVal, currVal) => prevVal + (currVal.formattedPromoPrice || currVal.formattedPrice), 0),
+					promo = productsPriceWithoutPromo != productsPriceWithPromo;
+				
 					if (err) {
 						console.log("[2] Erreur lors de la récupération des produits dans le panier: ", err);
 						res.writeHead(500, "Internal Server Error").end();
 					} else getPage(url, {
 						accountText: userToken ? "Mon compte" : "Se connecter",
 						accountLink: userToken ? "/profil" : "/connexion",
+						sousTotalSansPromo: promo ? `<p style="text-align: end; font-weight: 600;" class="without-promo">${productsPriceWithoutPromo}€</p>` : "",
+						totalSansPromo: promo ? `<p style="text-align: end; font-weight: 600;" class="without-promo">${productsPriceWithoutPromo}€</p>` : "",
 						...(products.length == 0 ? {
 							products: "<p>Il n'y a aucun article dans ton panier.</p>",
-							productPrices: 0,
-							total: 0,
+							productPrices: '<p style="text-align: end; font-weight: 600;">0€</p>',
+							total: '<p style="text-align: end; font-weight: 600;">0€</p>',
 						} : {
 							products: products.map(product => generateProductItemInCart(product, true, product.isFavorite)).join(`<div class="ligne"></div>`),
-							productPrices: products.reduce((prevValue, currProduct) => prevValue + (currProduct.formattedPromoPrice || currProduct.formattedPrice), 0),
-							total: products.reduce((prevValue, currProduct) => prevValue + (currProduct.formattedPromoPrice || currProduct.formattedPrice), 0),
+							productPrices: `<p style="text-align: end; font-weight: 600;" ${promo ? "class='promo'" : ""}>${productsPriceWithPromo}€</p>`,
+							total: `<p style="text-align: end; font-weight: 600;" ${promo ? "class='promo'" : ""}>${productsPriceWithPromo}€</p>`,
 						})
 					}).then(
 						data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, {
@@ -476,8 +493,10 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 				accountText: userToken ? "Mon compte" : "Se connecter",
 				accountLink: userToken ? "/profil" : "/connexion",
 				products: "<p>Il n'y a aucun article dans ton panier.</p>",
-				productPrices: 0,
-				total: 0
+				productPrices: '<p style="text-align: end; font-weight: 600;">0€</p>',
+				total: '<p style="text-align: end; font-weight: 600;">0€</p>',
+				sousTotalSansPromo: "",
+				totalSansPromo: "",
 			}).then(
 				data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, {
 					...headers,
@@ -497,20 +516,26 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 				JOIN stocks ON products.id = stocks.productId
 				WHERE (${Array(productsInCart.length).fill("(products.id = ? AND size = ?)").join(" OR ")});
 			`, productsInCart.flatMap(product => product.split("*")), (err, products) => {
+				const productsPriceWithoutPromo = products.reduce((prevVal, currVal) => prevVal + currVal.formattedPrice, 0),	
+				productsPriceWithPromo = products.reduce((prevVal, currVal) => prevVal + (currVal.formattedPromoPrice || currVal.formattedPrice), 0),
+				promo = productsPriceWithoutPromo != productsPriceWithPromo;
+
 				if (err) {
 					console.error("[3] Erreur lors de la récupération des produits dans le panier: ", err);
 					res.writeHead(500, "Internal Server Error").end();
 				} else getPage(url, {
 					accountText: userToken ? "Mon compte" : "Se connecter",
 					accountLink: userToken ? "/profil" : "/connexion",
+					sousTotalSansPromo: promo ? `<p style="text-align: end; font-weight: 600;" class="without-promo">${productsPriceWithoutPromo}€</p>` : "",
+					totalSansPromo: promo ? `<p style="text-align: end; font-weight: 600;" class="without-promo">${productsPriceWithoutPromo}€</p>` : "",
 					...(products.length == 0 ? {
 						products: "<p>Il n'y a aucun article dans ton panier.</p>",
-						productPrices: 0,
-						total: 0,
+						productPrices: '<p style="text-align: end; font-weight: 600;">0€</p>',
+						total: '<p style="text-align: end; font-weight: 600;">0€</p>',
 					} : {
 						products: products.map(product => generateProductItemInCart(product, false, false)).join(`<div class="ligne"></div>`),
-						productPrices: products.reduce((prevValue, currProduct) => prevValue + (currProduct.formattedPromoPrice || currProduct.formattedPrice), 0),
-						total: products.reduce((prevValue, currProduct) => prevValue + (currProduct.formattedPromoPrice || currProduct.formattedPrice), 0),
+						productPrices: `<p style="text-align: end; font-weight: 600;" ${promo ? "class='promo'" : ""}>${productsPriceWithPromo}€</p>`,
+						total: `<p style="text-align: end; font-weight: 600;" ${promo ? "class='promo'" : ""}>${productsPriceWithPromo}€</p>`,
 					})
 				}).then(
 					data => compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, {

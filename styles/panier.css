@@ -121,8 +121,31 @@ h2 {
   transform: scale(1.1);
 }
 
-#nom_prix p {
-  width: 50%;
+.price {
+  font-weight: 600;
+}
+
+.without-promo {
+  text-decoration: line-through;
+} 
+
+.promo {
+	font-weight: 600;
+	color: #ff9500;
+} 
+
+.promo-price {
+  width: min-content;
+	font-weight: 600;
+	color: #ff9500;
+}
+
+.promo-price ~ .price {
+  text-decoration: line-through;
+}
+
+.product-name {
+  flex: 1;
 }
 
 .ligne {

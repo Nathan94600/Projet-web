@@ -20,7 +20,8 @@
     <div id="panier_droit">
       <h2>Récapitulatif</h2>
       <p>Sous-total
-      <p style="text-align: end; font-weight: 600;">{{productPrices}}€</p>
+        {{productPrices}}
+        {{sousTotalSansPromo}}
       </p>
       <p>Frais de livraison</p>
       <p style="text-align: end;">Gratuit</p>
@@ -28,7 +29,8 @@
       <div id="ligne" style="height: 1px; background-color: black; border-radius: 1px; width: 100%;"></div>
       <br>
       <p style="font-weight: 600;">Total
-      <p style="text-align: end; font-weight: 600;">{{total}}€</p>
+        {{total}}
+        {{totalSansPromo}}
       </p>
       <br>
       <div id="ligne" style="height: 1px; background-color: black; border-radius: 1px; width: 100%;"></div>
