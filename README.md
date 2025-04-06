@@ -50,9 +50,6 @@ node server --ip      # Lance le serveur en détectant l'IP de l'interface
 # Todolist
 
 - Faire le style et/ou html pour les produits dans le panier qui sont plus en stock
-- Faire des pages :
-  - connexion.html
-  - inscription.html
 - Réorganiser les fichiers `.js` utilisé pour le backend
 - Faire le footer
 - Régler les problèmes du header

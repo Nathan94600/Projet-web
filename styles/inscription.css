@@ -159,3 +159,112 @@ form {
     transform: scaleX(1.4) scaleY(1.6);
     opacity: 0;
   }
+
+	/* Responsive styles for tablets */
+@media (max-width: 768px) {
+	#container {
+			flex-direction: column;
+	}
+
+	.container-l,
+	.container-r {
+			width: 100%;
+	}
+
+	.container-l {
+			height: 50vh; /* Adjust height for better scaling */
+			display: none; /* Masque le conteneur gauche */
+	}
+
+	.container-l img {
+			max-width: 70%; /* Adjust image size */
+			margin-top: 10%; /* Reduce margin for better fit */
+	}
+
+	h1 {
+			font-size: 48px;
+	}
+
+	h2 {
+			font-size: 14px;
+	}
+
+	#email, #password {
+			width: 90%;
+			margin: 10px auto;
+	}
+
+	.btn {
+			width: 90%;
+			margin: 10px auto;
+	}
+}
+
+/* Responsive styles for mobile phones */
+@media (max-width: 480px) {
+	#container {
+			flex-direction: column;
+	}
+
+	.container-l {
+			display: none; /* Hide the image container on mobile */
+	}
+
+	.container-r {
+			width: 100%; /* Make the right container take full width */
+			padding: 20px; /* Add padding for better spacing */
+	}
+
+	.container-r img {
+			display: none; /* Hide the logo on mobile */
+	}
+
+	h1 {
+			font-size: 36px;
+	}
+
+	h2 {
+			font-size: 12px;
+	}
+
+	#email, #password {
+			width: 100%;
+			padding: 0 15px;
+	}
+
+	.btn {
+			width: 100%;
+			padding: 1em;
+			margin: 10px 0;
+	}
+}
+
+/* Responsive styles for very small devices */
+@media (max-width: 320px) {
+	.container-l {
+			display: none; /* Ensure the image container remains hidden */
+	}
+
+	.container-r img {
+			display: none; /* Ensure the logo remains hidden */
+	}
+
+	h1 {
+			font-size: 28px;
+	}
+
+	h2 {
+			font-size: 10px;
+	}
+
+	#email, #password {
+			width: 100%;
+			padding: 0 10px;
+	}
+
+	.btn {
+			width: 100%;
+			padding: 0.8em;
+			margin: 5px 0;
+	}
+}
