@@ -1,7 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+
 footer {
-   background-color: #f5fefd;
+   background-color: #000000;
 }
 
-p {
-    color: black;
+footer p {
+    color: rgb(255, 255, 255);
+    font-family: Inter;
 }
+
+footer a {
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+    font-family: Inter;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #000000;
+}
+
