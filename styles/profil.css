@@ -10,6 +10,38 @@ p {
 
 }
 
+#error {
+	z-index: 100;
+  margin-top: .5rem;
+	color: #640000;
+	width: max-content;
+	padding: 1rem;
+	background: #ff393963;
+	border-radius: 10px;
+	border: 2px solid #640000;
+  position: absolute;
+  left: 0; 
+  right: 0; 
+  margin-inline: auto; 
+  width: fit-content;
+}
+
+#success {
+	z-index: 100;
+  margin-top: .5rem;
+	color: #0d5000;
+	width: max-content;
+	padding: 1rem;
+	background: #77e97740;
+	border-radius: 10px;
+	border: 2px solid #0d5000;
+  position: absolute;
+  left: 0; 
+  right: 0; 
+  margin-inline: auto; 
+  width: fit-content;
+}
+
 .informations p{
     padding: 10px;
     margin-left: 3px;

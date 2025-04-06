@@ -149,6 +149,7 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 		if (err) res.writeHead(404, "Not found").end();
 		else compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { ...headers, "content-type": `application/javascript`, "content-encoding": compression.encoding }).end(compression.data));
 	});
+	else if (url == "/logout") res.writeHead(302, { location: "/", "set-cookie": "token=; Path=/;" }).end();
 	else if ((url == "/inscription" || url == "/connexion") && userToken) res.writeHead(302, { location: "/" }).end();
 	else if (url == "/profil" && !userToken) res.writeHead(302, { location: "/connexion" }).end();
 	else if (url == "/produits") {
@@ -335,13 +336,17 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 				console.error("Erreur lors de la vérification du token: ", err);
 				res.writeHead(500, "Internal Server Error").end();
 			} else if (!user) res.writeHead(302, { location: "/connexion" }).end();
-			else db.all("SELECT products.* FROM products JOIN favorites ON products.id = favorites.productId WHERE userId = ?;", user.id, (err, products) => {												
+			else db.all("SELECT products.* FROM products JOIN favorites ON products.id = favorites.productId WHERE userId = ?;", user.id, (err, products) => {																
 				if (err) {
 					console.log("Erreur lors de la récupération du panier: ", err);
 					res.writeHead(500, "Internal Server Error").end();
 				} else getPage(url, {
 					accountText: userToken ? "Mon compte" : "Se connecter",
 					accountLink: userToken ? "/profil" : "/connexion",
+					error: errorMessage ? `<p id="error">${errorMessage}</p>` : "",
+					success: successMessage ? `<p id="success">${successMessage}</p>` : "",
+					username: user.username,
+					email: user.email,
 					favorites: products.length == 0 ? "<p id='no-favorites'>Il n'y a aucun article dans tes favoris.</p>" : products.map(product => `
 						<div class="favorite-item">
 							<p style="font-weight: 600;">${product.name}</p> 
