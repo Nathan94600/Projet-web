@@ -17,8 +17,8 @@ function buildImagePath(product, fileName) {
 };
 
 function generateProductItemInCart(product, userConnected, favoriteProduct) {
-	return product.quantity != 0 ? `
-		<div id="article_ajouté">
+	return `
+		<div id="article_ajouté"${product.quantity == 0 ? "class='plus-diso'" : ""}>
 			<a href="/produits/${product.id}">
 				<img src="${buildImagePath(product, "01.webp")}" alt="airforce1" style="height: 5cm;"> 
 			</a>
@@ -51,7 +51,7 @@ function generateProductItemInCart(product, userConnected, favoriteProduct) {
 				</div>
 			</div>
 		</div>
-	` : `PLUS DISPO`;
+	`;
 };
 
 function typeToText(type) {
@@ -409,8 +409,8 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 						JOIN stocks ON products.id = stocks.productId
 						WHERE (${Array(productsInCart.length).fill("(products.id = ? AND size = ?)").join(" OR ")});
 					`, productsInCart.flatMap(product => product.split("*")), (err, products) => {
-						const productsPriceWithoutPromo = products.reduce((prevVal, currVal) => prevVal + currVal.formattedPrice, 0),	
-						productsPriceWithPromo = products.reduce((prevVal, currVal) => prevVal + (currVal.formattedPromoPrice || currVal.formattedPrice), 0),
+						const productsPriceWithoutPromo = products.filter(product => product.quantity > 0).reduce((prevVal, currVal) => prevVal + currVal.formattedPrice, 0),	
+						productsPriceWithPromo = products.filter(product => product.quantity > 0).reduce((prevVal, currVal) => prevVal + (currVal.formattedPromoPrice || currVal.formattedPrice), 0),
 						promo = productsPriceWithoutPromo != productsPriceWithPromo;
 		
 						if (err) {
@@ -462,8 +462,8 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 						LEFT JOIN favorites ON products.id = favorites.productId AND favorites.userId = ?
 						WHERE carts.userId = ?${productsInCart.length != 0 ? ` AND (${Array(productsInCart.length).fill("(products.id = ? AND stocks.size = ?)").join(" OR ")})` : ""};
 					`, [user.id, user.id, ...productsInCart.flatMap(product => [product.productId, product.size])], (err, products) => {			
-						const productsPriceWithoutPromo = products.reduce((prevVal, currVal) => prevVal + currVal.formattedPrice, 0),	
-						productsPriceWithPromo = products.reduce((prevVal, currVal) => prevVal + (currVal.formattedPromoPrice || currVal.formattedPrice), 0),
+						const productsPriceWithoutPromo = products.filter(product => product.quantity > 0).reduce((prevVal, currVal) => prevVal + currVal.formattedPrice, 0),	
+						productsPriceWithPromo = products.filter(product => product.quantity > 0).reduce((prevVal, currVal) => prevVal + (currVal.formattedPromoPrice || currVal.formattedPrice), 0),
 						promo = productsPriceWithoutPromo != productsPriceWithPromo;
 					
 						if (err) {
@@ -526,8 +526,8 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 					JOIN stocks ON products.id = stocks.productId
 					WHERE (${Array(productsInCart.length).fill("(products.id = ? AND size = ?)").join(" OR ")});
 				`, productsInCart.flatMap(product => product.split("*")), (err, products) => {
-					const productsPriceWithoutPromo = products.reduce((prevVal, currVal) => prevVal + currVal.formattedPrice, 0),	
-					productsPriceWithPromo = products.reduce((prevVal, currVal) => prevVal + (currVal.formattedPromoPrice || currVal.formattedPrice), 0),
+					const productsPriceWithoutPromo = products.filter(product => product.quantity > 0).reduce((prevVal, currVal) => prevVal + currVal.formattedPrice, 0),	
+					productsPriceWithPromo = products.filter(product => product.quantity > 0).reduce((prevVal, currVal) => prevVal + (currVal.formattedPromoPrice || currVal.formattedPrice), 0),
 					promo = productsPriceWithoutPromo != productsPriceWithPromo;
 	
 					if (err) {
