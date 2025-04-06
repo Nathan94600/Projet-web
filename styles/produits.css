@@ -24,7 +24,7 @@ body {
   /* Filters Sidebar */
 .filtres {
     overflow: auto;
-    position: fixed;
+    position: absolute;
     width: 280px;
     background: white;
     padding: 20px;
