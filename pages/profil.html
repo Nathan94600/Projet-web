@@ -12,8 +12,10 @@
 </head>
 <body>
   [header]
+  {{error}}
+  {{success}}
   <div id="parent">
-    <div  id="parametres" >
+    <div id="parametres">
       <h1>Paramètres</h1>
       <div style="display: flex;" class="informations">
         <img src="/images/assets/utilisateur.png" alt="" style="height: 30px;">
@@ -27,38 +29,39 @@
         <img src="/images/assets/ajouter-aux-favoris.png" alt="" style="height: 30px;">
         <a href="#fav"><p>Favoris</p></a>
       </div>
-    </div>    
+    </div> 
     <div id="details">          
       <h2 id="info"> <img src="/images/assets/utilisateur.png" alt="" style="height: 25px; margin-right: 15px;">Informations du compte</h2> <br>
-      <form action="">
-      <label for="email">Adresse e-mail</label> <br>  
-      <input type="email"> <br> <br>
-      <label for="">Mot de passe</label> <br>
-      <input type="password" name="mdp" id=""> <br> <br>
-      <label for="">Nom d'utilisateur</label> <br>
-      <input type="text" name="username" id=""><br> <br>
-      <label for="">Modifier le compte</label> 
-      <button class="btn1">Modifier</button> <br> <br>
-      <label for="">Supprimer le compte</label> 
-      <button class="btn">Supprimer</button>
-    </form>
-    <h2 id="cmd"><img src="/images/assets/archive-1-svgrepo-com.svg" alt="" style="height: 25px; margin-right: 15px;"> Commandes passées</h2>
-    <div id="article_ajouté">
-      <img src="/images/assets/NIKE+AIR+FORCE+1+JEWEL.jpg" alt="airforce1" style="height: 5cm;"> 
-      <div id="description">
-        <div id="nom_prix">
-          <p style="font-weight: 600;">Nike Air Force 1</p> 
-          <p style="font-weight: 600;" id="prix"> 149,99$</p>
-        </div>
-        <p style="color: gray;">Chaussure pour Homme</p>
-        <p style="color: gray;">Taille / Pointure : <u>42</u></p>
-        <p style="margin-top: 1.6cm;">Quantité commandée : 1</p>
-        <p>Numéro de commande : 27385960</p>
-        <p> Commande passé le 13/03/2025</p>
+      <form action="/profil" method="POST" id="form-profil">
+        <label for="email">Adresse e-mail</label> <br>  
+        <input type="email" name="email" id="email" value="{{email}}"> <br> <br>
+        <label for="username">Nom d'utilisateur</label> <br>
+        <input type="text" name="username" id="username" value="{{username}}"><br> <br>
+        <button class="btn1" type="submit">Modifier</button>
+      </form>
+      <div id="actions">
+        <a href="/delete_account?email={{email}}">Supprimer le compte</a>
+        <a href="/mdp_oublie?email={{email}}">Modifier le mot de passe</a>
+        <a href="/logout">Déconnexion</a>
       </div>
+      <h2 id="cmd"><img src="/images/assets/archive-1-svgrepo-com.svg" alt="" style="height: 25px; margin-right: 15px;"> Commandes passées</h2>
+      <div id="article_ajouté">
+        <img src="/images/assets/NIKE+AIR+FORCE+1+JEWEL.jpg" alt="airforce1" style="height: 5cm;"> 
+        <div id="description">
+          <div id="nom_prix">
+            <p style="font-weight: 600;">Nike Air Force 1</p> 
+            <p style="font-weight: 600;" id="prix">149,99€</p>
+          </div>
+          <p style="color: gray;">Chaussure pour Homme</p>
+          <p style="color: gray;">Taille / Pointure : <u>42</u></p>
+          <p style="margin-top: 1.6cm;">Quantité commandée : 1</p>
+          <p>Numéro de commande : 27385960</p>
+          <p> Commande passé le 13/03/2025</p>
+        </div>
+      </div>
+      <h2 id="fav"><img src="/images/assets/ajouter-aux-favoris.png" alt="" style="height: 25px; margin-right: 15px;"> Favoris</h2>
+      {{favorites}}
     </div>
-    <h2 id="fav"><img src="/images/assets/ajouter-aux-favoris.png" alt="" style="height: 25px; margin-right: 15px;"> Favoris</h2>
-    <p style="margin-top: 40px;"> Vous n'avez aucun article en favoris</p>
   </div>
   [footer]
 </body>

@@ -6,6 +6,7 @@
 
 /* General styles */
 header {
+    z-index: 10000;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -14,7 +15,6 @@ header {
     box-shadow: 0px 4px 4px #8a8a8a;
     padding: 0 20px;
     position: relative;
-    z-index: 10;
 }
 
 #logo-container {
@@ -118,7 +118,6 @@ header {
     gap: 15px;
     padding: 10px 0;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
-    z-index: 10;
 }
 
 #hamburger-menu a {
@@ -136,7 +135,6 @@ header {
 .sticky {
     position: sticky;
     top: 0;
-    z-index: 1;
     background: #fff;
 }
 

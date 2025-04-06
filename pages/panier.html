@@ -20,7 +20,8 @@
     <div id="panier_droit">
       <h2>Récapitulatif</h2>
       <p>Sous-total
-      <p style="text-align: end; font-weight: 600;">{{productPrices}}€</p>
+        {{productPrices}}
+        {{sousTotalSansPromo}}
       </p>
       <p>Frais de livraison</p>
       <p style="text-align: end;">Gratuit</p>
@@ -28,32 +29,28 @@
       <div id="ligne" style="height: 1px; background-color: black; border-radius: 1px; width: 100%;"></div>
       <br>
       <p style="font-weight: 600;">Total
-      <p style="text-align: end; font-weight: 600;">{{total}}€</p>
+        {{total}}
+        {{totalSansPromo}}
       </p>
       <br>
       <div id="ligne" style="height: 1px; background-color: black; border-radius: 1px; width: 100%;"></div>
       <br>
-      <div style="justify-content: center;">
+      <div id="payment-buttons">
         <button class="payment-method">
           <span class="button_top">
             <img src="/images/assets/pngegg.png" style="height: 17px;" alt="">
           </span>
         </button>
-        <br>
-        <br>
         <button class="payment-method">
           <span class="button_top">Paiment</span>
         </button>
       </div>
     </div>
   </section>
-  <section id="articles">
-    <div id="images">
-      <h1 style="text-align: left;">Nos articles du moment.</h1>
-      <br>
-      <img src="/images/assets/AIR+MAX+PLUS.png" style="width: 32%;" alt="">
-      <img src="/images/assets/WMNS+AIR+JORDAN+1+MID.png" style="width: 32%;" alt="">
-      <img src="/images/assets/NIKE+AIR+FORCE+1+JEWEL.jpg" style="width: 32%;" alt="">
+  <section id="best-sellers">
+    <h3>Nos articles du moment</h3>
+    <div id="best-sellers-container">
+      {{bestProducts}}
     </div>
   </section>
   [footer]

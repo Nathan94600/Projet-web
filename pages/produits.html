@@ -15,9 +15,17 @@
   [header]
   <div class="container">
     <aside class="filtres">
-      <h2>Filtres</h2>
+      <input type="checkbox" id="toggle-filtre" class="toggle" hidden>
+      <label id="filtre" for="toggle-filtre">
+        Filtres
+        <span></span>
+      </label>
       <div class="filter-group" id="genres">
-        <h3>Genres</h3>
+        <input type="checkbox" id="toggle-genres" class="toggle" checked hidden>
+        <label class="filter-title" for="toggle-genres">
+          Genres
+          <span></span>
+        </label>
         <label class="checkbox-container">
           <input type="checkbox" name="genre" value="1">
           Homme
@@ -36,7 +44,11 @@
         </label>
       </div>
       <div class="filter-group" id="marques">
-        <h3>Marques</h3>
+        <input type="checkbox" id="toggle-marques" class="toggle" checked hidden>
+        <label class="filter-title" for="toggle-marques">
+          Marques
+          <span></span>
+        </label>
         <label class="checkbox-container">
           <input type="checkbox" name="marque" value="1">
           New Balance
@@ -59,7 +71,11 @@
         </label>
       </div>
       <div class="filter-group" id="promos">
-        <h3>En promotion</h3>
+        <input type="checkbox" id="toggle-promos" class="toggle" checked hidden>
+        <label class="filter-title" for="toggle-promos">
+          En promotion
+          <span></span>
+        </label>
         <label class="checkbox-container">
           <input type="checkbox" name="promo" value="1">
           Oui
@@ -70,7 +86,11 @@
         </label>
       </div>
       <div class="filter-group" id="news">
-        <h3>Nouveau</h3>
+        <input type="checkbox" id="toggle-news" class="toggle" checked hidden>
+        <label class="filter-title" for="toggle-news">
+          Nouveau
+          <span></span>
+        </label>
         <label class="checkbox-container">
           <input type="checkbox" name="new" value="1">
           Oui
@@ -81,7 +101,11 @@
         </label>
       </div>
       <div class="filter-group" id="prices">
-        <h3>Prix</h3>
+        <input type="checkbox" id="toggle-prices" class="toggle" checked hidden>
+        <label class="filter-title" for="toggle-prices">
+          Prix
+          <span></span>
+        </label>
         <label class="checkbox-container">
           <input type="checkbox" name="price" value="0-70">
           0€ - 70€
@@ -96,13 +120,21 @@
         </label>
       </div>
       <div class="filter-group" id="sizes">
-        <h3>Tailles</h3>
+        <input type="checkbox" id="toggle-sizes" class="toggle" checked hidden>
+        <label class="filter-title" for="toggle-sizes">
+          Tailles
+          <span></span>
+        </label>
         <div class="size-grid">
           {{sizes}}
         </div>
       </div>
       <div class="filter-group" id="colors">
-        <h3>Couleurs</h3>
+        <input type="checkbox" id="toggle-colors" class="toggle" checked hidden>
+        <label class="filter-title" for="toggle-colors">
+          Couleurs
+          <span></span>
+        </label>
         <div class="color-options">
           <div>
             <input type="checkbox" name="color" value="1" id="red">

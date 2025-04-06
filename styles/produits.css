@@ -33,12 +33,15 @@ body {
     height: calc(100vh - 110px);
 }
   
-.filters h2 {
+#filtre {
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
     font-size: 1.5rem;
     margin-bottom: 20px;
     color: #1a1a1a;
 }
-  
+
 .filter-group {
     margin-bottom: 24px;
     border-bottom: 1px solid #eee;
@@ -143,7 +146,7 @@ label[for="white"] { background: white; border: 1px solid black; }
 label[for="brown"] { background: #644117; }
 label[for="grey"] { background: grey; }
 
-#colors input:checked ~ label {
+#colors div input:checked ~ label {
     transform: scale(1.2);
 }
   
@@ -157,6 +160,60 @@ label[for="grey"] { background: grey; }
     overflow: auto;
     margin-left: 300px;
     flex: 1;
+}
+
+.filter-title {
+    cursor: pointer;
+    margin-bottom: 12px;
+    color: #4a4a4a;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+}
+
+.filter-title span {
+    font-size: 1.2rem;
+    font-weight: normal;
+}
+
+.toggle:checked ~ .checkbox-container {
+    display: block;
+}
+
+.toggle:checked ~ .size-grid {
+    display: grid;
+}
+
+.toggle:checked ~ .color-options {
+    display: flex;
+}
+
+.filter-title span::before {
+    content: "+";  
+}
+
+.toggle:checked + .filtre-title span::before{
+    content: "-";
+}
+
+#filtre span::before {
+    content: "-";
+}
+
+.toggle:checked + #filtre span::before {
+    content: "+";
+}
+
+.toggle:checked + .filtre-title span::before {
+    content: "-";
+}
+
+#toggle-filtre:checked ~ .filter-group {
+    display: none;
+}
+
+.checkbox-container, .size-grid, .color-options {
+    display: none;
 }
   
 .results-header {
@@ -237,18 +294,79 @@ label[for="grey"] { background: grey; }
     color: #2c5282;
     margin-bottom: 4px;
 }
-  
-  /* Responsive Design */
-@media (max-width: 768px) {
+
+@media (max-width: 1130px) {
+    .results-header {
+        flex-direction: column;
+    }
+
     .container {
-      flex-direction: column;
+        flex-direction: column;
     }
-  
-    .filters {
-      width: 100%;
+
+    .filtres {
+        position: relative;
+        height: max-content;
+        width: 100%;
     }
-  
+
+    .filtres h2 {
+        margin-bottom: 1rem;
+    }
+
+    .filtres .checkbox-container {
+        margin-right: 1rem;
+        display: inline;
+    }
+
+    .toggle:checked ~ .checkbox-container {
+        display: none;
+        margin-right: 1rem;
+    }
+
+    .results {
+        margin: 0;
+    }
+
+    .results-header h1 {
+        font-size: 1.25rem;
+    }
+
     .products-grid {
-      grid-template-columns: repeat(auto-fill, minmax(20px, 1fr));
+        justify-content: center;
+    }
+
+    .size-grid {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .size-grid div {
+        width: 5rem;
+    }
+
+    .toggle:checked ~ .size-grid {
+        display: none;
+    }
+
+    .toggle:checked ~ .color-options {
+        display: none;
+    }
+
+    #filtre span::before {
+        content: "+";
+    }
+    
+    .toggle:checked + #filtre span::before {
+        content: "-";
+    }
+
+    .filter-group {
+        display: none;
+    }
+
+    #toggle-filtre:checked ~ .filter-group {
+        display: inherit;
     }
 }

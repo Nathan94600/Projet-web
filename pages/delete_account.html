@@ -15,8 +15,8 @@
   {{error}}
   {{success}}
   <div id="mdp">
-    <h2>Rénitialisez votre mot de passe.</h2>
-    <form action="/password-reset/request" method="post">
+    <h2>Supprimez votre compte.</h2>
+    <form action="/delete-account/request" method="post">
       <label for="mail" id="mail">Votre adresse e-mail</label>
       <input type="email" name="mail" id="mail" required value="{{email}}"/>
       <div>
@@ -25,16 +25,16 @@
         </button>
       </div>
     </form>
-    <form action="/password-reset/verify" method="post" class="valider">
+    <form action="/delete-account/verify" method="post" class="valider">
       <input type="text" name="email" value="{{email}}" style="display: none;"/>
       <label for="code" id="code1">Code à 8 caractères</label>
       <input type="text" name="code" id="code" minlength="8" maxlength="8"/>
       <br>
       <button class="payment-method">
-        <span class="button_top">Valider</span>
+        <span class="button_top">Supprimer le compte</span>
       </button>
       <p id="help">
-        Si vous rencontrez des difficultés à réinitialser votre mot de passe,
+        Si vous rencontrez des difficultés à supprimer votre compte,
         contacter le support à l'adresse mail suivant : support@xyz.com
       </p>
     </form>

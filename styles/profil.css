@@ -1,13 +1,54 @@
 #parametres {
-    height: 100vh;
-    width: 15%;
-    padding: 150px;
+    height: max-content;
+    width: calc(150px + 15%);
+    padding: 150px 0 0 150px;
     text-align: left;
 }
 
 p {
     font-weight: 400;
 
+}
+
+#error {
+	z-index: 50;
+  margin-top: .5rem;
+	color: #640000;
+	width: max-content;
+	padding: 1rem;
+	background: #ff393963;
+	border-radius: 10px;
+	border: 2px solid #640000;
+  position: absolute;
+  left: 0; 
+  right: 0; 
+  margin-inline: auto; 
+  width: fit-content;
+}
+
+#form-profil {
+  display: flex;
+  flex-direction: column;
+}
+
+#form-profil input {
+  width: 100%;
+}
+
+#success {
+	z-index: 50;
+  margin-top: .5rem;
+	color: #0d5000;
+	width: max-content;
+	padding: 1rem;
+	background: #77e97740;
+	border-radius: 10px;
+	border: 2px solid #0d5000;
+  position: absolute;
+  left: 0; 
+  right: 0; 
+  margin-inline: auto; 
+  width: fit-content;
 }
 
 .informations p{
@@ -19,12 +60,20 @@ p {
     margin-top: 30px;
 }
 
+#actions {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
 #details {
-    width: 50%;
+    width: max-content;
     padding: 15px;
-    margin-top: 200px;
-    margin-left: 50px;
-    
+    margin-top: 135px;
+    margin-left: 50px;   
 }
 
 #parent {
@@ -122,7 +171,7 @@ a {
 
 
   .btn1 {
-    margin-left: 2rem;
+    margin: auto;
     position: relative;
     font-size: 17px;
     text-transform: uppercase;
@@ -171,3 +220,69 @@ a {
     transform: scaleX(1.4) scaleY(1.6);
     opacity: 0;
   }
+
+.favorite-item {
+  width: max-content;
+  margin-top: 2rem;  
+  display: flex;
+  flex-direction: column;
+}
+
+.favorite-item p {
+  margin: 0;
+}
+
+#no-favorites {
+  margin: 0;
+  margin-top: 2rem;
+}
+
+#favoris-form {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+#favoris-form button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+#favoris-form svg {
+  fill: #E3474F;
+}
+
+#favoris-form span {
+  font-size: 1rem;
+  color: grey;
+  margin: 1rem;
+}
+
+@media (max-width: 1000px) {
+  #parent {
+    width: 80%;
+    margin: auto;
+    align-content: center;
+    flex-wrap: wrap;
+    flex-direction: column;
+  }
+
+  #parametres, #details {
+    width: 100%;
+    padding: 0;
+    margin: 2rem 0;
+  }
+
+  #article_ajouté {
+    flex-direction: column-reverse;
+  }
+
+  #article_ajouté img {
+    width: min-content;
+    aspect-ratio: 4 / 5;
+  }
+}
