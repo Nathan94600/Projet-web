@@ -1,28 +1,27 @@
 #panier {
   height: 100%;
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+  margin: auto;
 }
 
 #panier_gauche {
-  margin-top: 5%;
-  margin-left: 18%;
   padding: 30px;
   border-radius: 3px;
-  width: 40%;
+  width: 60%;
   height: 60vh;
   overflow: hidden;
   overflow-y: auto;
 }
 
 #panier_droit {
-  width: 20%;
-  margin-top: 10%;
-  margin-right: 2cm;
+  width: 30%;
   padding: 20px;
   height: 60%;
   border-radius: 10px;
   border: 1px solid black;
-  margin-left: 30px;
 }
 
 h1 {
@@ -40,6 +39,7 @@ h2 {
 }
 
 .payment-method {
+  margin: .5rem;
   --button_radius: 0.75em;
   --button_color: #e8e8e8;
   --button_outline_color: #000000;
@@ -275,6 +275,7 @@ label {
 #payment-buttons {
   display: flex;
   justify-content: space-evenly;
+  flex-wrap: wrap;
 }
 
 /* Responsive styles for tablets */
@@ -337,34 +338,6 @@ label {
   }
 }
 
-/* Responsive styles for mobile phones */
-@media (max-width: 480px) {
-  #panier_gauche,
-  #panier_droit {
-    width: 100%;
-    margin: 5px 0;
-  }
-
-  h1 {
-    font-size: 24px;
-  }
-
-  h2 {
-    font-size: 14px;
-  }
-
-  #ligne {
-    width: 80px;
-  }
-
-  .container svg {
-    height: 20px;
-    width: 20px;
-    margin-top: 0.5cm;
-    margin-left: 0.5cm;
-  }
-}
-
 @media (max-width: 1800px) {
 	#best-sellers h3 {
 		margin: 2rem 3rem;
@@ -377,4 +350,20 @@ label {
 	.best-seller-item:last-child {
 		margin-right: 3rem;
 	}
+}
+
+@media (max-width: 670px) {
+  #like-poubelle label {
+    display: none;
+  }
+
+  #nom_prix {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 475px) {
+  #article_ajouté {
+    flex-direction: column-reverse;
+  }
 }

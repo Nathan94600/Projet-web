@@ -56,7 +56,6 @@ node server --ip      # Lance le serveur en détectant l'IP de l'interface
   - inscription.html
   - mdp_oublie_2.html
   - mdp_oublie.html
-  - panier.html
 - Réorganiser les fichiers `.js` utilisé pour le backend
 - Faire le footer
 - Régler les problèmes du header
