@@ -54,5 +54,3 @@ node server --ip      # Lance le serveur en détectant l'IP de l'interface
 - Réorganiser les fichiers `.js` utilisé pour le backend
 - Faire le footer
 - Régler les problèmes du header
-- Ajouter les données de l'utilisateur dans la page de son compte
-- Ajout la possibilité de modifer/supprimer son compte
