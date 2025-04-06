@@ -53,7 +53,6 @@ node server --ip      # Lance le serveur en détectant l'IP de l'interface
 - Faire des pages :
   - connexion.html
   - inscription.html
-  - mdp_oublie_2.html
 - Réorganiser les fichiers `.js` utilisé pour le backend
 - Faire le footer
 - Régler les problèmes du header
