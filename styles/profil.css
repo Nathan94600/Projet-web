@@ -11,7 +11,7 @@ p {
 }
 
 #error {
-	z-index: 100;
+	z-index: 50;
   margin-top: .5rem;
 	color: #640000;
 	width: max-content;
@@ -26,8 +26,17 @@ p {
   width: fit-content;
 }
 
+#form-profil {
+  display: flex;
+  flex-direction: column;
+}
+
+#form-profil input {
+  width: 100%;
+}
+
 #success {
-	z-index: 100;
+	z-index: 50;
   margin-top: .5rem;
 	color: #0d5000;
 	width: max-content;
@@ -52,11 +61,10 @@ p {
 }
 
 #details {
-    width: 50%;
+    width: max-content;
     padding: 15px;
-    margin-top: 200px;
-    margin-left: 50px;
-    
+    margin-top: 135px;
+    margin-left: 50px;   
 }
 
 #parent {
@@ -154,7 +162,7 @@ a {
 
 
   .btn1 {
-    margin-left: 2rem;
+    margin: auto;
     position: relative;
     font-size: 17px;
     text-transform: uppercase;

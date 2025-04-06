@@ -32,7 +32,7 @@
     </div> 
     <div id="details">          
       <h2 id="info"> <img src="/images/assets/utilisateur.png" alt="" style="height: 25px; margin-right: 15px;">Informations du compte</h2> <br>
-      <form action="/profil" method="POST">
+      <form action="/profil" method="POST" id="form-profil">
         <label for="email">Adresse e-mail</label> <br>  
         <input type="email" name="email" id="email" value="{{email}}"> <br> <br>
         <label for="username">Nom d'utilisateur</label> <br>
@@ -41,6 +41,7 @@
         <label for="">Supprimer le compte</label> 
         <button class="btn">Supprimer</button>
       </form>
+      <a href="/mdp_oublie?email={{email}}">Modifier le mot de passe</a>
       <a href="/logout">Déconnexion</a>
       <h2 id="cmd"><img src="/images/assets/archive-1-svgrepo-com.svg" alt="" style="height: 25px; margin-right: 15px;"> Commandes passées</h2>
       <div id="article_ajouté">
@@ -48,7 +49,7 @@
         <div id="description">
           <div id="nom_prix">
             <p style="font-weight: 600;">Nike Air Force 1</p> 
-            <p style="font-weight: 600;" id="prix"> 149,99$</p>
+            <p style="font-weight: 600;" id="prix">149,99€</p>
           </div>
           <p style="color: gray;">Chaussure pour Homme</p>
           <p style="color: gray;">Taille / Pointure : <u>42</u></p>

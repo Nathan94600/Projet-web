@@ -3,7 +3,7 @@ body {
 }
 
 #error {
-	z-index: 100;
+	z-index: 50;
   margin-top: .5rem;
 	color: #640000;
 	width: max-content;
@@ -19,7 +19,7 @@ body {
 }
 
 #success {
-	z-index: 100;
+	z-index: 50;
   margin-top: .5rem;
 	color: #0d5000;
 	width: max-content;
