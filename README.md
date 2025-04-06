@@ -50,5 +50,3 @@ node server --ip      # Lance le serveur en détectant l'IP de l'interface
 # Todolist
 
 - Réorganiser les fichiers `.js` utilisé pour le backend
-- Faire le footer
-- Régler les problèmes du header
