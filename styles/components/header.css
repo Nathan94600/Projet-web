@@ -185,3 +185,21 @@ header {
     
 }
 
+@media (max-width: 430px) {
+    header {
+        padding: 0;
+    }
+
+    .hamburger {
+        margin: 0;
+    }
+
+    #logo-container {
+        width: 15vw;
+        margin: 0;
+    }
+
+    #action-container {
+        gap: 0;
+    }
+}
