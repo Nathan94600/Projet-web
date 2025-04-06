@@ -29,7 +29,10 @@ transporter = createTransport({
 	}
 }),
 passwordResetCodes = {
-	// email: code
+	// email: { date, code }
+},
+deleteAccountResetCodes = {
+	// email: { date, code }
 },
 host = process.argv.includes("--ip") ?
 	Object.entries(networkInterfaces()).filter(([name]) => !name.includes("VM")).map(interface => interface[1]).flat().filter(interface => typeof interface != "string" && !interface.internal && interface.family == "IPv4")[0].address || "localhost" :
@@ -225,8 +228,10 @@ setRoutes("./routes").then(() => {
 									searchParams,
 									cookies,
 									passwordResetCodes,
+									deleteAccountResetCodes,
 									transporter,
-									db
+									db,
+									senderEmail
 								});
 								else res.writeHead(404, "Not found").end();
 								break;

@@ -37,12 +37,13 @@
         <input type="email" name="email" id="email" value="{{email}}"> <br> <br>
         <label for="username">Nom d'utilisateur</label> <br>
         <input type="text" name="username" id="username" value="{{username}}"><br> <br>
-        <button class="btn1" type="submit">Modifier</button> <br> <br>
-        <label for="">Supprimer le compte</label> 
-        <button class="btn">Supprimer</button>
+        <button class="btn1" type="submit">Modifier</button>
       </form>
-      <a href="/mdp_oublie?email={{email}}">Modifier le mot de passe</a>
-      <a href="/logout">Déconnexion</a>
+      <div id="actions">
+        <a href="/delete_account?email={{email}}">Supprimer le compte</a>
+        <a href="/mdp_oublie?email={{email}}">Modifier le mot de passe</a>
+        <a href="/logout">Déconnexion</a>
+      </div>
       <h2 id="cmd"><img src="/images/assets/archive-1-svgrepo-com.svg" alt="" style="height: 25px; margin-right: 15px;"> Commandes passées</h2>
       <div id="article_ajouté">
         <img src="/images/assets/NIKE+AIR+FORCE+1+JEWEL.jpg" alt="airforce1" style="height: 5cm;"> 

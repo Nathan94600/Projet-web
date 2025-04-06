@@ -851,6 +851,7 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 		});
 	} else getPage(url, {
 		error: errorMessage ? `<p id="error">${errorMessage}</p>` : "",
+		success: successMessage ? `<p id="success">${successMessage}</p>` : "",
 		email: params.get("email") || "",
 		code: params.get("code") || "",
 		accountText: userToken ? "Mon compte" : "Se connecter",

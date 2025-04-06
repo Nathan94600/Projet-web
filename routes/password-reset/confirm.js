@@ -18,7 +18,7 @@ module.exports = (req, res, { passwordResetCodes, db }) => {
 				!email ||
 				!EMAIL_REGEX.test(email) ||
 				!code ||
-				code != passwordResetCodes[email]
+				code != passwordResetCodes[email].code
 			) errorMessage = "Problème lors de la réinitialisation du mot de passe";
 			else if (!password) errorMessage = "Vous devez mettre un mot de passe";
 			else if (!password2) errorMessage = "Vous devez confirmer votre mot de passe";
@@ -33,7 +33,7 @@ module.exports = (req, res, { passwordResetCodes, db }) => {
 					if (err) res.writeHead(302, {
 						location: `/mdp_oublie_2?errorMessage=${encodeURIComponent("Erreur lors de la réinitialisation du mot de passe")}`
 					}).end();
-					else res.writeHead(302, { location: "/" }).end();
+					else res.writeHead(302, { location: "/", "set-cookie": "token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; Path=/;" }).end();
 				});
 			};
 		});

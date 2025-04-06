@@ -14,6 +14,22 @@
   width: fit-content;
 }
 
+#success {
+	z-index: 50;
+  margin-top: .5rem;
+	color: #0d5000;
+	width: max-content;
+	padding: 1rem;
+	background: #77e97740;
+	border-radius: 10px;
+	border: 2px solid #0d5000;
+  position: absolute;
+  left: 0; 
+  right: 0; 
+  margin-inline: auto; 
+  width: fit-content;
+}
+
 #mdp {
     margin: auto;
     width: 20%;
@@ -88,6 +104,7 @@ margin-top: 30px;
   #mail {
     font-weight: 600;
     border-radius: 10px;
+    width: 100%;
     height: 30px;
   }
 
