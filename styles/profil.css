@@ -80,7 +80,7 @@ p {
     display: flex;
 }
 
-input {
+#parent input {
     height: 40px;
     border-color: gray;
     border-radius: 10px;
