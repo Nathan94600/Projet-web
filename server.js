@@ -154,7 +154,7 @@ setRoutes("./routes").then(() => {
 				product.promoPrice || null,
 				product.genre,
 				product.colors,
-				new Date(product.date).getTime(),
+				(product.date ? new Date(product.date) : new Date()).getTime(),
 				product.supplier,
 				product.soldCount,
 				err => {
