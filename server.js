@@ -1,14 +1,15 @@
 // Importation des modules nécessaires
-const { createServer } = require("http"),
+const { createServer: createSecureServer } = require("https"),
+	{ createServer } = require("http"),
 	{ createTransport } = require("nodemailer"),
 	{ Database } = require("sqlite3"),
 	{ randomUUID } = require("crypto"),
 	{ networkInterfaces } = require("os"),
-	{ email: senderEmail, password } = require("./config.json"),
+	{ email: senderEmail, password, certPath, keyPath } = require("./config.json"),
 	products = require("./products.json"),
 	stocks = require("./stocks.json"),
 	{ handleGetRequest } = require("./utils/functions"),
-	{ readdir, stat } = require("fs");
+	{ readdir, readFileSync, stat } = require("fs");
 
 const routes = {
 	// path: file
@@ -195,7 +196,10 @@ setRoutes("./routes").then(() => {
 				if (err) console.error("Erreur lors de la finalisation de la requête: ", err);
 				else db.run("COMMIT;", err => {
 					if (err) console.error("Erreur lors de la validation de la transaction: ", err);
-					else createServer((req, res) => {
+					else ((certPath && keyPath) ? createSecureServer : createServer)({
+						key: keyPath ? readFileSync(keyPath) : keyPath,
+						cert: certPath ? readFileSync(certPath) : certPath
+					}, (req, res) => {
 						const { pathname: url, searchParams } = new URL(req.url, "http://localhost:8080"),
 						cookies = Object.fromEntries(req.headers.cookie?.split(";").map(cookie => cookie.trim().split("=")) || []),
 						userToken = cookies?.token;									
@@ -239,7 +243,7 @@ setRoutes("./routes").then(() => {
 								res.writeHead(404, "Not found").end();
 								break;
 						};
-					}).listen({ host, port: 8080 }, () => console.log(`http://${host}:8080`));
+					}).listen({ host, port: 8080 }, () => console.log(`${certPath && keyPath ? "https" : "http"}://${host}:8080`));
 				});
 			});
 		});
