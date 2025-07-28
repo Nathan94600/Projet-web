@@ -334,7 +334,7 @@
 		"genre": 2,
 		"colors": 128,
 		"supplier": 16,
-		"date": "2025-01-03T06:01:24Z"
+		"date": null
 	},
 	{
 		"supplierId": "HQ6638",
@@ -344,7 +344,7 @@
 		"genre": 4,
 		"colors": 4,
 		"supplier": 16,
-		"date": "2025-01-28T16:49:35Z"
+		"date": null
 	},
 	{
 		"supplierId": "HQ6507",
@@ -354,7 +354,7 @@
 		"genre": 4,
 		"colors": 1024,
 		"supplier": 16,
-		"date": "2025-02-14T00:08:04Z"
+		"date": null
 	},
 	{
 		"supplierId": "JH6333",
@@ -364,7 +364,7 @@
 		"genre": 4,
 		"colors": 2,
 		"supplier": 16,
-		"date": "2025-01-07T03:48:12Z"
+		"date": null
 	},
 	{
 		"supplierId": "JI0284",
@@ -374,7 +374,7 @@
 		"genre": 4,
 		"colors": 128,
 		"supplier": 16,
-		"date": "2025-01-26T23:13:51Z"
+		"date": null
 	},
 	{
 		"supplierId": "JI3985",
@@ -384,6 +384,6 @@
 		"genre": 4,
 		"colors": 512,
 		"supplier": 16,
-		"date": "2025-02-23T12:13:33Z"
+		"date": null
 	}
 ]
