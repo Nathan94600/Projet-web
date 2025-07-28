@@ -10,7 +10,7 @@
 2. Cloner le site :
 
 ```bash
-git clone https://github.com/Nathan-ecole/Projet-web.git
+git clone https://github.com/Nathan94600/Projet-web.git
 ```
 
 3. Aller dans le dossier du site
