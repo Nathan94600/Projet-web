@@ -55,8 +55,8 @@ body {
 	padding: 2rem;
 	border-radius: 15px;
 	min-width: 200px;
-	display: inline-table;
 	box-shadow: inset 4px 4px 5px #8a8a8a, 4px 4px 5px #8a8a8a;
+	display: inline-table;
 }
 
 .news-item img, .best-seller-item img, .promo-item img {

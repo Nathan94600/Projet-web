@@ -91,7 +91,7 @@ h2 {
   opacity: .5;
 }
 
-#article_ajouté, p {
+#article_ajouté, #panier p {
   margin-left: 10px;
   margin-top: 10px;
 }
