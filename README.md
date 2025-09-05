@@ -1,9 +1,11 @@
-# Logiciels requis
+# Ce projet a été réalisé dans le cadre d'un exercice scolaire.
+
+## Logiciels requis
 
 - [Node.js](https://nodejs.org/fr/download)
 - [Git](https://git-scm.com/downloads)
 
-# Configuration du site
+## Configuration du site
 
 1. Ouvrir un terminal
 
@@ -31,7 +33,7 @@ npm i
 }
 ```
 
-# Lancement et accès au site
+## Lancement et accès au site
 
 1. Lancer le server web :
 
