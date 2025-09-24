@@ -137,8 +137,12 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 	const userToken = cookies.token, errorMessage = params.get("errorMessage"), successMessage = params.get("successMessage");	
 
 	if (url.startsWith("/images/")) readFile(`.${url}`, (err, data) => {
-		if (err) res.writeHead(404, "Not found").end();
-		else if (url.endsWith(".svg")) compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { ...headers, "content-type": "image/svg+xml", "content-encoding": compression.encoding }).end(compression.data));
+		if (err) {
+			if (url.startsWith("/images/products")) readFile("./images/assets/sneaker-shoe-svgrepo-com.svg", (err, data) => {
+				if (err) res.writeHead(404, "Not found").end();
+				else compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { ...headers, "content-type": "image/svg+xml", "content-encoding": compression.encoding }).end(compression.data));
+			})
+		} else if (url.endsWith(".svg")) compressData(req.headers["accept-encoding"], data).then(compression => res.writeHead(200, { ...headers, "content-type": "image/svg+xml", "content-encoding": compression.encoding }).end(compression.data));
 		else res.writeHead(200, { ...headers, "content-type": `image/${url.split(".").at(-1)}` }).end(data);
 	});
 	else if (url.startsWith("/styles/")) readFile(`.${url}`, (err, data) => {
