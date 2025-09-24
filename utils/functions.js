@@ -610,10 +610,7 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 					res.writeHead(500, "Internal Server Error").end();
 				} else if (!product) res.writeHead(404, "Not found").end();
 				else readdir(`./images/products/${SUPPLIER_NAMES[product.supplier].toLowerCase().replaceAll(" ", "-")}/${GENDER_NAMES[product.genre][0].toUpperCase()}${product.supplierId}`, (err, files) => {
-					if (err) {
-						console.error("Erreur lors de la récupéraction des images du produit: ", err);
-						res.writeHead(500, "Internal Server Error").end();
-					} else db.all("SELECT id, supplierId FROM products WHERE supplier = ? AND genre = ? AND name = ?", [
+					db.all("SELECT id, supplierId FROM products WHERE supplier = ? AND genre = ? AND name = ?", [
 						product.supplier,
 						product.genre,
 						product.name
@@ -632,7 +629,7 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 									<hr>
 									<div id="images-container">
 										<img src="${firstImageURL}.webp" alt="" id="current-presentation" srcset="${firstImageURL}-300w.webp 300w, ${firstImageURL}-500w.webp 500w, ${firstImageURL}-1000w.webp 1000w, ${firstImageURL}-1500w.webp 1500w">
-										${files.filter(file => !file.includes("-")).slice(2).map(file => {
+										${files?.filter(file => !file.includes("-")).slice(2).map(file => {
 											const url = buildImagePath(product, file.split(".")[0]);
 	
 											return `<img src="${url}.webp" alt="" srcset="${url}-300w.webp 300w, ${url}-500w.webp 500w, ${url}-1000w.webp 1000w, ${url}-1500w.webp 1500w">`
@@ -703,10 +700,7 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 					res.writeHead(500, "Internal Server Error").end();
 				} else if (!product) res.writeHead(404, "Not found").end();
 				else readdir(`./images/products/${SUPPLIER_NAMES[product.supplier].toLowerCase().replaceAll(" ", "-")}/${GENDER_NAMES[product.genre][0].toUpperCase()}${product.supplierId}`, (err, files) => {
-					if (err) {
-						console.error("Erreur lors de la récupéraction des images du produit: ", err);
-						res.writeHead(500, "Internal Server Error").end();
-					} else db.all("SELECT id, supplierId FROM products WHERE supplier = ? AND genre = ? AND name = ?", [
+					db.all("SELECT id, supplierId FROM products WHERE supplier = ? AND genre = ? AND name = ?", [
 						product.supplier,
 						product.genre,
 						product.name
@@ -732,7 +726,7 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 									<hr>
 									<div id="images-container">
 										<img src="${firstImageURL}.webp" alt="" id="current-presentation" srcset="${firstImageURL}-300w.webp 300w, ${firstImageURL}-500w.webp 500w, ${firstImageURL}-1000w.webp 1000w, ${firstImageURL}-1500w.webp 1500w">
-										${files.filter(file => !file.includes("-")).slice(2).map(file => {
+										${files?.filter(file => !file.includes("-")).slice(2).map(file => {
 											const url = buildImagePath(product, file.split(".")[0]);
 	
 											return `<img src="${url}.webp" alt="" srcset="${url}-300w.webp 300w, ${url}-500w.webp 500w, ${url}-1000w.webp 1000w, ${url}-1500w.webp 1500w">`
@@ -802,10 +796,7 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 				res.writeHead(500, "Internal Server Error").end();
 			} else if (!product) res.writeHead(404, "Not found").end();
 			else readdir(`./images/products/${SUPPLIER_NAMES[product.supplier].toLowerCase().replaceAll(" ", "-")}/${GENDER_NAMES[product.genre][0].toUpperCase()}${product.supplierId}`, (err, files) => {
-				if (err) {
-					console.error("Erreur lors de la récupéraction des images du produit: ", err);
-					res.writeHead(500, "Internal Server Error").end();
-				} else db.all("SELECT id, supplierId FROM products WHERE supplier = ? AND genre = ? AND name = ?", [
+				db.all("SELECT id, supplierId FROM products WHERE supplier = ? AND genre = ? AND name = ?", [
 					product.supplier,
 					product.genre,
 					product.name
@@ -824,7 +815,7 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 								<hr>
 								<div id="images-container">
 									<img src="${firstImageURL}.webp" alt="" id="current-presentation" srcset="${firstImageURL}-300w.webp 300w, ${firstImageURL}-500w.webp 500w, ${firstImageURL}-1000w.webp 1000w, ${firstImageURL}-1500w.webp 1500w">
-									${files.filter(file => !file.includes("-")).slice(2).map(file => {
+									${files?.filter(file => !file.includes("-")).slice(2).map(file => {
 										const url = buildImagePath(product, file.split(".")[0]);
 
 										return `<img src="${url}.webp" alt="" srcset="${url}-300w.webp 300w, ${url}-500w.webp 500w, ${url}-1000w.webp 1000w, ${url}-1500w.webp 1500w">`
