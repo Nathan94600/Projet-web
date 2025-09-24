@@ -300,11 +300,28 @@ function handleGetRequest(db, url, req, res, params, cookies, headers = {}) {
 			})
 		});
 	} else if (url == "/") db.all(`
-		SELECT
-			*,
-			CAST(price AS DECIMAL(10,2)) / 100.0 AS formattedPrice,
-			CAST(promoPrice AS DECIMAL(10,2)) / 100.0 AS formattedPromoPrice
-		FROM products WHERE date > ?
+		WITH recent AS (
+		  SELECT
+		    *,
+		    CAST(price AS DECIMAL(10,2)) / 100.0 AS formattedPrice,
+    		CAST(promoPrice AS DECIMAL(10,2)) / 100.0 AS formattedPromoPrice
+		  FROM products
+		  WHERE date > ?
+		  ORDER BY date DESC
+		),
+		fallback AS (
+		  SELECT
+    		*,
+		    CAST(price AS DECIMAL(10,2)) / 100.0 AS formattedPrice,
+    		CAST(promoPrice AS DECIMAL(10,2)) / 100.0 AS formattedPromoPrice
+		  FROM products
+		  ORDER BY date DESC
+		  LIMIT 6
+		)
+		SELECT * FROM recent
+		UNION ALL
+		SELECT * FROM fallback
+		WHERE NOT EXISTS (SELECT 1 FROM recent);
 	`, Date.now() - 1209600000 /* 2 semaines */, (err, newProductsRows) => {
 		if (err) {
 			console.error("Erreur lors de la récupération des nouveaux produits: ", err);
