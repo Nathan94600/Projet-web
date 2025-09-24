@@ -50,7 +50,7 @@ form {
 
 .container-l {
 	width: 50%;
-	background-image: url("/images/assets/michael-jordan-focuses.jpg");
+	/* background-image: url("/images/assets/michael-jordan-focuses.jpg"); */
 	background-size: cover;
 	background-position: center;
 	display: flex;

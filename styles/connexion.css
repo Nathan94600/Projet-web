@@ -20,7 +20,7 @@ nav a {
 .container-l {
     max-width: 50%;
     width: 50%;
-    background-image: url("/images/assets/michael-jordan-focuses.jpg");
+    /* background-image: url("/images/assets/michael-jordan-focuses.jpg"); */
     background-size: cover;
     background-position: center;
     display: flex;
